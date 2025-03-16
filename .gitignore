@@ -1,0 +1,90 @@
+# === Django ===
+# Python и Django временные файлы
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Виртуальное окружение
+venv/
+ENV/
+env/
+.venv/
+
+# Локальные настройки
+.env
+.env.local
+.env.*.local
+
+# Статические файлы (если они собираются вручную)
+/static/
+/media/
+
+# Миграции базы данных (опционально, если вы хотите хранить миграции в Git)
+# migrations/
+# !migrations/__init__.py
+
+# Логи
+*.log
+logs/
+
+# PyCharm и другие IDE файлы
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Build артефакты
+dist/
+build/
+
+# Poetry
+poetry.lock*
+poetry.toml
+
+# === Vue.js / Nuxt.js ===
+# Зависимости
+node_modules/
+package-lock.json
+yarn.lock
+
+# Логи и кэш
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Сборка и дистрибутивы
+dist/
+.nuxt/
+.output/
+
+# Локальные настройки
+.nuxt.config.local.js
+.nuxt.config.local.ts
+
+# Окружение
+.env
+.env.*
+!.env.example
+
+# Тестовые отчеты
+coverage/
+.nyc_output/
+
+# === Общие ===
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Linux
+*~
+
+# Шаблоны и временные файлы
+*.tmp
+*.swp
+*.bak
+
+# Другие файлы
+*.iml
+*.log

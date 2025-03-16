@@ -14,16 +14,21 @@ RUN npm install
 COPY . .
 
 # Генерируем статический сайт
-RUN npm run build && npm run generate
+RUN npm run build
 
-# Стадия 2: Запуск приложения через Nginx
-FROM nginx:alpine
+# Стадия 2: Запуск приложения через Node.js
+FROM node:23-alpine
 
-# Копируем сгенерированные файлы из стадии сборки в директорию Nginx
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Устанавливаем рабочую директорию
+WORKDIR /app
 
-# Открываем порт 80 для подключения
-EXPOSE 80
+# Копируем зависимости из стадии сборки
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/.output ./.output
 
-# Запускаем Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Открываем порт 3000 для подключения
+EXPOSE 3000
+
+# Запускаем сервер SSR
+CMD ["npx", "dotenv", "-e", ".env", "--", "node", ".output/server/index.mjs"]

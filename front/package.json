@@ -16,5 +16,9 @@
     "nuxt": "^3.16.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^8.0.0",
+    "sass": "^1.85.1"
   }
 }

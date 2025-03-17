@@ -1,9 +1,4 @@
 services:
-  app:
-    environment:
-      - POSTGRES_HOST=localhost  # Указываем localhost для подключения к базе данных
-      - POSTGRES_PORT=88
-
   db:
     ports:
-      - "88:${POSTGRES_PORT:-5432}"  # База данных доступна снаружи через порт 88
+      - "88:${POSTGRES_PORT:-5432}" 

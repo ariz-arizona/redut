@@ -6,10 +6,14 @@ export default <Partial<Config>>{
         extend: {
             colors: {
                 primary: {
-                    ...colors.emerald,
-                    DEFAULT: colors.emerald[500],
+                    ...colors.cyan,
+                    DEFAULT: colors.cyan[500],
                 }
+            },
+            fontFamily: {
+                ruberoid: ['Ruberoid', 'sans-serif']
             }
+
         }
     }
 }

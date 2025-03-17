@@ -1,0 +1,41 @@
+// fonts.scss
+
+// Путь к папке с шрифтами
+$font-path: '../fonts/Ruberoid';
+
+// Миксин для импорта шрифтов
+@mixin import-font($font-family, $file-name, $weight, $style: normal) {
+  @font-face {
+    font-family: $font-family;
+    src: url('#{$font-path}/#{$file-name}.otf') format('opentype');
+    font-weight: $weight;
+    font-style: $style;
+  }
+}
+
+// Импорт всех шрифтов Ruberoid
+@include import-font('Ruberoid', 'Ruberoid-Thin', 100, normal);
+@include import-font('Ruberoid', 'Ruberoid-ThinOblique', 100, italic);
+
+@include import-font('Ruberoid', 'Ruberoid-UltraLight', 200, normal);
+@include import-font('Ruberoid', 'Ruberoid-UltraLightOblique', 200, italic);
+
+@include import-font('Ruberoid', 'Ruberoid-ExtraLight', 300, normal);
+@include import-font('Ruberoid', 'Ruberoid-ExtraLightOblique', 300, italic);
+
+@include import-font('Ruberoid', 'Ruberoid-Light', 400, normal);
+@include import-font('Ruberoid', 'Ruberoid-LightOblique', 400, italic);
+
+@include import-font('Ruberoid', 'Ruberoid-Regular', 500, normal);
+@include import-font('Ruberoid', 'Ruberoid-Oblique', 500, italic);
+
+@include import-font('Ruberoid', 'Ruberoid-Medium', 600, normal);
+@include import-font('Ruberoid', 'Ruberoid-MediumOblique', 600, italic);
+
+@include import-font('Ruberoid', 'Ruberoid-SemiBold', 700, normal);
+@include import-font('Ruberoid', 'Ruberoid-SemiBoldOblique', 700, italic);
+
+@include import-font('Ruberoid', 'Ruberoid-Bold', 800, normal);
+@include import-font('Ruberoid', 'Ruberoid-BoldOblique', 800, italic);
+
+@include import-font('Ruberoid', 'Ruberoid-ExtraBold', 900, normal);

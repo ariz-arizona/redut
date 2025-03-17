@@ -3,8 +3,16 @@ import("assets/tailwind.scss");
 </script>
 <template>
   <div>
-    <div class="bg-primary text-white">
-      <div class="container">123</div>
+
+    <div class="bg-primary-800 text-white">
+      <div class="container flex items-center gap-4 px-4">
+        <HeaderLogo />
+        <HeaderMenu class="grow" />
+        <HeaderPhone />
+      </div>
     </div>
+
+    <Slider />
+
   </div>
 </template>

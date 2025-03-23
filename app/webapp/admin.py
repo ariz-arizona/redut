@@ -33,6 +33,8 @@ class BlockAdmin(admin.ModelAdmin):
     list_filter = ("type", "page")
     search_fields = ("type", "title", "menu_title", "content")
     prepopulated_fields = {"slug": ("title",)}
+    inlines = [ImageInline]
+
 
 # Инлайн для блоков на страницах
 class BlockInline(admin.StackedInline):
@@ -40,6 +42,8 @@ class BlockInline(admin.StackedInline):
     extra = 1
     fields = ("type", "order", "title", "menu_title", "slug", "content", "page")
     ordering = ["order"]
+    inlines = [ImageInline]
+
 
 # Админка для страниц
 @admin.register(Page)

@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 import colors from 'tailwindcss/colors'
-import tailwindTypography from '@tailwindcss/typography';
+import typography from '@tailwindcss/typography'
+import forms from '@tailwindcss/forms';
 
 export default <Partial<Config>>{
     theme: {
@@ -17,5 +18,5 @@ export default <Partial<Config>>{
 
         }
     },
-    plugins: [tailwindTypography]
+    plugins: [typography, forms]
 }

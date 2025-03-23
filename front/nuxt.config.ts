@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
@@ -7,7 +8,7 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/image',
     '@nuxtjs/tailwindcss',
-    '@nuxtjs/robots'
+    '@nuxtjs/robots',
   ],
   site: { indexable: false },
   runtimeConfig: {
@@ -27,4 +28,17 @@ export default defineNuxtConfig({
       crawlLinks: false
     }
   },
+  tailwindcss: {
+    exposeConfig: true,
+    config: {
+      content: [
+        "./components/**/*.{js,vue,ts}",
+        "./layouts/**/*.vue",
+        "./pages/**/*.vue",
+        "./plugins/**/*.{js,ts}",
+        "./nuxt.config.{js,ts}",
+        "./error.vue",
+      ]
+    }
+  }
 })

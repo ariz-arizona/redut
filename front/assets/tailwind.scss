@@ -18,10 +18,13 @@ body {
 
     a {
       @apply block p-4 hover:bg-primary-200 transition-colors;
+      &.active {
+        @apply bg-primary-400/50
+      }
     }
   }
 }
 
 .title {
-  @apply text-4xl font-black my-2;
+  @apply text-4xl font-black mt-2 mb-8;
 }

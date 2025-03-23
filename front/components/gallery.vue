@@ -20,7 +20,7 @@ const imgBase = config.public.imgBase
 // Настройки Swiper
 const swiperOptions: SwiperOptions = {
     slidesPerView: 4, // Количество видимых слайдов
-    loop: true, // Зацикливание
+    loop: false, // Зацикливание
     autoplay: { delay: 5000, disableOnInteraction: false }, // Автопрокрутка
     freeMode: true,
     slidesOffsetBefore: (window.innerWidth - 1024) * 0.5,

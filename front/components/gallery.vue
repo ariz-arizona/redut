@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import type { SwiperOptions } from 'swiper/types';
 
 import 'swiper/css';
+import 'swiper/css/effect-fade';
 
 const props = defineProps({
     'slides': {
@@ -23,6 +24,7 @@ const swiperOptions: SwiperOptions = {
     autoplay: { delay: 5000, disableOnInteraction: false }, // Автопрокрутка
     freeMode: true,
     slidesOffsetBefore: (window.innerWidth - 1024) * 0.5,
+    effect: 'fade', 
 };
 
 // Ссылка на Swiper для управления (например, пауза/воспроизведение)
@@ -31,7 +33,7 @@ const swiperRef = ref(null);
 <template>
     <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="w-screen">
         <swiper-slide v-for="(slide, index) in props.slides" :key="index">
-            <div class="bg-no-repeat bg-cover h-96 rounded-2xl overflow-hidden flex justify-start align-bottom p-4 bg-origin-content"
+            <div class="bg-no-repeat bg-cover bg-center h-96 rounded-2xl overflow-hidden flex justify-start align-bottom p-4 bg-origin-content"
                 :style="[{ backgroundImage: `url(${imgBase}/${slide.image})` }]">
                 <div class="self-end">
                     <h3 class="font-bold text-2xl">{{ slide.title }}</h3>

@@ -28,7 +28,7 @@ SECRET_KEY = "django-insecure-!r=koo!(z86)c86*z_xh@m!cl5sn8js(#a$l9%9$chntk@mogl
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-HOST = os.environ.get("HOST", "localhost")
+HOST = os.environ.get("DJANGO_HOST", "localhost")
 PORT = os.environ.get("NGINX_PORT", 80)
 
 ALLOWED_HOSTS = [

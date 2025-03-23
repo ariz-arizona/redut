@@ -11,8 +11,11 @@ import("assets/tailwind.scss");
         <HeaderPhone />
       </div>
     </div>
-
-    <Slider />
+    <NuxtLayout>
+      <Suspense>
+        <NuxtPage />
+      </Suspense>
+    </NuxtLayout>
 
   </div>
 </template>

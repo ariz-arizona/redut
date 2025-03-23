@@ -1,31 +1,23 @@
 <script setup lang="ts">
+import type { PropType } from 'vue';
+
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Autoplay, Navigation, EffectFade } from 'swiper/modules';
+import { Autoplay, Navigation, EffectFade } from 'swiper/modules';
 
 import 'swiper/css';
-import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-fade';
 import type { SwiperOptions } from 'swiper/types';
 
-// Массив слайдов
-const slides = [
-    {
-        image: '/slider/all-bong.jpg',
-        title: 'Заголовок 1',
-        description: 'Описание первого слайда.'
-    },
-    {
-        image: '/slider/danist-soh.jpg',
-        title: 'Заголовок 2',
-        description: 'Описание второго слайда.'
-    },
-    {
-        image: '/slider/luke-van.jpg',
-        title: 'Заголовок 3',
-        description: 'Описание третьего слайда.'
+const props = defineProps({
+    'slides': {
+        requireв: true,
+        type: Array as PropType<Image[]>,
     }
-];
+})
+
+const config = useRuntimeConfig()
+const imgBase = config.public.imgBase
 
 // Настройки Swiper
 const swiperOptions: SwiperOptions = {
@@ -45,12 +37,12 @@ const swiperRef = ref(null);
 <template>
     <div class="max-h-[50vh] h-[300px] overflow-hidden relative">
         <swiper ref="swiperRef" v-bind="swiperOptions as any" class="h-full">
-            <swiper-slide v-for="(slide, index) in slides" :key="index">
-                <div class="h-full bg-[100%_auto] bg-bottom" :style="[{ backgroundImage: `url(${slide.image})` }]">
+            <swiper-slide v-for="(slide, index) in props.slides" :key="index">
+                <div class="h-full bg-[100%_auto] bg-bottom" :style="[{ backgroundImage: `url(${imgBase}/${slide.image})` }]">
                     <div
                         class="container m-auto select-none absolute text-white text-2xl bottom-2 right-2 left-2 text-left font-normal">
                         <h3>{{ slide.title }}</h3>
-                        <p>{{ slide.description }}</p>
+                        <p>{{ slide.alt_text }}</p>
                     </div>
                 </div>
             </swiper-slide>

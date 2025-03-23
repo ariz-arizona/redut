@@ -31,7 +31,7 @@ const swiperRef = ref(null);
 <template>
     <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="w-screen">
         <swiper-slide v-for="(slide, index) in props.slides" :key="index">
-            <div class="bg-cover h-96 rounded-2xl overflow-hidden flex justify-start align-bottom p-4 bg-origin-content"
+            <div class="bg-no-repeat bg-cover h-96 rounded-2xl overflow-hidden flex justify-start align-bottom p-4 bg-origin-content"
                 :style="[{ backgroundImage: `url(${imgBase}/${slide.image})` }]">
                 <div class="self-end">
                     <h3 class="font-bold text-2xl">{{ slide.title }}</h3>

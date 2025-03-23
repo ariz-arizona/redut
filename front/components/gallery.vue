@@ -25,6 +25,7 @@ const swiperOptions: SwiperOptions = {
     freeMode: true,
     slidesOffsetBefore: (window.innerWidth - 1024) * 0.5,
     effect: 'fade', 
+    fadeEffect: { crossFade: true }, // Плавное перекрытие слайдов
     spaceBetween: 24,
 };
 

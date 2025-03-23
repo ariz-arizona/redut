@@ -88,3 +88,5 @@ Thumbs.db
 # Другие файлы
 *.iml
 *.log
+
+/uploaded/*

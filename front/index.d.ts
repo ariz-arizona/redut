@@ -16,6 +16,8 @@ interface Block {
     order: number;
     page: number;
     title: string;
+    menu_title: string | null;
+    slug: string;
     type: string;
 }
 

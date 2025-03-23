@@ -35,7 +35,7 @@ const swiperOptions: SwiperOptions = {
 const swiperRef = ref(null);
 </script>
 <template>
-    <div class="max-h-[50vh] h-[300px] overflow-hidden relative">
+    <div class="h-[calc(100vh-8rem)] min-h-[300px] overflow-hidden relative">
         <swiper ref="swiperRef" v-bind="swiperOptions as any" class="h-full">
             <swiper-slide v-for="(slide, index) in props.slides" :key="index">
                 <div class="h-full bg-[100%_auto] bg-bottom" :style="[{ backgroundImage: `url(${imgBase}/${slide.image})` }]">

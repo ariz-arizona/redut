@@ -3,9 +3,8 @@ import("assets/tailwind.scss");
 </script>
 <template>
   <div>
-
     <div class="bg-primary-800 text-white">
-      <div class="container flex items-center gap-4 px-4">
+      <div class="container flex items-center gap-4 p-2">
         <HeaderLogo />
         <HeaderMenu class="grow" />
         <HeaderPhone />
@@ -16,6 +15,5 @@ import("assets/tailwind.scss");
         <NuxtPage />
       </Suspense>
     </NuxtLayout>
-
   </div>
 </template>

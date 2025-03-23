@@ -6,6 +6,7 @@ export function useApiFetch() {
     
     const fetchData = <T>(path: string, queryParams: Record<string, any> = {}, global = false) => {
         const headers = new Headers()
+        headers.set('Content-Type', 'application/json')
         console.log(`${apiBase}/api/${path}/`)
 
         return useFetch<T>(`${apiBase}/api/${path}/`, {

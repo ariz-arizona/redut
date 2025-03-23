@@ -1,7 +1,7 @@
 // fonts.scss
 
 // Путь к папке с шрифтами
-$font-path: '../fonts/Ruberoid';
+$font-path: '/assets/fonts/Ruberoid';
 
 // Миксин для импорта шрифтов
 @mixin import-font($font-family, $file-name, $weight, $style: normal) {

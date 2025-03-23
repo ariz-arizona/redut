@@ -1,11 +1,24 @@
 from rest_framework import serializers
-from .models import SEO
+from .models import Page, Block, Image
 
-class SEOSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для модели SEO.
-    """
+
+class ImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SEO
-        fields = ['id', 'title', 'meta_description', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']  # Эти поля нельзя изменять через API
+        model = Image
+        fields = "__all__"
+
+
+class BlockSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Block
+        fields = "__all__"
+
+
+class PageSerializer(serializers.ModelSerializer):
+    blocks = BlockSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Page
+        fields = "__all__"

@@ -1,11 +1,33 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from .models import SEO
-from .serializers import SEOSerializer
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from .models import Page
+from .serializers import PageSerializer
 
-class SEOViewSet(viewsets.ModelViewSet):
-    """
-    Вьюсет для работы с SEO данными.
-    """
-    queryset = SEO.objects.all().order_by('-created_at')  # Сортировка по дате создания
-    serializer_class = SEOSerializer
+
+class PageViewSet(viewsets.ModelViewSet):
+    queryset = Page.objects.all()
+    serializer_class = PageSerializer
+    lookup_field = "slug"  # Используем slug вместо id для поиска
+
+    def list(self, request, *args, **kwargs):
+        """
+        Переопределяем метод list, чтобы возвращать только главную страницу.
+        """
+        homepage = Page.objects.filter(is_homepage=True).first()
+        if not homepage:
+            return Response(
+                {"detail": "Главная страница не найдена."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = self.get_serializer(homepage)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Переопределяем метод retrieve, чтобы искать страницу по slug.
+        """
+        slug = kwargs.get("slug")
+        page = get_object_or_404(Page, slug=slug)
+        serializer = self.get_serializer(page)
+        return Response(serializer.data)

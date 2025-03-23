@@ -48,7 +48,7 @@ const swiperRef = ref(null);
             <swiper-slide v-for="(slide, index) in slides" :key="index">
                 <div class="h-full bg-[100%_auto] bg-bottom" :style="[{ backgroundImage: `url(${slide.image})` }]">
                     <div
-                        class="container m-auto select-none absolute text-white text-2xl bottom-2 right-2 left-2 text-right">
+                        class="container m-auto select-none absolute text-white text-2xl bottom-2 right-2 left-2 text-left font-normal">
                         <h3>{{ slide.title }}</h3>
                         <p>{{ slide.description }}</p>
                     </div>
@@ -72,10 +72,9 @@ const swiperRef = ref(null);
 }
 
 @media(min-width:1024px) {
-
     .swiper-button-next,
     .swiper-button-prev {
-        @apply right-1/2 left-[auto];
+        @apply right-1/2 left-[auto] top-[auto] bottom-4;
     }
 
     .swiper-button-next {

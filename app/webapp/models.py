@@ -98,7 +98,7 @@ class Image(models.Model):
     )
     url = models.URLField(blank=True, null=True, verbose_name="Ссылка (для галереи)")
     title = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="Заголовок (для галереи)"
+        max_length=255,  verbose_name="Заголовок"
     )
     text = models.TextField(
         blank=True, null=True, verbose_name="Описание (для галереи)"

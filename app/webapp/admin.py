@@ -56,6 +56,6 @@ class PageAdmin(admin.ModelAdmin):
 # Админка для изображений
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ("image", "alt_text", "block", "order")
+    list_display = ("title", "image", "alt_text", "block", "order")
     list_filter = ("block",)
     search_fields = ("alt_text", "title")

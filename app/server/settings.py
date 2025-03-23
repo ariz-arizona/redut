@@ -29,8 +29,23 @@ SECRET_KEY = "django-insecure-!r=koo!(z86)c86*z_xh@m!cl5sn8js(#a$l9%9$chntk@mogl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "localhost",
+    "app",
+]
+CSRF_TRUSTED_ORIGINS = (
+    "http://localhost",
+    "http://localhost:8500",
+    "http://localhost:8000",
+    "http://localhost:3000",
+)
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost",
+    "http://localhost:8500",
+    "http://localhost:8000",
+    "http://localhost:3000",
+]
 
 # Application definition
 
@@ -41,12 +56,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "markdownfield",
     "rest_framework",
     "webapp",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # Добавьте CorsMiddleware в начало списка
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -138,6 +155,10 @@ STATIC_URL = "/static/"  # URL для доступа к статическим �
 
 # Путь к папке, куда будут собираться статические файлы
 STATIC_ROOT = os.path.join(BASE_DIR, "static")  # Папка для собранных статических файлов
+
+# Настройки для медиафайлов
+MEDIA_URL = "/media/"  # URL для доступа к медиафайлам
+MEDIA_ROOT = os.path.join(BASE_DIR, "images")  # Путь для хранения медиафайлов
 
 
 # Default primary key field type

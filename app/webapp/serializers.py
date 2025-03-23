@@ -3,6 +3,8 @@ from .models import Page, Block, Image
 
 
 class ImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=False)
+    
     class Meta:
         model = Image
         fields = "__all__"

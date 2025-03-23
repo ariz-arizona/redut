@@ -29,20 +29,17 @@ class ImageInline(admin.TabularInline):
 # Админка для блоков
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
-    list_display = ("type", "order", "title", "page")
+    list_display = ("type", "order", "title", "menu_title", "slug", "page")
     list_filter = ("type", "page")
-    search_fields = ("type", "title", "content")
-    inlines = [ImageInline]
-
+    search_fields = ("type", "title", "menu_title", "content")
+    prepopulated_fields = {"slug": ("title",)}
 
 # Инлайн для блоков на страницах
 class BlockInline(admin.StackedInline):
     model = Block
     extra = 1
-    fields = ("type", "order", "title", "content", "page")
+    fields = ("type", "order", "title", "menu_title", "slug", "content", "page")
     ordering = ["order"]
-    inlines = [ImageInline]
-
 
 # Админка для страниц
 @admin.register(Page)

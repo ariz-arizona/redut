@@ -1,6 +1,4 @@
 from django.db import models
-
-from django.db import models
 from django.core.exceptions import ValidationError
 
 from markdownfield.models import MarkdownField
@@ -9,7 +7,7 @@ from markdownfield.validators import VALIDATOR_STANDARD
 
 class Page(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
-    slug = models.SlugField(unique=True, verbose_name="URL")
+    slug = models.SlugField(unique=True, verbose_name="Slug")
     meta_title = models.CharField(
         max_length=255, blank=True, null=True, verbose_name="Meta Title"
     )
@@ -52,6 +50,14 @@ class Block(models.Model):
         choices=BLOCK_TYPES, max_length=20, verbose_name="Тип блока"
     )
     title = models.CharField(max_length=255, verbose_name="Заголовок")
+    slug = models.SlugField(verbose_name="Slug")
+    menu_title = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Заголовок меню",
+        help_text="Необязательное поле. Если указано, будет использоваться в меню вместо основного заголовка.",
+    )
     order = models.PositiveIntegerField(verbose_name="Порядок")
     content = MarkdownField(
         blank=True,
@@ -66,9 +72,15 @@ class Block(models.Model):
         return f"{self.get_type_display()} (Order: {self.order})"
 
     class Meta:
-        ordering = ["order"]
+        ordering = ["page", "order"]
         verbose_name = "Блок"
         verbose_name_plural = "Блоки"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["page", "slug"],
+                name="unique_slug_per_page",
+            ),
+        ]
 
 
 class Image(models.Model):

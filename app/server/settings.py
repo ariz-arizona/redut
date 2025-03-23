@@ -33,7 +33,7 @@ PORT = os.environ.get("NGINX_PORT", 80)
 
 ALLOWED_HOSTS = [
     HOST,
-    "loclhost",
+    "localhost",
     "app",
 ]
 CSRF_TRUSTED_ORIGINS = (

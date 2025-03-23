@@ -28,21 +28,23 @@ SECRET_KEY = "django-insecure-!r=koo!(z86)c86*z_xh@m!cl5sn8js(#a$l9%9$chntk@mogl
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+HOST = os.environ.get("HOST", "localhost")
+PORT = os.environ.get("NGINX_PORT", 80)
 
 ALLOWED_HOSTS = [
-    "localhost",
+    HOST,
     "app",
 ]
 CSRF_TRUSTED_ORIGINS = (
-    "http://localhost",
-    "http://localhost:8500",
+    f"http://{HOST}:{PORT}",
+    f"http://{HOST}",
     "http://localhost:8000",
     "http://localhost:3000",
 )
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost",
-    "http://localhost:8500",
+    f"http://{HOST}:{PORT}",
+    f"http://{HOST}",
     "http://localhost:8000",
     "http://localhost:3000",
 ]

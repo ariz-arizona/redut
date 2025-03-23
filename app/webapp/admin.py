@@ -3,28 +3,9 @@ from .models import Page, Block, Image
 
 
 # Инлайн для изображений
-class ImageInline(admin.TabularInline):
+class ImageInline(admin.StackedInline):
     model = Image
     extra = 1
-
-    def get_fields(self, request, obj=None):
-        # Динамическое отображение полей в зависимости от типа блока
-        if obj and obj.type == "gallery":
-            return ("image", "alt_text", "url", "title", "text", "order")
-        elif obj and obj.type == "slider":
-            return ("image", "alt_text", "order")
-        return ()
-
-    def has_add_permission(self, request, obj=None):
-        # Разрешаем добавление только для слайдеров и галерей
-        return obj is None or obj.type in ["slider", "gallery"]
-
-    def has_change_permission(self, request, obj=None):
-        return self.has_add_permission(request, obj)
-
-    def has_delete_permission(self, request, obj=None):
-        return self.has_add_permission(request, obj)
-
 
 # Админка для блоков
 @admin.register(Block)

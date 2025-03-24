@@ -23,7 +23,7 @@ const swiperOptions: SwiperOptions = {
     loop: false, // Зацикливание
     autoplay: { delay: 5000, disableOnInteraction: false }, // Автопрокрутка
     freeMode: true,
-    slidesOffsetBefore: (window.innerWidth - 1024) * 0.5,
+    slidesOffsetBefore: window.innerWidth > 1024 ? (window.innerWidth - 1024) * 0.5 : 16,
     effect: 'fade', 
     fadeEffect: { crossFade: true }, // Плавное перекрытие слайдов
     spaceBetween: 24,

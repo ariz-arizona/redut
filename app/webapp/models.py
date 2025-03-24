@@ -4,6 +4,78 @@ from django.core.exceptions import ValidationError
 from markdownfield.models import MarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 
+from django.db import models
+
+
+class SiteSettings(models.Model):
+    """
+    Модель для хранения общих сведений о сайте.
+    """
+
+    phone_number = models.CharField(
+        max_length=20,
+        verbose_name="Номер телефона",
+        help_text="Введите номер телефона в международном формате (например, +79991234567).",
+    )
+
+    logo = models.ImageField(
+        upload_to="site_logos/",
+        verbose_name="Логотип",
+        help_text="Загрузите логотип сайта.",
+        blank=True,
+        null=True,
+    )
+
+    footer_text = models.TextField(
+        verbose_name="Текст футера",
+        help_text="Введите текст, который будет отображаться в нижней части сайта (футере).",
+    )
+
+    is_enabled = models.BooleanField(
+        default=False,
+        verbose_name="Активен",
+        help_text=(
+            "Установите этот флаг, если эта запись должна быть активной. "
+            "Может быть только одна активная запись."
+        ),
+    )
+
+    class Meta:
+        verbose_name = "Настройки сайта"
+        verbose_name_plural = "Настройки сайта"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["is_enabled"],
+                condition=models.Q(is_enabled=True),
+                name="unique_enabled_site_settings",
+            )
+        ]
+
+    def __str__(self):
+        return "Общие настройки сайта"
+
+    @staticmethod
+    def get_enabled():
+        """
+        Возвращает активную запись настроек сайта (где is_enabled=True).
+        Если активной записи нет, возвращает None.
+        """
+        return SiteSettings.objects.filter(is_enabled=True).first()
+
+    def clean(self):
+        """
+        Проверяет, что только одна запись может быть активной (is_enabled=True).
+        """
+        if self.is_enabled:
+            # Ищем другие активные записи, исключая текущую
+            enabled_settings = SiteSettings.objects.filter(is_enabled=True)
+            if self.pk:
+                enabled_settings = enabled_settings.exclude(pk=self.pk)
+            if enabled_settings.exists():
+                raise ValidationError(
+                    "Может быть только одна активная запись настроек сайта."
+                )
+
 
 class Page(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
@@ -15,6 +87,13 @@ class Page(models.Model):
         blank=True, null=True, verbose_name="Meta Description"
     )
     is_homepage = models.BooleanField(default=False, verbose_name="Главная страница")
+    logo = models.ImageField(
+        upload_to="site_logos/",
+        verbose_name="Логотип",
+        help_text="Загрузите логотип сайта.",
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.title
@@ -97,9 +176,7 @@ class Image(models.Model):
         max_length=255, blank=True, null=True, verbose_name="Альтернативный текст"
     )
     url = models.URLField(blank=True, null=True, verbose_name="Ссылка (для галереи)")
-    title = models.CharField(
-        max_length=255,  verbose_name="Заголовок"
-    )
+    title = models.CharField(max_length=255, verbose_name="Заголовок")
     text = models.TextField(
         blank=True, null=True, verbose_name="Описание (для галереи)"
     )

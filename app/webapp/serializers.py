@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Page, Block, Image
+from .models import Page, Block, Image, SiteSettings
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -24,3 +24,11 @@ class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = "__all__"
+
+class SiteSettingsSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели SiteSettings.
+    """
+    class Meta:
+        model = SiteSettings
+        fields = '__all__'

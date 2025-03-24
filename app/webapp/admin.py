@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Page, Block, Image
+from django.utils.html import format_html
+
+from .models import Page, Block, Image, SiteSettings
 
 
 # Инлайн для изображений
@@ -40,3 +42,37 @@ class ImageAdmin(admin.ModelAdmin):
     list_display = ("title", "image", "alt_text", "block", "order")
     list_filter = ("block",)
     search_fields = ("alt_text", "title")
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    """
+    Админка для модели SiteSettings.
+    """
+    list_display = ('phone_number', 'logo_preview', 'footer_text_short', 'is_enabled')
+    list_filter = ('is_enabled',)
+    search_fields = ('phone_number', 'footer_text')
+    actions = ['make_enabled']
+
+    fieldsets = (
+        (None, {
+            'fields': ('phone_number', 'logo', 'footer_text', 'is_enabled'),
+        }),
+    )
+
+    def logo_preview(self, obj):
+        """
+        Возвращает HTML-представление логотипа для предпросмотра.
+        """
+        if obj.logo:
+            return format_html('<img src="{}" width="50" height="50" />', obj.logo.url)
+        return "Нет логотипа"
+
+    logo_preview.short_description = 'Логотип'
+
+    def footer_text_short(self, obj):
+        """
+        Возвращает укороченную версию текста футера.
+        """
+        return obj.footer_text[:50] + "..." if len(obj.footer_text) > 50 else obj.footer_text
+
+    footer_text_short.short_description = 'Текст футера'

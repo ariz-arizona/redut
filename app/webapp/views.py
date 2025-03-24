@@ -1,8 +1,12 @@
-from rest_framework import viewsets, status
-from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from .models import Page
-from .serializers import PageSerializer
+
+from rest_framework import viewsets, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from .models import Page, SiteSettings
+
+from .serializers import SiteSettingsSerializer, PageSerializer
 
 
 class PageViewSet(viewsets.ModelViewSet):
@@ -31,3 +35,22 @@ class PageViewSet(viewsets.ModelViewSet):
         page = get_object_or_404(Page, slug=slug)
         serializer = self.get_serializer(page)
         return Response(serializer.data)
+
+class EnabledSiteSettingsView(APIView):
+    """
+    Возвращает активные настройки сайта (is_enabled=True).
+    """
+    def get(self, request, *args, **kwargs):
+        # Получаем активную запись
+        site_settings = SiteSettings.get_enabled()
+        
+        if site_settings:
+            # Сериализуем данные
+            serializer = SiteSettingsSerializer(site_settings)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            # Если активной записи нет
+            return Response(
+                {"detail": "Активные настройки сайта не найдены."},
+                status=status.HTTP_404_NOT_FOUND
+            )

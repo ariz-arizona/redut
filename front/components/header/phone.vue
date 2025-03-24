@@ -1,10 +1,16 @@
 <script setup lang="ts">
-const phone = '+7 (978) 888 55 22'
+import { parsePhoneNumber } from 'libphonenumber-js/min';
+
+const props = defineProps<{
+    phone: string;
+}>();
+
 </script>
+
 <template>
-    <div>
-        <a :href="`tel:${phone.replace(/[^+\d]/g, '')}`">
-            {{ phone }}
+    <div v-if="props.phone">
+        <a :href="`tel:${parsePhoneNumber(props.phone).getURI()}`">
+            {{ parsePhoneNumber(props.phone, 'RU').formatInternational() }}
         </a>
     </div>
 </template>

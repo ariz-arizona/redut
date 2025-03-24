@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import("assets/tailwind.scss");
+const { fetchData } = useApiFetch()
+const { data: settings } = fetchData<SiteSettings>('site-settings')
 </script>
 <template>
   <div>
     <div class="bg-primary-800 text-white">
       <div class="container flex items-center gap-4 p-2">
-        <HeaderLogo />
+        <HeaderLogo :logo="settings?.logo" />
         <HeaderMenu class="grow" />
-        <HeaderPhone />
+        <template v-if="settings?.phone_number">
+          <HeaderPhone :phone="settings?.phone_number" />
+        </template>
       </div>
     </div>
     <NuxtLayout>
@@ -15,16 +19,12 @@ import("assets/tailwind.scss");
         <NuxtPage />
       </Suspense>
     </NuxtLayout>
-    <div class="bg-primary-800 text-white">
+    <div class="bg-primary-800 text-white mt-8">
       <div class="container flex items-center gap-4 p-2 py-8">
         <div class="grid grid-cols-3">
           <div class="col-span-2">
-            <div class="text-sm">
-              Информация о ценах, планировках, а также специальных предложениях, размещённых на данном сайте, носит
-              исключительно ознакомительный характер, не является публичной офертой, определяемой положениями Статьи 437
-              Гражданского кодекса Российской Федерации. Представленные на сайте изображения объектов долевого
-              строительства носят предварительный ознакомительный характер и могут отличаться от фактических проектных
-              решений, реализуемых застройщиком.
+            <div class="text-xs">
+              {{ settings?.footer_text }}
             </div>
           </div>
         </div>

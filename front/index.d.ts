@@ -31,3 +31,10 @@ interface PageData {
     slug: string;
     title: string;
 }
+interface SiteSettings {
+    id: number; // Уникальный идентификатор
+    phone_number: string; // Номер телефона
+    logo: string | null; // Логотип (путь к файлу или null)
+    footer_text: string; // Текст футера
+    is_enabled: boolean; // Флаг активности
+}

@@ -19,7 +19,7 @@ const imgBase = config.public.imgBase
 
 // Настройки Swiper
 const swiperOptions: SwiperOptions = {
-    slidesPerView: 4, // Количество видимых слайдов
+    slidesPerView: 'auto', // Количество видимых слайдов
     loop: false, // Зацикливание
     autoplay: { delay: 5000, disableOnInteraction: false }, // Автопрокрутка
     freeMode: true,
@@ -34,8 +34,8 @@ const swiperRef = ref(null);
 </script>
 <template>
     <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="w-screen">
-        <swiper-slide v-for="(slide, index) in props.slides" :key="index">
-            <div class="bg-no-repeat bg-cover bg-center h-96 rounded-2xl overflow-hidden flex justify-start align-bottom p-4"
+        <swiper-slide v-for="(slide, index) in props.slides" :key="index" >
+            <div class="bg-no-repeat bg-cover bg-center w-52 h-96 rounded-2xl overflow-hidden flex justify-start align-bottom p-4"
                 :style="[{ backgroundImage: `url(${imgBase}/${slide.image})` }]">
                 <div class="self-end">
                     <h3 class="font-bold text-2xl">{{ slide.title }}</h3>

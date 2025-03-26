@@ -13,6 +13,7 @@ x-common-settings: &common_settings
     project_name: ${PROJECT_NAME}
   networks:
     - backend_network
+  restart: always  # Добавляем перезапуск для всех сервисов
 
 services:
   app:
@@ -28,7 +29,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s 
-
 
   celery:
     <<: *common_settings
@@ -53,12 +53,7 @@ services:
       - backend_network
     depends_on:
       - app
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:3000"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 3
-    #   start_period: 10s 
+    restart: always  # Добавляем перезапуск для фронтенда
 
   redis:
     image: redis:7
@@ -73,6 +68,7 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+    restart: always  # Добавляем перезапуск для Redis
 
   db:
     image: postgres:15
@@ -89,6 +85,7 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+    restart: always  # Добавляем перезапуск для PostgreSQL
 
   nginx:
     image: nginx:latest
@@ -106,6 +103,7 @@ services:
       - backend_network
     labels:
       project_name: ${PROJECT_NAME}
+    restart: always  # Добавляем перезапуск для Nginx
 
   dozzle:
     image: amir20/dozzle:latest
@@ -125,6 +123,7 @@ services:
       - backend_network
     labels:
       project_name: ${PROJECT_NAME}  # Метка для dozzle
+    restart: always  # Добавляем перезапуск для Dozzle
 
 # Сети
 networks:

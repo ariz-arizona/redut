@@ -9,7 +9,6 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         fields = "__all__"
 
-
 class BlockSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
 
@@ -29,6 +28,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели SiteSettings.
     """
+    logo = serializers.FileField(use_url=False)
     class Meta:
         model = SiteSettings
         fields = '__all__'

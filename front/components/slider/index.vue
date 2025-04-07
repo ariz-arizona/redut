@@ -4,6 +4,8 @@ import type { PropType } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Autoplay, Navigation, EffectFade } from 'swiper/modules';
 
+const { setMainSliderRef } = useMainSlider();
+
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-fade';
@@ -32,14 +34,16 @@ const swiperOptions: SwiperOptions = {
 const swiperRef = ref(null);
 </script>
 <template>
-    <div class="h-[calc(100vh-8rem)] min-h-[300px] overflow-hidden relative" v-if="props.slides">
-        <swiper ref="swiperRef" v-bind="swiperOptions as any" class="h-full" v-if="props.slides.length > 1">
-            <swiper-slide v-for="(slide, index) in props.slides" :key="index">
-                <SliderItem :slide="slide" />
-            </swiper-slide>
-        </swiper>
-        <SliderItem :slide="props.slides[0]" v-else />
-    </div>
+    <template v-if="props.slides">
+        <div class="h-[calc(100vh-8rem)] min-h-[300px] overflow-hidden relative" :ref="setMainSliderRef">
+            <swiper ref="swiperRef" v-bind="swiperOptions as any" class="h-full" v-if="props.slides.length > 1">
+                <swiper-slide v-for="(slide, index) in props.slides" :key="index">
+                    <SliderItem :slide="slide" />
+                </swiper-slide>
+            </swiper>
+            <SliderItem :slide="props.slides[0]" v-else />
+        </div>
+    </template>
 </template>
 <style>
 .swiper-button-next,

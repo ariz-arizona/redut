@@ -1,11 +1,9 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 
 from markdownfield.models import MarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
-
-from django.db import models
-
 
 class SiteSettings(models.Model):
     """
@@ -18,12 +16,13 @@ class SiteSettings(models.Model):
         help_text="Введите номер телефона в международном формате (например, +79991234567).",
     )
 
-    logo = models.ImageField(
+    logo = models.FileField(
         upload_to="site_logos/",
         verbose_name="Логотип",
         help_text="Загрузите логотип сайта.",
         blank=True,
         null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'svg'])]
     )
 
     footer_text = models.TextField(

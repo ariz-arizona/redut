@@ -2,15 +2,21 @@
 import("~/assets/tailwind.scss");
 const { fetchData } = useApiFetch()
 const { data: settings } = fetchData<SiteSettings>('site-settings')
+
+const menuRef = ref()
+const { isVisible: isSliderVisible } = useMainSlider();
 </script>
 <template>
     <div>
-        <div class="bg-primary-800/75 text-white">
-            <div class="container flex items-center gap-4 p-2">
+        <div class="w-full text-provincial-pink-200 z-10" :ref="menuRef" :class="[
+            isSliderVisible ? 'absolute top-20' : 'fixed bg-primary-800/75',
+            'transition-all duration-300 ease-in-out'
+        ]">
+            <div class="container grid grid-cols-3 items-center gap-4 p-2">
+                <HeaderMenu />
                 <HeaderLogo :logo="settings?.logo" />
-                <HeaderMenu class="grow" />
                 <template v-if="settings?.phone_number">
-                    <HeaderPhone :phone="settings?.phone_number" />
+                    <HeaderPhone :phone="settings?.phone_number" class="text-right" />
                 </template>
             </div>
         </div>

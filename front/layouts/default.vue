@@ -5,7 +5,7 @@ const { data: settings } = fetchData<SiteSettings>('site-settings')
 </script>
 <template>
     <div>
-        <div class="bg-primary-800 text-white">
+        <div class="bg-primary-800/75 text-white">
             <div class="container flex items-center gap-4 p-2">
                 <HeaderLogo :logo="settings?.logo" />
                 <HeaderMenu class="grow" />

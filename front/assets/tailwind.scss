@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-  @apply font-euclid;
+  @apply font-euclid bg-primary-950 text-provincial-pink-100;
 }
 
 .container {

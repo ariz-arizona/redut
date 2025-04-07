@@ -22,7 +22,8 @@ $font-path: '/assets/fonts';
 @mixin import-font-otf($font-family, $file-name, $weight, $style: normal) {
   @font-face {
     font-family: $font-family;
-    src: url('#{$font-path}/#{$font-family}/#{$file-name}.otf') format('opentype'); // Fallback для старых браузеров
+    src: url('#{$font-path}/#{$font-family}/#{$file-name}.otf')
+      format('opentype'); // Fallback для старых браузеров
     font-weight: $weight;
     font-style: $style;
   }
@@ -217,5 +218,10 @@ $font-path: '/assets/fonts';
   @include import-font('EuclidSquare', 'EuclidSquare-BoldItalic', 700, italic);
 }
 
+@mixin import-wonder-garden() {
+  @include import-font('WonderGardenScript', 'WonderGardenScript-Regular', 400, normal);
+}
+
 @include import-bleu-empire();
 @include import-euclid-square();
+@include import-wonder-garden();

@@ -16,9 +16,6 @@ const props = defineProps({
     }
 })
 
-const config = useRuntimeConfig()
-const imgBase = config.public.imgBase
-
 // Настройки Swiper
 const swiperOptions: SwiperOptions = {
     modules: [Autoplay, Navigation, EffectFade], // Подключаем модули
@@ -35,18 +32,13 @@ const swiperOptions: SwiperOptions = {
 const swiperRef = ref(null);
 </script>
 <template>
-    <div class="h-[calc(100vh-8rem)] min-h-[300px] overflow-hidden relative">
-        <swiper ref="swiperRef" v-bind="swiperOptions as any" class="h-full">
+    <div class="h-[calc(100vh-8rem)] min-h-[300px] overflow-hidden relative" v-if="props.slides">
+        <swiper ref="swiperRef" v-bind="swiperOptions as any" class="h-full" v-if="props.slides.length > 1">
             <swiper-slide v-for="(slide, index) in props.slides" :key="index">
-                <div class="h-full bg-[100%_auto] bg-bottom" :style="[{ backgroundImage: `url(${imgBase}/${slide.image})` }]">
-                    <div
-                        class="container m-auto select-none absolute text-white text-2xl bottom-2 right-2 left-2 text-left font-normal">
-                        <h3>{{ slide.title }}</h3>
-                        <p>{{ slide.alt_text }}</p>
-                    </div>
-                </div>
+                <SliderItem :slide="slide" />
             </swiper-slide>
         </swiper>
+        <SliderItem :slide="props.slides[0]" v-else />
     </div>
 </template>
 <style>
@@ -64,6 +56,7 @@ const swiperRef = ref(null);
 }
 
 @media(min-width:1024px) {
+
     .swiper-button-next,
     .swiper-button-prev {
         @apply right-1/2 left-[auto] top-[auto] bottom-4;

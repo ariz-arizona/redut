@@ -9,6 +9,15 @@ const imgBase = config.public.imgBase
 
 const path = ['page', route.params.slug].filter(Boolean)
 const { data, status, error } = await fetchData<PageData>(path.join('/'))
+
+if (status.value == 'error') {
+    showError({
+        statusCode: error.value?.statusCode,
+        message: `Ошибка при запросе к ${path.join('/')}`,
+        fatal: true, // Указывает, что ошибка фатальная
+    })
+}
+
 useSeoMeta({
     title: data.value?.title,
     description: data.value?.meta_description,
@@ -101,8 +110,9 @@ watchEffect(() => {
                 <ul class="menu flex gap-2 grow-1">
                     <template v-for="block in blocksByType(['text', 'gallery'])" :key="block.slug">
                         <li>
-                            <NuxtLink :href="`#${block.slug}`" :class="{ 'active': isSticky && activeBlock === block.slug }">{{
-                                block.menu_title || block.title }}</NuxtLink>
+                            <NuxtLink :href="`#${block.slug}`"
+                                :class="{ 'active': isSticky && activeBlock === block.slug }">{{
+                                    block.menu_title || block.title }}</NuxtLink>
                         </li>
                     </template>
                 </ul>

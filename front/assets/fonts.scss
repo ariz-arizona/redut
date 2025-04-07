@@ -1,41 +1,221 @@
-// fonts.scss
+// Путь к шрифтам
+$font-path: '/assets/fonts';
 
-// Путь к папке с шрифтами
-$font-path: '/assets/fonts/Ruberoid';
-
-// Миксин для импорта шрифтов
+// Базовый миксин для импорта шрифтов
 @mixin import-font($font-family, $file-name, $weight, $style: normal) {
   @font-face {
     font-family: $font-family;
-    src: url('#{$font-path}/#{$file-name}.otf') format('opentype');
+    src: url('#{$font-path}/#{$font-family}/#{$file-name}.eot?#iefix')
+        format('embedded-opentype'),
+      // IE9 Compat Modes
+      url('#{$font-path}/#{$font-family}/#{$file-name}.woff2') format('woff2'),
+      // Современные браузеры
+      url('#{$font-path}/#{$font-family}/#{$file-name}.woff') format('woff'),
+      // Широкая поддержка
+      url('#{$font-path}/#{$font-family}/#{$file-name}.ttf') format(
+          'truetype'
+        ); // Fallback для некоторых систем
     font-weight: $weight;
     font-style: $style;
   }
 }
+@mixin import-font-otf($font-family, $file-name, $weight, $style: normal) {
+  @font-face {
+    font-family: $font-family;
+    src: url('#{$font-path}/#{$font-family}/#{$file-name}.otf') format('opentype'); // Fallback для старых браузеров
+    font-weight: $weight;
+    font-style: $style;
+  }
+}
+// Миксин для подключения всех шрифтов SangBleuKingdom
+@mixin import-bleu-kingdom() {
+  // Air
+  @include import-font-otf(
+    'SangBleuKingdom',
+    'SangBleuKingdom-Air',
+    100,
+    normal
+  );
+  @include import-font-otf(
+    'SangBleuKingdom',
+    'SangBleuKingdom-AirItalic',
+    100,
+    italic
+  );
 
-// Импорт всех шрифтов Ruberoid
-@include import-font('Ruberoid', 'Ruberoid-Thin', 100, normal);
-@include import-font('Ruberoid', 'Ruberoid-ThinOblique', 100, italic);
+  // Light
+  @include import-font-otf(
+    'SangBleuKingdom',
+    'SangBleuKingdom-Light',
+    300,
+    normal
+  );
+  @include import-font-otf(
+    'SangBleuKingdom',
+    'SangBleuKingdom-LightItalic',
+    300,
+    italic
+  );
 
-@include import-font('Ruberoid', 'Ruberoid-UltraLight', 200, normal);
-@include import-font('Ruberoid', 'Ruberoid-UltraLightOblique', 200, italic);
+  // Regular
+  @include import-font-otf(
+    'SangBleuKingdom',
+    'SangBleuKingdom-Regular',
+    400,
+    normal
+  );
+  @include import-font-otf(
+    'SangBleuKingdom',
+    'SangBleuKingdom-RegularItalic',
+    400,
+    italic
+  );
 
-@include import-font('Ruberoid', 'Ruberoid-ExtraLight', 300, normal);
-@include import-font('Ruberoid', 'Ruberoid-ExtraLightOblique', 300, italic);
+  // Medium
+  @include import-font-otf(
+    'SangBleuKingdom',
+    'SangBleuKingdom-Medium',
+    500,
+    normal
+  );
+  @include import-font-otf(
+    'SangBleuKingdom',
+    'SangBleuKingdom-MediumItalic',
+    500,
+    italic
+  );
 
-@include import-font('Ruberoid', 'Ruberoid-Light', 400, normal);
-@include import-font('Ruberoid', 'Ruberoid-LightOblique', 400, italic);
+  // Bold
+  @include import-font-otf(
+    'SangBleuKingdom',
+    'SangBleuKingdom-Bold',
+    700,
+    normal
+  );
+  @include import-font-otf(
+    'SangBleuKingdom',
+    'SangBleuKingdom-BoldItalic',
+    700,
+    italic
+  );
+}
 
-@include import-font('Ruberoid', 'Ruberoid-Regular', 500, normal);
-@include import-font('Ruberoid', 'Ruberoid-Oblique', 500, italic);
+// Миксин для подключения всех шрифтов Bleu Empire
+@mixin import-bleu-empire() {
+  // Regular
+  @include import-font-otf(
+    'SangBleuEmpire',
+    'SangBleuEmpire-Regular',
+    400,
+    normal
+  );
+  @include import-font-otf(
+    'SangBleuEmpire',
+    'SangBleuEmpire-RegularItalic',
+    400,
+    italic
+  );
 
-@include import-font('Ruberoid', 'Ruberoid-Medium', 600, normal);
-@include import-font('Ruberoid', 'Ruberoid-MediumOblique', 600, italic);
+  // Medium
+  @include import-font-otf(
+    'SangBleuEmpire',
+    'SangBleuEmpire-Medium',
+    500,
+    normal
+  );
+  @include import-font-otf(
+    'SangBleuEmpire',
+    'SangBleuEmpire-MediumItalic',
+    500,
+    italic
+  );
 
-@include import-font('Ruberoid', 'Ruberoid-SemiBold', 700, normal);
-@include import-font('Ruberoid', 'Ruberoid-SemiBoldOblique', 700, italic);
+  // Bold
+  @include import-font-otf(
+    'SangBleuEmpire',
+    'SangBleuEmpire-Bold',
+    700,
+    normal
+  );
+  @include import-font-otf(
+    'SangBleuEmpire',
+    'SangBleuEmpire-BoldItalic',
+    700,
+    italic
+  );
 
-@include import-font('Ruberoid', 'Ruberoid-Bold', 800, normal);
-@include import-font('Ruberoid', 'Ruberoid-BoldOblique', 800, italic);
+  // Black
+  @include import-font-otf(
+    'SangBleuEmpire',
+    'SangBleuEmpire-Black',
+    900,
+    normal
+  );
+  @include import-font-otf(
+    'SangBleuEmpire',
+    'SangBleuEmpire-BlackItalic',
+    900,
+    italic
+  );
+}
+// Миксин для подключения всех шрифтов Ruberoid
+@mixin import-ruberoid() {
+  // Thin
+  @include import-font('Ruberoid', 'Ruberoid-Thin', 100, normal);
+  @include import-font('Ruberoid', 'Ruberoid-ThinItalic', 100, italic);
 
-@include import-font('Ruberoid', 'Ruberoid-ExtraBold', 900, normal);
+  // UltraLight
+  @include import-font('Ruberoid', 'Ruberoid-UltraLight', 200, normal);
+  @include import-font('Ruberoid', 'Ruberoid-UltraLightItalic', 200, italic);
+
+  // Light
+  @include import-font('Ruberoid', 'Ruberoid-Light', 300, normal);
+  @include import-font('Ruberoid', 'Ruberoid-LightItalic', 300, italic);
+
+  // Regular
+  @include import-font('Ruberoid', 'Ruberoid-Regular', 400, normal);
+  @include import-font('Ruberoid', 'Ruberoid-RegularItalic', 400, italic);
+
+  // Medium
+  @include import-font('Ruberoid', 'Ruberoid-Medium', 500, normal);
+  @include import-font('Ruberoid', 'Ruberoid-MediumItalic', 500, italic);
+
+  // Bold
+  @include import-font('Ruberoid', 'Ruberoid-Bold', 700, normal);
+  @include import-font('Ruberoid', 'Ruberoid-BoldItalic', 700, italic);
+}
+
+// Миксин для подключения всех шрифтов EuclidSquare
+@mixin import-euclid-square() {
+  // Light
+  @include import-font('EuclidSquare', 'EuclidSquare-Light', 300, normal);
+  @include import-font('EuclidSquare', 'EuclidSquare-LightItalic', 300, italic);
+
+  // Regular
+  @include import-font('EuclidSquare', 'EuclidSquare-Regular', 400, normal);
+
+  // Medium
+  @include import-font('EuclidSquare', 'EuclidSquare-Medium', 500, normal);
+  @include import-font(
+    'EuclidSquare',
+    'EuclidSquare-MediumItalic',
+    500,
+    italic
+  );
+
+  // SemiBold
+  @include import-font('EuclidSquare', 'EuclidSquare-SemiBold', 600, normal);
+  @include import-font(
+    'EuclidSquare',
+    'EuclidSquare-SemiBoldItalic',
+    600,
+    italic
+  );
+
+  // Bold
+  @include import-font('EuclidSquare', 'EuclidSquare-Bold', 700, normal);
+  @include import-font('EuclidSquare', 'EuclidSquare-BoldItalic', 700, italic);
+}
+
+@include import-bleu-empire();
+@include import-euclid-square();

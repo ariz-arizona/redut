@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-  @apply font-ruberoid;
+  @apply font-euclid;
 }
 
 .container {
@@ -26,5 +26,5 @@ body {
 }
 
 .title {
-  @apply text-4xl font-black mt-2 mb-8;
+  @apply text-4xl font-black mt-2 mb-8 font-bleu;
 }

@@ -82,7 +82,6 @@ onMounted(async () => {
 
 // Sticky-эффект при скролле
 watchEffect(() => {
-    console.log(initialMenuPosition)
     if (initialMenuPosition.value !== null) {
         isSticky.value = scrollY.value > initialMenuPosition.value; // Меню становится sticky, если скролл ниже начальной позиции
 

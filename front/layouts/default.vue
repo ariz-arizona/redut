@@ -9,10 +9,10 @@ const { isVisible: isSliderVisible } = useMainSlider();
 <template>
     <div>
         <div class="w-full text-provincial-pink-200 z-10" :ref="menuRef" :class="[
-            isSliderVisible ? 'absolute top-20' : 'fixed bg-primary-800/75',
+            isSliderVisible ? 'h-40 absolute top-20' : 'h-20 fixed bg-primary-800/75',
             'transition-all duration-300 ease-in-out'
         ]">
-            <div class="container grid grid-cols-3 items-center gap-4 p-2">
+            <div class="container grid grid-cols-3 items-center gap-4 px-2 h-full">
                 <HeaderMenu />
                 <HeaderLogo :logo="settings?.logo" />
                 <template v-if="settings?.phone_number">

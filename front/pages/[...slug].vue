@@ -125,7 +125,7 @@ watchEffect(() => {
                     </div>
                     <div class="grid grid-cols-3 items-center gap-2">
                         <div :class="[{ 'col-span-3': !block.images.length, 'col-span-2': block.images.length }]">
-                            <div class="content prose" v-html="block.content_rendered" />
+                            <div class="content prose prose-invert" v-html="block.content_rendered" />
                         </div>
                         <div class="col-span-1" v-if="block.images.length">
                             <template v-for="img in block.images.slice(0, 1)">

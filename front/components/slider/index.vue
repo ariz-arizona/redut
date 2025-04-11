@@ -35,8 +35,8 @@ const swiperRef = ref(null);
 </script>
 <template>
     <template v-if="props.slides">
-        <div class="h-[calc(100vh-8rem)] min-h-[300px] overflow-visible relative" :ref="setMainSliderRef">
-            <swiper ref="swiperRef" v-bind="swiperOptions as any" class="h-full" v-if="props.slides.length > 1">
+        <div class="h-[calc(100vh-8rem)] min-h-[300px] overflow-visible relative" :ref="(setMainSliderRef as any)">
+            <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="h-full" v-if="props.slides.length > 1">
                 <swiper-slide v-for="(slide, index) in props.slides" :key="index">
                     <SliderItem :slide="slide" />
                 </swiper-slide>

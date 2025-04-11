@@ -26,5 +26,8 @@ body {
 }
 
 .title {
-  @apply text-4xl font-black mt-2 mb-8 font-bleu;
+  @apply leading-normal text-3xl font-light font-euclid uppercase tracking-[0.2rem];
+}
+.content {
+  @apply leading-loose text-xs uppercase tracking-[0.2rem];
 }

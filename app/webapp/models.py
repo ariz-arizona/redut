@@ -5,6 +5,7 @@ from django.core.validators import FileExtensionValidator
 from markdownfield.models import MarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 
+
 class SiteSettings(models.Model):
     """
     Модель для хранения общих сведений о сайте.
@@ -22,7 +23,9 @@ class SiteSettings(models.Model):
         help_text="Загрузите логотип сайта.",
         blank=True,
         null=True,
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'svg'])]
+        validators=[
+            FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "svg"])
+        ],
     )
 
     footer_text = models.TextField(
@@ -112,6 +115,7 @@ class Page(models.Model):
 class Block(models.Model):
     BLOCK_TYPES = [
         ("text", "Текстовый блок"),
+        ("text_right", "Текст справа"),
         ("slider", "Слайдер"),
         ("gallery", "Галерея"),
     ]
@@ -128,6 +132,9 @@ class Block(models.Model):
         choices=BLOCK_TYPES, max_length=20, verbose_name="Тип блока"
     )
     title = models.CharField(max_length=255, verbose_name="Заголовок")
+    sub_title = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Подзаголовок"
+    )
     slug = models.SlugField(verbose_name="Slug")
     menu_title = models.CharField(
         max_length=255,

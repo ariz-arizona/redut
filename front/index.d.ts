@@ -8,7 +8,7 @@ interface Image {
     title: string | null;
     text: string | null;
 }
-type BlockType = 'text' | 'gallery' | 'slider'
+type BlockType = 'text' | 'text_right' | 'gallery' | 'slider'
 interface Block {
     content: string;
     content_rendered: string;
@@ -17,6 +17,7 @@ interface Block {
     order: number;
     page: number;
     title: string;
+    sub_title: string | null;
     menu_title: string | null;
     slug: string;
     type: BlockType;

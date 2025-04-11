@@ -117,20 +117,17 @@ watchEffect(() => {
                 </ul>
             </div>
         </nav>
-        <template v-for="block in blocksByType(['text', 'gallery'])" :key="block.id">
-            <div :id="block.slug" v-if="block.type == 'text'">
+        <template v-for="block in blocksByType(['text_right', 'gallery'])" :key="block.id">
+            <div :id="block.slug" v-if="block.type == 'text_right'">
                 <div class="container pt-4">
-                    <div class="title">
-                        {{ block.title }}
-                    </div>
-                    <div class="grid grid-cols-3 items-center gap-2">
-                        <div :class="[{ 'col-span-3': !block.images.length, 'col-span-2': block.images.length }]">
-                            <div class="content prose prose-invert" v-html="block.content_rendered" />
-                        </div>
-                        <div class="col-span-1" v-if="block.images.length">
-                            <template v-for="img in block.images.slice(0, 1)">
-                                <NuxtImg :src="`${imgBase}/${img.image}`" :alt="(img.alt_text as string)" />
-                            </template>
+                    <div class="grid grid-cols-2 items-center gap-2">
+                        <div class="col-span-1 col-start-2">
+                            <div class="title mt-16 mb-20">
+                                {{ block.title }}
+                                <span v-if="block.sub_title" class="text-provincial-pink-400">{{ block.sub_title
+                                }}</span>
+                            </div>
+                            <div class="content mb-20 prose prose-invert" v-html="block.content_rendered" />
                         </div>
                     </div>
                 </div>

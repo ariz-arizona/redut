@@ -154,7 +154,7 @@ class Block(models.Model):
     content_rendered = models.TextField(blank=True, null=True, editable=False)
 
     def __str__(self):
-        return f"{self.get_type_display()} (Order: {self.order})"
+        return f"{self.get_type_display()} {self.title} (Order: {self.order})"
 
     class Meta:
         ordering = ["page", "order"]

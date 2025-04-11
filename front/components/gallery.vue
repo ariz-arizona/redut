@@ -19,28 +19,31 @@ const imgBase = config.public.imgBase
 
 // Настройки Swiper
 const swiperOptions: SwiperOptions = {
-    slidesPerView: 'auto', // Количество видимых слайдов
-    loop: false, // Зацикливание
-    autoplay: { delay: 5000, disableOnInteraction: false }, // Автопрокрутка
+    slidesPerView: 'auto', // Автоматическая ширина слайдов
+    spaceBetween: 48, // Расстояние между слайдами
+    slidesOffsetBefore: -48,
+    loop: true, // Бесконечная прокрутка
+    autoplay: { 
+        delay: 5000, // Задержка между переключениями (в миллисекундах)
+        disableOnInteraction: false, // Продолжать автопрокрутку даже после взаимодействия
+    },
     freeMode: true,
-    slidesOffsetBefore: window.innerWidth > 1024 ? (window.innerWidth - 1024) * 0.5 : 16,
-    effect: 'fade', 
+    effect: 'fade',
     fadeEffect: { crossFade: true }, // Плавное перекрытие слайдов
-    spaceBetween: 24,
+    centeredSlides: true, // Центрирование активного слайда
+    grabCursor: true, // Включение курсора "рука" для перетаскивания
+    allowTouchMove: true, // Разрешение перетаскивания
 };
 
 // Ссылка на Swiper для управления (например, пауза/воспроизведение)
 const swiperRef = ref(null);
 </script>
 <template>
-    <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="w-screen">
-        <swiper-slide v-for="(slide, index) in props.slides" :key="index" >
-            <div class="bg-no-repeat bg-cover bg-center w-52 h-96 rounded-2xl overflow-hidden flex justify-start align-bottom p-4"
+    <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="w-full">
+        <swiper-slide v-for="(slide, index) in props.slides" :key="index" class="w-auto">
+            <div class="bg-no-repeat bg-cover bg-center h-[50vh] flex justify-start align-bottom p-4"
                 :style="[{ backgroundImage: `url(${imgBase}/${slide.image})` }]">
-                <div class="self-end">
-                    <h3 class="font-bold text-2xl">{{ slide.title }}</h3>
-                    <p>{{ slide.text }}</p>
-                </div>
+                <NuxtImg :src="`${imgBase}/${slide.image}`" class="invisible" />
             </div>
         </swiper-slide>
     </swiper>

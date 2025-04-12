@@ -151,7 +151,7 @@ watchEffect(() => {
                     </div>
                 </div>
             </div>
-            <div :id="block.slug" class="overflow-hidden relative" v-else>
+            <div :id="block.slug" v-if="block.type == 'gallery'" class="overflow-hidden relative">
                 <div
                     class="text-[50vh] text-center text-sandal-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 leading-none">
                     {{ block.title }}

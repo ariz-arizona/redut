@@ -8,16 +8,23 @@ const { isVisible: isSliderVisible } = useMainSlider();
 </script>
 <template>
     <div>
-        <div class="w-full text-provincial-pink-200 z-10" :ref="menuRef" :class="[
-            isSliderVisible ? 'h-40 absolute top-20' : 'h-20 fixed bg-primary-800/75',
+        <div class="w-full z-10" :ref="menuRef" :class="[
+            isSliderVisible ? 'h-52 absolute top-20' : 'h-32 fixed bg-primary-800/75',
             'transition-all duration-300 ease-in-out'
         ]">
-            <div class="container grid grid-cols-3 items-center gap-4 px-2 h-full">
-                <HeaderMenu />
+            <div class="container grid grid-cols-[1fr_14rem_1fr] items-start gap-4 px-2 h-full"
+                :class="[isSliderVisible ? 'items-start' : 'items-center']">
+                <div class="flex gap-8 items-center basetext">
+                    <HeaderMenu />
+                    <NuxtLink to="/">Контакты</NuxtLink>
+                </div>
                 <HeaderLogo :logo="settings?.logo" />
-                <template v-if="settings?.phone_number">
-                    <HeaderPhone :phone="settings?.phone_number" class="text-right" />
-                </template>
+                <div class="flex justify-end gap-8 items-center">
+                    <template v-if="settings?.phone_number">
+                        <HeaderPhone :phone="settings?.phone_number" />
+                    </template>
+                    <HeaderChange class="basetext" />
+                </div>
             </div>
         </div>
         <Suspense>

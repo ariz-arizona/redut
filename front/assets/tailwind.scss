@@ -5,11 +5,11 @@
 @tailwind utilities;
 
 body {
-  @apply font-euclid bg-primary-950 text-provincial-pink-100;
+  @apply font-euclid bg-primary-950 text-sandal-100;
 }
 
 .container {
-  @apply mx-auto w-full max-w-screen-lg px-4;
+  @apply mx-auto w-full max-w-screen-xl px-4;
 }
 
 .menu {
@@ -28,6 +28,9 @@ body {
 .title {
   @apply leading-normal text-3xl font-light font-euclid uppercase tracking-[0.2rem];
 }
-.content {
+.basetext {
   @apply leading-loose text-xs uppercase tracking-[0.2rem];
+}
+.menubtn {
+  @apply border rounded-full border-sandal-500 px-4 py-2 inline-flex gap-2 items-center cursor-pointer;
 }

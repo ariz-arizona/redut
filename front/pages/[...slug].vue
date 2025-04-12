@@ -124,17 +124,18 @@ watchEffect(() => {
                         <div class="col-span-1 col-start-2">
                             <div class="title mt-16 mb-20">
                                 {{ block.title }}
-                                <span v-if="block.sub_title" class="text-provincial-pink-400">{{ block.sub_title
-                                    }}</span>
+                                <span v-if="block.sub_title" class="text-sandal-400">
+                                    {{ block.sub_title }}
+                                </span>
                             </div>
-                            <div class="content mb-20 prose prose-invert" v-html="block.content_rendered" />
+                            <div class="basetext mb-20 prose prose-invert" v-html="block.content_rendered" />
                         </div>
                     </div>
                 </div>
             </div>
             <div :id="block.slug" class="overflow-hidden relative" v-else>
                 <div
-                    class="text-[50vh] text-center text-provincial-pink-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 leading-none">
+                    class="text-[50vh] text-center text-sandal-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 leading-none">
                     {{ block.title }}
                 </div>
                 <Gallery :slides="block.images" />

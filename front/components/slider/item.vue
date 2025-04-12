@@ -23,7 +23,7 @@ const imgBase = config.public.imgBase
         <div class="max-w-[75%] select-none leading-none relative">
           <h3 class="text-[12vmin] font-bleu" v-html="slide.title"></h3>
           <p v-if="slide.alt_text"
-            class="font-wonder text-[24vmin] text-provincial-pink-200 absolute right-0 top-1/4 left-3/4">
+            class="font-wonder text-[24vmin] text-sandal-200 absolute right-0 top-1/4 left-3/4">
             {{ slide.alt_text }}
           </p>
         </div>

@@ -8,7 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-    <div v-if="props.phone">
+    <div v-if="props.phone" class="text-3xl">
         <a :href="`tel:${parsePhoneNumber(props.phone).getURI()}`">
             {{ parsePhoneNumber(props.phone, 'RU').formatInternational() }}
         </a>

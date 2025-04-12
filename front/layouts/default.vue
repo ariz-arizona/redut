@@ -16,7 +16,7 @@ const { isVisible: isSliderVisible } = useMainSlider();
                 :class="[isSliderVisible ? 'items-start' : 'items-center']">
                 <div class="gap-2 xl:gap-8 items-center basetext hidden md:flex flex-wrap xl:flex-nowrap">
                     <HeaderMenu />
-                    <NuxtLink to="/">Контакты</NuxtLink>
+                    <NuxtLink to="/contacts">Контакты</NuxtLink>
                 </div>
                 <HeaderLogo :logo="settings?.logo" />
                 <div class="justify-end gap-2 xl:gap-8 items-center hidden md:flex flex-wrap xl:flex-nowrap">

@@ -25,7 +25,7 @@ export function useMainSlider() {
                 (entries) => {
                     entries.forEach((entry) => {
                         isVisible.value = entry.isIntersecting;
-                        console.log(isVisible.value ? "Слайдер виден" : "Слайдер скрыт");
+                        // console.log(isVisible.value ? "Слайдер виден" : "Слайдер скрыт");
                     });
                 },
                 {

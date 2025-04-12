@@ -101,6 +101,9 @@ watchEffect(() => {
         <template v-if="mainSlider">
             <Slider :slides="mainSlider.images" :content="mainSlider.content_rendered" />
         </template>
+        <template v-if="!mainSlider">
+            <div class="h-40" />
+        </template>
         <nav class="menu z-10 bg-white" :class="{ 'fixed top-0 right-0 left-0': isSticky }" ref="menuRef" v-if="false">
             <div class="container flex gap-2 items-stretch">
                 <div class="flex items-center">
@@ -117,11 +120,26 @@ watchEffect(() => {
                 </ul>
             </div>
         </nav>
-        <template v-for="block in blocksByType(['text_right', 'gallery'])" :key="block.id">
+        <template v-for="block in blocksByType(['text', 'text_right', 'gallery'])" :key="block.id">
             <div :id="block.slug" v-if="block.type == 'text_right'">
                 <div class="container pt-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
                         <div class="col-span-1 col-start-2">
+                            <div class="title mt-16 mb-20">
+                                {{ block.title }}
+                                <span v-if="block.sub_title" class="text-sandal-400">
+                                    {{ block.sub_title }}
+                                </span>
+                            </div>
+                            <div class="basetext mb-20 prose prose-invert" v-html="block.content_rendered" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div :id="block.slug" v-if="block.type == 'text'">
+                <div class="container pt-4">
+                    <div class="grid grid-cols-1 items-center gap-2">
+                        <div class="col-span-1">
                             <div class="title mt-16 mb-20">
                                 {{ block.title }}
                                 <span v-if="block.sub_title" class="text-sandal-400">

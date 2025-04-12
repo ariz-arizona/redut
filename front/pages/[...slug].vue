@@ -99,7 +99,7 @@ watchEffect(() => {
 <template>
     <div>
         <template v-if="mainSlider">
-            <Slider :slides="mainSlider.images" />
+            <Slider :slides="mainSlider.images" :content="mainSlider.content_rendered" />
         </template>
         <nav class="menu z-10 bg-white" :class="{ 'fixed top-0 right-0 left-0': isSticky }" ref="menuRef" v-if="false">
             <div class="container flex gap-2 items-stretch">

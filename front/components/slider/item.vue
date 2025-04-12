@@ -10,6 +10,7 @@ const props = defineProps({
       alt_text: '', // Дополнительный текст
     }),
   },
+  add_text: String,
 });
 
 const config = useRuntimeConfig()
@@ -22,10 +23,20 @@ const imgBase = config.public.imgBase
       <div class="container m-auto">
         <div class="max-w-[75%] select-none leading-none relative">
           <h3 class="text-[12vmin] font-bleu" v-html="slide.title"></h3>
-          <p v-if="slide.alt_text"
-            class="font-wonder text-[24vmin] text-sandal-200 absolute right-0 top-1/4 left-3/4">
+          <p v-if="slide.alt_text" class="font-wonder text-[24vmin] text-sandal-200 absolute right-0 top-1/4 left-3/4">
             {{ slide.alt_text }}
           </p>
+        </div>
+      </div>
+    </div>
+    <div v-if="add_text">
+      <div class="absolute top-1/2 right-2 left-2">
+        <div class="container relative grid grid-cols-3">
+          <div class="col-span-1 col-start-3">
+            <div class="bg-midnight-950 text-white p-8 prose prose-invert basetext -translate-y-1/2">
+              <span v-html="add_text" />
+            </div>
+          </div>
         </div>
       </div>
     </div>

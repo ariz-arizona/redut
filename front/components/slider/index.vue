@@ -15,7 +15,8 @@ const props = defineProps({
     'slides': {
         requireв: true,
         type: Array as PropType<Image[]>,
-    }
+    },
+    'content': String
 })
 
 // Настройки Swiper
@@ -38,10 +39,10 @@ const swiperRef = ref(null);
         <div class="h-[calc(100vh-8rem)] min-h-[300px] overflow-visible relative" :ref="(setMainSliderRef as any)">
             <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="h-full" v-if="props.slides.length > 1">
                 <swiper-slide v-for="(slide, index) in props.slides" :key="index">
-                    <SliderItem :slide="slide" />
+                    <SliderItem :slide="slide" :add_text="props.content" />
                 </swiper-slide>
             </swiper>
-            <SliderItem :slide="props.slides[0]" v-else />
+            <SliderItem :slide="props.slides[0]" :add_text="props.content" v-else />
         </div>
     </template>
 </template>

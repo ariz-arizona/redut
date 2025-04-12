@@ -183,9 +183,14 @@ class Image(models.Model):
     )
     url = models.URLField(blank=True, null=True, verbose_name="Ссылка (для галереи)")
     title = models.CharField(max_length=255, verbose_name="Заголовок")
-    text = models.TextField(
-        blank=True, null=True, verbose_name="Описание (для галереи)"
+    text = MarkdownField(
+        blank=True,
+        null=True,
+        validator=VALIDATOR_STANDARD,  # Валидатор для Markdown
+        rendered_field="text_rendered",  # Поле для хранения HTML
+        verbose_name="Контент (Markdown)",
     )
+    text_rendered = models.TextField(blank=True, null=True, editable=False)
     order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
 
     def __str__(self):

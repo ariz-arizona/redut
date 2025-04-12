@@ -120,7 +120,7 @@ watchEffect(() => {
         <template v-for="block in blocksByType(['text_right', 'gallery'])" :key="block.id">
             <div :id="block.slug" v-if="block.type == 'text_right'">
                 <div class="container pt-4">
-                    <div class="grid grid-cols-2 items-center gap-2">
+                    <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
                         <div class="col-span-1 col-start-2">
                             <div class="title mt-16 mb-20">
                                 {{ block.title }}

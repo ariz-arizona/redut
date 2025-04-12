@@ -31,7 +31,7 @@ const imgBase = config.public.imgBase
     </div>
     <div v-if="add_text">
       <div class="absolute top-1/2 right-2 left-2">
-        <div class="container relative grid grid-cols-3">
+        <div class="container relative grid grid-cols-1 md:grid-cols-3">
           <div class="col-span-1 col-start-3">
             <div class="bg-midnight-950 text-white p-8 prose prose-invert basetext -translate-y-1/2">
               <span v-html="add_text" />

@@ -12,14 +12,14 @@ const { isVisible: isSliderVisible } = useMainSlider();
             isSliderVisible ? 'h-52 absolute top-20' : 'h-32 fixed bg-primary-800/75',
             'transition-all duration-300 ease-in-out'
         ]">
-            <div class="container grid grid-cols-[1fr_14rem_1fr] items-start gap-4 px-2 h-full"
+            <div class="container grid grid-cols-1 md:grid-cols-[1fr_10rem_1fr] xl:grid-cols-[1fr_14rem_1fr] items-start gap-4 px-2 h-full"
                 :class="[isSliderVisible ? 'items-start' : 'items-center']">
-                <div class="flex gap-8 items-center basetext">
+                <div class="gap-2 xl:gap-8 items-center basetext hidden md:flex flex-wrap xl:flex-nowrap">
                     <HeaderMenu />
                     <NuxtLink to="/">Контакты</NuxtLink>
                 </div>
                 <HeaderLogo :logo="settings?.logo" />
-                <div class="flex justify-end gap-8 items-center">
+                <div class="justify-end gap-2 xl:gap-8 items-center hidden md:flex flex-wrap xl:flex-nowrap">
                     <template v-if="settings?.phone_number">
                         <HeaderPhone :phone="settings?.phone_number" />
                     </template>

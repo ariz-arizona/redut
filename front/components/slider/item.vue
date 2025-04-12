@@ -18,7 +18,7 @@ const imgBase = config.public.imgBase
 </script>
 
 <template>
-  <div class="h-full bg-cover" :style="{ backgroundImage: `url(${imgBase}/${slide.image})` }">
+  <div class="h-full bg-cover" :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${slide.image}`) }">
     <div class="absolute bottom-2 right-2 left-2 text-left">
       <div class="container m-auto">
         <div class="max-w-[75%] select-none leading-none relative">

@@ -157,6 +157,22 @@ watchEffect(() => {
                     {{ block.title }}
                 </div>
                 <Gallery :slides="block.images" />
+                <template v-if="block.link || block.external_link">
+                    <div class="relative -translate-y-1/2 z-10 flex justify-center w-full">
+                        <NuxtLink :to="((block.link || block.external_link) as string)"
+                            :external="!!block.external_link" class="
+                relative size-36 overflow-hidden flex items-center justify-center
+                rounded-full border border-sandal-500 bg-midnight-950 text-white
+                p-4 text-center
+                basetext
+                transition-all duration-300 ease-in-out
+            ">
+                            <span class=" leading-4">
+                                Читать далее
+                            </span>
+                        </NuxtLink>
+                    </div>
+                </template>
             </div>
         </template>
     </div>

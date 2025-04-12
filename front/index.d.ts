@@ -21,6 +21,8 @@ interface Block {
     menu_title: string | null;
     slug: string;
     type: BlockType;
+    link: null | string
+    external_link: null | string
 }
 
 interface PageData {

@@ -11,7 +11,7 @@ const props = defineProps({
     'slides': {
         requireв: true,
         type: Array as PropType<Image[]>,
-    }
+    },
 })
 
 const config = useRuntimeConfig()
@@ -23,7 +23,7 @@ const swiperOptions: SwiperOptions = {
     spaceBetween: 48, // Расстояние между слайдами
     slidesOffsetBefore: -48,
     loop: true, // Бесконечная прокрутка
-    autoplay: { 
+    autoplay: {
         delay: 5000, // Задержка между переключениями (в миллисекундах)
         disableOnInteraction: false, // Продолжать автопрокрутку даже после взаимодействия
     },
@@ -39,12 +39,14 @@ const swiperOptions: SwiperOptions = {
 const swiperRef = ref(null);
 </script>
 <template>
-    <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="w-full">
-        <swiper-slide v-for="(slide, index) in props.slides" :key="index" class="w-auto">
-            <div class="bg-no-repeat bg-cover bg-center h-[50vh] flex justify-start align-bottom p-4"
-                :style="[{ backgroundImage: `url(${imgBase}/${slide.image})` }]">
-                <NuxtImg :src="`${imgBase}/${slide.image}`" class="invisible" />
-            </div>
-        </swiper-slide>
-    </swiper>
+    <div>
+        <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="w-full">
+            <swiper-slide v-for="(slide, index) in props.slides" :key="index" class="w-auto">
+                <div class="bg-no-repeat bg-cover bg-center h-[50vh] flex justify-start align-bottom p-4"
+                    :style="[{ backgroundImage: `url(${imgBase}/${slide.image})` }]">
+                    <NuxtImg :src="`${imgBase}/${slide.image}`" class="invisible" />
+                </div>
+            </swiper-slide>
+        </swiper>
+    </div>
 </template>

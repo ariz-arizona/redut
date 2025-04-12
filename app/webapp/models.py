@@ -136,6 +136,19 @@ class Block(models.Model):
         max_length=255, blank=True, null=True, verbose_name="Подзаголовок"
     )
     slug = models.SlugField(verbose_name="Slug")
+    link = models.ForeignKey(
+        "Page",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Внутренняя ссылка",
+    )
+    external_link = models.URLField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Внешняяы ссылка",
+    )
     menu_title = models.CharField(
         max_length=255,
         blank=True,

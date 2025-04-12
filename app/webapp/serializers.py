@@ -11,6 +11,13 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class BlockSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
+    
+    link = serializers.SlugRelatedField(
+        slug_field="slug",  # Указываем, что нужно использовать поле slug
+        queryset=Page.objects.all(),  # Queryset для поля ForeignKey
+        allow_null=True,  # Разрешаем null значения
+        required=False,  # Поле необязательное
+    )
 
     class Meta:
         model = Block

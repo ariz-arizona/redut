@@ -19,7 +19,7 @@ body {
     a {
       @apply block p-4 hover:bg-primary-200 transition-colors;
       &.active {
-        @apply bg-primary-400/50
+        @apply bg-primary-400/50;
       }
     }
   }
@@ -33,4 +33,11 @@ body {
 }
 .menubtn {
   @apply border rounded-full border-sandal-500 px-4 py-2 inline-flex gap-2 items-center cursor-pointer;
+}
+.leadbtn {
+  @apply relative overflow-hidden flex items-center justify-center
+  rounded-full border border-sandal-500 bg-midnight-950 text-white
+  text-center
+  basetext
+  transition-all duration-300 ease-in-out;
 }

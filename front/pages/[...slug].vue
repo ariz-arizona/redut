@@ -120,7 +120,7 @@ watchEffect(() => {
                 </ul>
             </div>
         </nav>
-        <template v-for="block in blocksByType(['text', 'gallery'])" :key="block.id">
+        <template v-for="block in blocksByType(['text', 'gallery', 'lead'])" :key="block.id">
             <div :id="block.slug" v-if="block.type === 'text'">
                 <div class="container pt-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
@@ -158,19 +158,27 @@ watchEffect(() => {
                 <template v-if="block.link || block.external_link">
                     <div class="relative -translate-y-1/2 z-10 flex justify-center w-full">
                         <NuxtLink :to="((block.link || block.external_link) as string)"
-                            :external="!!block.external_link" class="
-                relative size-36 overflow-hidden flex items-center justify-center
-                rounded-full border border-sandal-500 bg-midnight-950 text-white
-                p-4 text-center
-                basetext
-                transition-all duration-300 ease-in-out
-            ">
-                            <span class=" leading-4">
+                            :external="!!block.external_link" class="size-36 p-4 leadbtn">
+                            <span class="leading-4">
                                 Читать далее
                             </span>
                         </NuxtLink>
                     </div>
                 </template>
+            </div>
+            <div :id="block.slug" v-if="block.type == 'lead'">
+                <div class="container pt-4">
+                    <h3 class="text-[8vmin] font-bleu text-center w-3/4 m-auto uppercase leading-tight"
+                        v-html="block.title"></h3>
+                    <div class="relative flex justify-center w-full mt-20" v-if="(block.link || block.external_link)">
+                        <NuxtLink :to="((block.link || block.external_link) as string)"
+                            :external="!!block.external_link" class="leadbtn p-8">
+                            <span class="leading-4">
+                                {{ block.sub_title || 'Читать далее' }}
+                            </span>
+                        </NuxtLink>
+                    </div>
+                </div>
             </div>
         </template>
     </div>

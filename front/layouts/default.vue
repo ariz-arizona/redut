@@ -8,7 +8,7 @@ const { isVisible: isSliderVisible } = useMainSlider();
 </script>
 <template>
     <div>
-        <div class="w-full z-10" :ref="menuRef" :class="[
+        <div class="w-full z-20" :ref="menuRef" :class="[
             isSliderVisible ? 'h-52 absolute top-20' : 'h-32 fixed bg-primary-800/75',
             'transition-all duration-300 ease-in-out'
         ]">

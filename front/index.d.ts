@@ -8,21 +8,23 @@ interface Image {
     title: string | null;
     text: string | null;
 }
-type BlockType = 'text' | 'text_right' | 'gallery' | 'slider'
+type BlockType = 'text' | 'lead' | 'gallery' | 'slider';
+
 interface Block {
-    content: string;
-    content_rendered: string;
-    id: number;
-    images: Image[];
-    order: number;
-    page: number;
-    title: string;
-    sub_title: string | null;
-    menu_title: string | null;
-    slug: string;
-    type: BlockType;
-    link: null | string
-    external_link: null | string
+    content: string; // Markdown-контент
+    content_rendered: string; // Отрендеренный HTML
+    id: number; // ID блока
+    images: Image[]; // Массив изображений (если применимо)
+    order: number; // Порядок отображения
+    page: number; // ID страницы, к которой привязан блок
+    title: string; // Заголовок блока
+    sub_title: string | null; // Подзаголовок (опционально)
+    menu_title: string | null; // Заголовок для меню (опционально)
+    slug: string; // Уникальный идентификатор блока
+    type: BlockType; // Тип блока
+    link: string | null; // Внутренняя ссылка (опционально)
+    external_link: string | null; // Внешняя ссылка (опционально)
+    is_text_right: boolean; // Флаг для расположения текста справа (true) или слева (false)
 }
 
 interface PageData {

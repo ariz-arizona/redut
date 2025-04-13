@@ -112,10 +112,12 @@ class Page(models.Model):
         ]
 
 
+from django.db import models
+
 class Block(models.Model):
     BLOCK_TYPES = [
         ("text", "Текстовый блок"),
-        ("text_right", "Текст справа"),
+        ("lead", "Лид"),
         ("slider", "Слайдер"),
         ("gallery", "Галерея"),
     ]
@@ -147,14 +149,14 @@ class Block(models.Model):
         max_length=255,
         blank=True,
         null=True,
-        verbose_name="Внешняяы ссылка",
+        verbose_name="Внешняя ссылка",
     )
     menu_title = models.CharField(
         max_length=255,
         blank=True,
         null=True,
         verbose_name="Заголовок меню",
-        help_text="Необязательное поле. Если указано, будет использоваться в меню вместо основного заголовка.",
+        help_text="Если указано, будет использоваться в меню вместо основного заголовка.",
     )
     order = models.PositiveIntegerField(verbose_name="Порядок")
     content = MarkdownField(
@@ -165,6 +167,11 @@ class Block(models.Model):
         verbose_name="Контент (Markdown)",
     )
     content_rendered = models.TextField(blank=True, null=True, editable=False)
+    is_text_right = models.BooleanField(
+        default=False,
+        verbose_name="Текст справа",
+        help_text="Если выбрано, текст будет расположен справа. Иначе — слева.",
+    )
 
     def __str__(self):
         return f"{self.get_type_display()} {self.title} (Order: {self.order})"
@@ -179,7 +186,6 @@ class Block(models.Model):
                 name="unique_slug_per_page",
             ),
         ]
-
 
 class Image(models.Model):
     block = models.ForeignKey(

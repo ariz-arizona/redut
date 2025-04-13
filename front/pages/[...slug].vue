@@ -120,26 +120,24 @@ watchEffect(() => {
                 </ul>
             </div>
         </nav>
-        <template v-for="block in blocksByType(['text', 'text_right', 'gallery'])" :key="block.id">
-            <div :id="block.slug" v-if="block.type == 'text_right'">
+        <template v-for="block in blocksByType(['text', 'gallery'])" :key="block.id">
+            <div :id="block.slug" v-if="block.type === 'text'">
                 <div class="container pt-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
-                        <div class="col-span-1 col-start-2">
-                            <div class="title mt-16 mb-20">
-                                {{ block.title }}
-                                <span v-if="block.sub_title" class="text-sandal-400">
-                                    {{ block.sub_title }}
-                                </span>
-                            </div>
-                            <div class="basetext mb-20 prose prose-invert" v-html="block.content_rendered" />
+                        <!-- Картинка -->
+                        <div v-if="block.images.length" :class="[
+                            block.is_text_right ? 'md:col-start-1' : 'md:col-start-2',
+                            'col-span-1'
+                        ]">
+                            <img :src="`${imgBase}/${block.images[0].url}`" :alt="block.title"
+                                class="w-full h-auto shadow-md" />
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div :id="block.slug" v-if="block.type == 'text'">
-                <div class="container pt-4">
-                    <div class="grid grid-cols-1 items-center gap-2">
-                        <div class="col-span-1">
+
+                        <!-- Текст -->
+                        <div :class="[
+                            block.is_text_right ? 'md:col-start-2' : 'md:col-start-1',
+                            'col-span-1'
+                        ]">
                             <div class="title mt-16 mb-20">
                                 {{ block.title }}
                                 <span v-if="block.sub_title" class="text-sandal-400">

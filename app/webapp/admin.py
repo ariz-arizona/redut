@@ -10,7 +10,6 @@ class ImageInline(admin.StackedInline):
     extra = 1
 
 
-# Админка для блоков
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
     list_display = (
@@ -21,30 +20,102 @@ class BlockAdmin(admin.ModelAdmin):
         "sub_title",
         "menu_title",
         "slug",
+        "is_text_right",  # Новое поле
     )
-    list_filter = ("type", "page")
+    list_filter = ("type", "page", "is_text_right")  # Фильтр по новому полю
     search_fields = ("type", "title", "menu_title", "content")
     prepopulated_fields = {"slug": ("title",)}
     inlines = [ImageInline]
 
+    fieldsets = (
+        (
+            "Основная информация",
+            {
+                "fields": (
+                    "type",
+                    "title",
+                    "sub_title",
+                    "slug",
+                    "order",
+                    "is_text_right",  # Поле для текста справа/слева
+                ),
+            },
+        ),
+        (
+            "Ссылки",
+            {
+                "fields": (
+                    "link",
+                    "external_link",
+                ),
+            },
+        ),
+        (
+            "Контент",
+            {
+                "fields": (
+                    "content",
+                    "content_rendered",  # Отрендеренный контент (только для чтения)
+                ),
+            },
+        ),
+        (
+            "Меню",
+            {
+                "fields": ("menu_title",),
+            },
+        ),
+        (
+            "Привязка к странице",
+            {
+                "fields": ("page",),
+            },
+        ),
+    )
 
-# Инлайн для блоков на страницах
+    readonly_fields = (
+        "content_rendered",
+    )  # Делаем отрендеренный контент только для чтения
+    
 class BlockInline(admin.StackedInline):
     model = Block
     extra = 1
-    fields = (
-        "type",
-        "order",
-        "title",
-        "sub_title",
-        "menu_title",
-        "slug",
-        "content",
-        "page",
-    )
     fk_name = "page"
     ordering = ["order"]
     inlines = [ImageInline]
+
+    fieldsets = (
+        (
+            "Основная информация",
+            {
+                "fields": (
+                    "type",
+                    "title",
+                    "sub_title",
+                    "slug",
+                    "order",
+                    "is_text_right",
+                ),
+            },
+        ),
+        (
+            "Ссылки",
+            {
+                "fields": (
+                    "link",
+                    "external_link",
+                ),
+            },
+        ),
+        (
+            "Контент",
+            {
+                "fields": (
+                    "content",
+                ),
+            },
+        ),
+    )
 
 
 # Админка для страниц
@@ -54,14 +125,51 @@ class PageAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     inlines = [BlockInline]  # Добавляем инлайн для блоков
 
-
-# Админка для изображений
-@admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ("title", "image", "alt_text", "block", "order")
-    list_filter = ("block",)
-    search_fields = ("alt_text", "title")
+    list_display = (
+        "title",
+        "block",
+        "order",
+        "alt_text",
+        "url",
+    )
+    list_filter = ("block",)  # Фильтр по блокам
+    search_fields = ("title", "alt_text")  # Поиск по заголовку и альтернативному тексту
+    ordering = ["order"]  # Сортировка по порядку
 
+    fieldsets = (
+        (
+            "Основная информация",
+            {
+                "fields": (
+                    "block",
+                    "image",
+                    "alt_text",
+                    "title",
+                    "order",
+                ),
+            },
+        ),
+        (
+            "Ссылки",
+            {
+                "fields": (
+                    "url",
+                ),
+            },
+        ),
+        (
+            "Контент",
+            {
+                "fields": (
+                    "text",
+                    "text_rendered",  # Отрендеренный контент (только для чтения)
+                ),
+            },
+        ),
+    )
+
+    readonly_fields = ("text_rendered",)  # Делаем отрендеренный контент только для чтения
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):

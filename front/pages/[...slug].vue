@@ -129,7 +129,7 @@ watchEffect(() => {
                             block.is_text_right ? 'md:col-start-1' : 'md:col-start-2',
                             'col-span-1'
                         ]">
-                            <img :src="`${imgBase}/${block.images[0].url}`" :alt="block.title"
+                            <img :src="`${imgBase}/${block.images[0].image}`" :alt="block.title"
                                 class="w-full h-auto shadow-md" />
                         </div>
 
@@ -180,9 +180,9 @@ watchEffect(() => {
                     </div>
                 </div>
                 <div class="bg-no-repeat bg-cover bg-center h-[50vh] p-4 -z-10 relative pointer-events-none -mt-[25vh]"
-                    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].url}`, 'rgba(0,0,0,0)') }"
+                    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`, 'rgba(0,0,0,0)') }"
                     v-if="block.images.length">
-                    <NuxtImg :src="`${imgBase}/${block.images[0].url}`" class="invisible" />
+                    <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
                 </div>
             </div>
         </template>

@@ -166,8 +166,8 @@ watchEffect(() => {
                     </div>
                 </template>
             </div>
-            <div :id="block.slug" v-if="block.type == 'lead'">
-                <div class="container pt-4 overflow-hidden">
+            <div :id="block.slug" v-if="block.type == 'lead'" class="overflow-hidden">
+                <div class="container pt-4">
                     <h3 class="text-[8vmin] font-bleu text-center w-3/4 m-auto uppercase leading-tight"
                         v-html="block.title"></h3>
                     <div class="relative flex justify-center w-full mt-20" v-if="(block.link || block.external_link)">

@@ -30,7 +30,7 @@ const imgBase = config.public.imgBase
       </div>
     </div>
     <div class="container relative grid grid-cols-1 md:grid-cols-3 h-full items-center" v-if="add_text">
-      <div class="col-span-1 col-start-3">
+      <div class="col-span-1 col-start-3 max-h-[66%] overflow-hidden">
         <div class="bg-midnight-950 text-white p-8 prose prose-invert basetext">
           <span v-html="add_text" />
         </div>

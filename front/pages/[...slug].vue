@@ -167,7 +167,7 @@ watchEffect(() => {
                 </template>
             </div>
             <div :id="block.slug" v-if="block.type == 'lead'">
-                <div class="container pt-4">
+                <div class="container pt-4 overflow-hidden">
                     <h3 class="text-[8vmin] font-bleu text-center w-3/4 m-auto uppercase leading-tight"
                         v-html="block.title"></h3>
                     <div class="relative flex justify-center w-full mt-20" v-if="(block.link || block.external_link)">
@@ -178,6 +178,11 @@ watchEffect(() => {
                             </span>
                         </NuxtLink>
                     </div>
+                </div>
+                <div class="bg-no-repeat bg-cover bg-center h-[50vh] p-4 -z-10 relative pointer-events-none -mt-[25vh]"
+                    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].url}`, 'rgba(0,0,0,0)') }"
+                    v-if="block.images.length">
+                    <NuxtImg :src="`${imgBase}/${block.images[0].url}`" class="invisible" />
                 </div>
             </div>
         </template>

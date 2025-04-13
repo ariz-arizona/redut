@@ -180,7 +180,7 @@ watchEffect(() => {
                     </div>
                 </div>
                 <div class="bg-no-repeat bg-cover bg-center h-[50vh] p-4 -z-10 relative pointer-events-none -mt-[25vh]"
-                    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`, 'rgba(0,0,0,0)') }"
+                    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`, 'rgba(24,29,36,1)', 'rgba(0,0,0,0)') }"
                     v-if="block.images.length">
                     <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
                 </div>

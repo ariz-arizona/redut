@@ -120,7 +120,7 @@ watchEffect(() => {
                 </ul>
             </div>
         </nav>
-        <template v-for="block in blocksByType(['text', 'gallery', 'lead'])" :key="block.id">
+        <template v-for="block in blocksByType(['text', 'gallery', 'lead', 'feedback'])" :key="block.id">
             <div :id="block.slug" v-if="block.type === 'text'">
                 <div class="container pt-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
@@ -144,7 +144,7 @@ watchEffect(() => {
                                     {{ block.sub_title }}
                                 </span>
                             </div>
-                            <div class="basetext mb-20 prose prose-invert" v-html="block.content_rendered" />
+                            <div class="basetext mb-20 prose" v-html="block.content_rendered" />
                         </div>
                     </div>
                 </div>
@@ -179,10 +179,27 @@ watchEffect(() => {
                         </NuxtLink>
                     </div>
                 </div>
-                <div class="bg-no-repeat bg-cover bg-center h-[50vh] p-4 -z-10 relative pointer-events-none -mt-[25vh]"
+                <div class="bg-no-repeat bg-cover bg-center h-[50vh] p-4 -z-10 relative pointer-events-none"
+                    :class="[{ '-mt-[25vh]': (block.link || block.external_link) }]"
                     :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`, 'rgba(24,29,36,1)', 'rgba(0,0,0,0)') }"
                     v-if="block.images.length">
                     <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
+                </div>
+            </div>
+            <div :id="block.slug" v-if="block.type == 'feedback'">
+                <div class="container p-4 grid grid-cols-1 xl:grid-cols-3">
+                    <div class="xl:col-start-2">
+                        <div class="text-center font-bleu text-[12vmin] relative">
+                            <span v-html="block.title" />
+                            <span
+                                class="font-wonder text-[24vmin] text-sandal-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                {{ block.sub_title }}
+                            </span>
+                        </div>
+                        <div>
+                            <Feedback />
+                        </div>
+                    </div>
                 </div>
             </div>
         </template>

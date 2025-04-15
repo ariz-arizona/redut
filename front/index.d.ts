@@ -8,7 +8,7 @@ interface Image {
     title: string | null;
     text: string | null;
 }
-type BlockType = 'text' | 'lead' | 'gallery' | 'slider';
+type BlockType = 'text' | 'lead' | 'gallery' | 'slider' | 'feedback';
 
 interface Block {
     content: string; // Markdown-контент

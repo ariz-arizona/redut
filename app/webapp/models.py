@@ -114,12 +114,14 @@ class Page(models.Model):
 
 from django.db import models
 
+
 class Block(models.Model):
     BLOCK_TYPES = [
         ("text", "Текстовый блок"),
         ("lead", "Лид"),
         ("slider", "Слайдер"),
         ("gallery", "Галерея"),
+        ("feedback", "Форма обратной связи"),
     ]
 
     page = models.ForeignKey(
@@ -186,6 +188,7 @@ class Block(models.Model):
                 name="unique_slug_per_page",
             ),
         ]
+
 
 class Image(models.Model):
     block = models.ForeignKey(

@@ -188,7 +188,7 @@ watchEffect(() => {
             </div>
             <div :id="block.slug" v-if="block.type == 'feedback'">
                 <div class="container p-4 grid grid-cols-1 xl:grid-cols-3">
-                    <div class="xl:col-start-2">
+                    <div class="col-span-full">
                         <div class="text-center font-bleu text-[12vmin] relative">
                             <span v-html="block.title" />
                             <span
@@ -196,9 +196,9 @@ watchEffect(() => {
                                 {{ block.sub_title }}
                             </span>
                         </div>
-                        <div>
-                            <Feedback />
-                        </div>
+                    </div>
+                    <div class="col-span-full xl:col-span-1 xl:col-start-2 flex justify-center">
+                        <Feedback />
                     </div>
                 </div>
             </div>

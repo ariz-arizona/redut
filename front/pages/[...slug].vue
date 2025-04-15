@@ -126,7 +126,7 @@ watchEffect(() => {
                     <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
                         <!-- Картинка -->
                         <div v-if="block.images.length" :class="[
-                            block.is_text_right ? 'md:col-start-1' : 'md:col-start-2',
+                            !block.is_text_right ? 'order-last' : '',
                             'col-span-1'
                         ]">
                             <img :src="`${imgBase}/${block.images[0].image}`" :alt="block.title"
@@ -135,7 +135,6 @@ watchEffect(() => {
 
                         <!-- Текст -->
                         <div :class="[
-                            block.is_text_right ? 'md:col-start-2' : 'md:col-start-1',
                             'col-span-1'
                         ]">
                             <div class="title mt-16 mb-20">

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Page, Block, Image, SiteSettings
+from .models import Page, Block, Image, SiteSettings, Feedback
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -39,3 +39,13 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
         fields = '__all__'
+        
+from rest_framework import serializers
+from .models import Feedback
+
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = ["id", "name", "phone", "message", "created_at"]
+        read_only_fields = ["created_at"]  # Поле `created_at` только для чтения

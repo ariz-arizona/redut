@@ -42,15 +42,24 @@ body {
   transition-all duration-300 ease-in-out;
 }
 .input {
-  @apply mt-0 px-0.5 border-0 border-b-2 border-sandal-400 focus:ring-0 focus:border-primary-900 bg-primary-950 transition-colors;
-  &[type=checkbox] {
-    @apply bg-primary-950 border-2 focus:border-sandal-400 checked:border-sandal-500 focus:bg-primary-900 focus:ring-0 focus:ring-sandal-800 checked:bg-transparent ring-offset-0;
+  @apply mt-0 px-0.5 border-0 border-b-2 border-sandal-400 focus:ring-0 focus:border-primary-900 bg-primary-950 transition-colors 
+  autofill:shadow-[inset_0_0_0px_1000px_rgb(24,29,36)];
+  &[type='checkbox'] {
+    @apply bg-primary-950 border-2 focus:border-sandal-400 checked:border-sandal-500
+    focus:bg-primary-900 focus:ring-0 focus:ring-sandal-800 checked:bg-transparent ring-offset-0;
+  }
+}
+input:-internal-autofill-selected {
+  &,
+  &:hover,
+  &:active {
+    -webkit-text-fill-color: white;
   }
 }
 .prose {
   @apply prose-invert;
 
   a {
-    @apply text-sandal-500
+    @apply text-sandal-500;
   }
 }

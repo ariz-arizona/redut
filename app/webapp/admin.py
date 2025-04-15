@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import Page, Block, Image, SiteSettings
+from .models import Page, Block, Image, SiteSettings, Feedback
 
 
 # Инлайн для изображений
@@ -212,3 +212,26 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         )
 
     footer_text_short.short_description = "Текст футера"
+
+from django.contrib import admin
+from .models import Feedback
+
+
+@admin.register(Feedback)
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "phone",
+        "created_at",
+        "has_message",  # Показывает, есть ли сообщение
+    )
+    list_filter = ("created_at",)  # Фильтр по дате создания
+    search_fields = ("name", "phone")  # Поиск по имени и телефону
+    readonly_fields = ("created_at",)  # Дата создания только для чтения
+
+    @admin.display(description="Есть сообщение?", boolean=True)
+    def has_message(self, obj):
+        """
+        Проверяет, есть ли текст в поле `message`.
+        """
+        return bool(obj.message)

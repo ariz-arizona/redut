@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+const { fetchData } = useApiFetch()
 
 // Реактивные данные формы
 const formData = ref({
@@ -13,6 +13,7 @@ const errors = ref({
     name: '',
     phone: '',
     acceptance: '',
+    submit: '',
 });
 
 // Флаг для отслеживания состояния отправки
@@ -46,15 +47,13 @@ const submitForm = async () => {
 
     // Отправка данных на сервер
     try {
-        const response = await fetch('/api/feedback', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData.value),
-        });
+        const { data, status } = await fetchData('feedback',
+            'post',
+            undefined,
+            formData.value,
+        );
 
-        if (response.ok) {
+        if (status.value == 'success') {
             // Устанавливаем флаг успешной отправки
             isFormSubmitted.value = true;
             formData.value = {
@@ -63,9 +62,11 @@ const submitForm = async () => {
                 acceptance: false,
             };
             resetErrors();
-        } else {
-            alert('Ошибка при отправке формы. Попробуйте позже.');
         }
+        if (status.value == 'error') {
+            errors.value.submit = 'Ошибка при отправке'
+        }
+
     } catch (error) {
         console.error('Ошибка при отправке:', error);
         alert('Произошла ошибка. Попробуйте позже.');
@@ -87,54 +88,59 @@ const resetErrors = () => {
         name: '',
         phone: '',
         acceptance: '',
+        submit: '',
     };
 };
 
 // Очистка конкретной ошибки
 const clearError = (field) => {
+    errors.value['submit'] = '';
     errors.value[field] = '';
 };
 </script>
 
 <template>
-    <form v-if="!isFormSubmitted" class="prose flex flex-col gap-8" @submit.prevent="submitForm">
+    <form class="prose relative" @submit.prevent="submitForm">
         <!-- Поле "Имя" -->
-        <label for="name" :data-error="errors.name" class="flex flex-col justify-center items-start"
-            :class="{ 'text-red-500': errors.name }">
-            <div>
-                <template v-if="errors.name">Пожалуйста, укажите имя</template>
-                <template v-else>Ваше имя:</template>
-            </div>
-            <input id="name" v-model="formData.name" type="text" placeholder="Введите ваше имя" class="input w-full"
-                :class="{ 'border-red-500': errors.name }" @keydown="clearError('name')" />
-        </label>
+        <div class="flex flex-col gap-8" :class="{ 'invisible': isFormSubmitted }">
+            <label for="name" :data-error="errors.name" class="flex flex-col justify-center items-start"
+                :class="{ 'text-red-500': errors.name }">
+                <div>
+                    <template v-if="errors.name">Пожалуйста, укажите имя</template>
+                    <template v-else>Ваше имя:</template>
+                </div>
+                <input id="name" v-model="formData.name" type="text" placeholder="Введите ваше имя" class="input w-full"
+                    :class="{ 'border-red-500': errors.name }" @keydown="clearError('name')" />
+            </label>
 
-        <!-- Поле "Телефон" -->
-        <label for="phone" :data-error="errors.phone" class="flex flex-col justify-center items-start"
-            :class="{ 'text-red-500': errors.phone }">
-            <div>
-                <template v-if="errors.phone">Укажите телефон</template>
-                <template v-else>Телефон:</template>
-            </div>
-            <input id="phone" v-model="formData.phone" type="tel" placeholder="Введите ваш телефон" class="input w-full"
-                :class="{ 'border-red-500': errors.phone }" @keydown="clearError('phone')" />
-        </label>
+            <!-- Поле "Телефон" -->
+            <label for="phone" :data-error="errors.phone" class="flex flex-col justify-center items-start"
+                :class="{ 'text-red-500': errors.phone }">
+                <div>
+                    <template v-if="errors.phone">Укажите телефон</template>
+                    <template v-else>Телефон:</template>
+                </div>
+                <input id="phone" v-model="formData.phone" type="tel" placeholder="Введите ваш телефон"
+                    class="input w-full" :class="{ 'border-red-500': errors.phone }" @keydown="clearError('phone')" />
+            </label>
 
-        <!-- Согласие на обработку данных -->
-        <label :data-error="errors.acceptance" class="flex gap-2 justify-start items-center"
-            :class="{ 'text-red-500': errors.acceptance }">
-            <input v-model="formData.acceptance" type="checkbox" class="input" @change="clearError('acceptance')" />
-            <span>Принимаю <NuxtLink to="policy">условия обработки персональных данных</NuxtLink></span>
-        </label>
+            <!-- Согласие на обработку данных -->
+            <label :data-error="errors.acceptance" class="flex gap-2 justify-start items-center"
+                :class="{ 'text-red-500': errors.acceptance }">
+                <input v-model="formData.acceptance" type="checkbox" class="input" @change="clearError('acceptance')" />
+                <span>Принимаю <NuxtLink to="policy">условия обработки персональных данных</NuxtLink></span>
+            </label>
 
-        <!-- Кнопка отправки -->
-        <button class="leadbtn p-4">
-            Отправить
-        </button>
+            <!-- Кнопка отправки -->
+            <button class="leadbtn p-4" :class="{ 'ring-red-500 text-red-500': errors.submit }">
+                <span v-if="errors.submit !== ''">Ошибка при отправке</span>
+                <span v-else>Отправить</span>
+            </button>
+        </div>
+        <!-- Сообщение об успешной отправке -->
+        <div v-if="isFormSubmitted" class="prose text-center text-2xl absolute top-0">
+            Ваше сообщение успешно отправлено!
+        </div>
     </form>
 
-    <!-- Сообщение об успешной отправке -->
-    <div v-else class="prose text-center text-2xl">
-        Ваше сообщение успешно отправлено!
-    </div>
 </template>

@@ -224,3 +224,38 @@ class Image(models.Model):
         ordering = ["order"]
         verbose_name = "Изображение"
         verbose_name_plural = "Изображения"
+
+
+class Feedback(models.Model):
+    """
+    Модель для хранения обратной связи от пользователей.
+    """
+    name = models.CharField(
+        max_length=255,
+        verbose_name="Имя",
+        help_text="Введите имя отправителя.",
+    )
+    phone = models.CharField(
+        max_length=20,
+        verbose_name="Телефон",
+        help_text="Введите номер телефона в международном формате (например, +79991234567).",
+    )
+    message = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Сообщение",
+        help_text="Введите текст сообщения (опционально).",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата создания",
+        help_text="Дата и время создания записи.",
+    )
+
+    def __str__(self):
+        return f"Feedback from {self.name} ({self.phone})"
+
+    class Meta:
+        verbose_name = "Обратная связь"
+        verbose_name_plural = "Обратная связь"
+        ordering = ["-created_at"]

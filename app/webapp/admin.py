@@ -65,6 +65,7 @@ class BlockAdmin(admin.ModelAdmin):
                     "title",
                     "sub_title",
                     "slug",
+                    "btn_title",
                     "order",
                     "is_text_right",  # Поле для текста справа/слева
                 ),
@@ -123,8 +124,9 @@ class BlockInline(admin.StackedInline):
                 "fields": (
                     "type",
                     "title",
-                    "sub_title",
                     "slug",
+                    "sub_title",
+                    "btn_title",
                     "order",
                     "is_text_right",
                 ),

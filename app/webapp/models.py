@@ -224,7 +224,14 @@ class Block(models.Model):
         verbose_name="Заголовок меню",
         help_text="Если указано, будет использоваться в меню вместо основного заголовка.",
     )
-    order = models.PositiveIntegerField(verbose_name="Порядок")
+    btn_title = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Текст кнопки",
+        help_text="Введите текст для кнопки (необязательно).",
+    )
+    order = models.PositiveIntegerField(verbose_name="Порядок", default=1)
     content = MarkdownField(
         blank=True,
         null=True,

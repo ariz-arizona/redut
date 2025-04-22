@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
+from django.utils.translation import gettext_lazy as _
 
 from markdownfield.models import MarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
@@ -28,10 +29,14 @@ class SiteSettings(models.Model):
         ],
     )
 
-    footer_text = models.TextField(
+    footer_text_md = MarkdownField(
+        blank=True,
+        null=True,
+        validator=VALIDATOR_STANDARD,  # Валидатор для Markdown
         verbose_name="Текст футера",
         help_text="Введите текст, который будет отображаться в нижней части сайта (футере).",
     )
+    footer_text = models.TextField(blank=True, null=True, editable=False)
 
     is_enabled = models.BooleanField(
         default=False,
@@ -41,6 +46,14 @@ class SiteSettings(models.Model):
             "Может быть только одна активная запись."
         ),
     )
+
+    def documents_count(self):
+        """
+        Возвращает количество документов, связанных с этой записью настроек.
+        """
+        return self.documents.count()
+
+    documents_count.short_description = _("Количество документов")
 
     class Meta:
         verbose_name = "Настройки сайта"
@@ -79,6 +92,58 @@ class SiteSettings(models.Model):
                 )
 
 
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+
+class Document(models.Model):
+    """
+    Модель для хранения документов, связанных с настройками сайта.
+    """
+
+    title = models.CharField(
+        max_length=255,
+        verbose_name=_("Название документа"),
+        help_text=_("Введите название документа."),
+    )
+
+    file = models.FileField(
+        upload_to="documents/",
+        verbose_name=_("Файл документа"),
+        help_text=_("Загрузите файл документа."),
+        validators=[FileExtensionValidator(allowed_extensions=["pdf", "docx", "txt"])],
+    )
+
+    description = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name=_("Описание"),
+        help_text=_("Введите описание документа (необязательно)."),
+    )
+
+    uploaded_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Дата загрузки"),
+        help_text=_("Дата и время загрузки документа."),
+    )
+
+    site_settings = models.ManyToManyField(
+        SiteSettings,
+        related_name="documents",
+        verbose_name=_("Настройки сайта"),
+        help_text=_("Выберите настройки сайта, к которым относится этот документ."),
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = _("Документ")
+        verbose_name_plural = _("Документы")
+        ordering = ["-uploaded_at"]
+
+    def __str__(self):
+        return self.title
+
+
 class Page(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     slug = models.SlugField(unique=True, verbose_name="Slug")
@@ -112,15 +177,12 @@ class Page(models.Model):
         ]
 
 
-from django.db import models
-
-
 class Block(models.Model):
     BLOCK_TYPES = [
         ("text", "Текстовый блок"),
         ("lead", "Лид"),
-        ("slider", "Слайдер"),
-        ("gallery", "Галерея"),
+        ("slider", "Главная картинка"),
+        ("gallery", "Карусель"),
         ("feedback", "Форма обратной связи"),
     ]
 
@@ -135,7 +197,9 @@ class Block(models.Model):
     type = models.CharField(
         choices=BLOCK_TYPES, max_length=20, verbose_name="Тип блока"
     )
-    title = models.CharField(max_length=255, verbose_name="Заголовок")
+    title = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Заголовок"
+    )
     sub_title = models.CharField(
         max_length=255, blank=True, null=True, verbose_name="Подзаголовок"
     )
@@ -230,6 +294,7 @@ class Feedback(models.Model):
     """
     Модель для хранения обратной связи от пользователей.
     """
+
     name = models.CharField(
         max_length=255,
         verbose_name="Имя",

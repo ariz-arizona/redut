@@ -125,19 +125,16 @@ watchEffect(() => {
                 <div class="container pt-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
                         <!-- Картинка -->
-                        <div v-if="block.images.length" :class="[
+                        <div v-if="block.images.length" class="col-span-1" :class="[
                             !block.is_text_right ? 'order-last' : '',
-                            'col-span-1'
                         ]">
                             <img :src="`${imgBase}/${block.images[0].image}`" :alt="block.title"
                                 class="w-full h-auto shadow-md" />
                         </div>
 
                         <!-- Текст -->
-                        <div :class="[
-                            'col-span-1'
-                        ]">
-                            <div class="title mt-16 mb-20">
+                        <div class="col-span-1">
+                            <div class="title mt-16 mb-20" v-if="block.title">
                                 {{ block.title }}
                                 <span v-if="block.sub_title" class="text-sandal-400">
                                     {{ block.sub_title }}
@@ -149,8 +146,8 @@ watchEffect(() => {
                 </div>
             </div>
             <div :id="block.slug" v-if="block.type == 'gallery'" class="overflow-hidden relative">
-                <div
-                    class="text-[50vh] text-center text-sandal-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 leading-none">
+                <div class="text-[50vh] text-center text-sandal-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 leading-none"
+                    v-if="block.title">
                     {{ block.title }}
                 </div>
                 <Gallery :slides="block.images" />
@@ -168,7 +165,7 @@ watchEffect(() => {
             <div :id="block.slug" v-if="block.type == 'lead'" class="overflow-hidden">
                 <div class="container pt-4">
                     <h3 class="text-[8vmin] font-bleu text-center w-3/4 m-auto uppercase leading-tight"
-                        v-html="block.title"></h3>
+                        v-if="block.title" v-html="block.title"></h3>
                     <div class="relative flex justify-center w-full mt-20" v-if="(block.link || block.external_link)">
                         <NuxtLink :to="((block.link || block.external_link) as string)"
                             :external="!!block.external_link" class="leadbtn p-8">
@@ -189,7 +186,7 @@ watchEffect(() => {
                 <div class="container p-4 grid grid-cols-1 xl:grid-cols-3">
                     <div class="col-span-full">
                         <div class="text-center font-bleu text-[12vmin] relative">
-                            <span v-html="block.title" />
+                            <span v-html="block.title" v-if="block.title" />
                             <span
                                 class="font-wonder text-[24vmin] text-sandal-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                                 {{ block.sub_title }}

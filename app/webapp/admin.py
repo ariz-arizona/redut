@@ -1,13 +1,42 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 
-from .models import Page, Block, Image, SiteSettings, Feedback
+from .models import Page, Block, Image, SiteSettings, Feedback, Document
+
+
+class DocumentInline(admin.TabularInline):
+    """
+    Inline для отображения документов в админке SiteSettings.
+    """
+
+    model = Document.site_settings.through
+    extra = 1
+    verbose_name = _("Документ")
+    verbose_name_plural = _("Документы")
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ("title", "uploaded_at", "description_short")
+    list_filter = ("uploaded_at",)
+    search_fields = ("title", "description")
+    readonly_fields = ("uploaded_at",)
+
+    @admin.display(description=_("Описание"))
+    def description_short(self, obj):
+        """
+        Отображает первые 50 символов описания.
+        """
+        return obj.description[:50] + "..." if obj.description else "-"
 
 
 # Инлайн для изображений
 class ImageInline(admin.StackedInline):
     model = Image
     extra = 1
+    classes = ["collapse"]  # Сворачиваем весь инлайн
+
 
 
 @admin.register(Block)
@@ -42,12 +71,19 @@ class BlockAdmin(admin.ModelAdmin):
             },
         ),
         (
+            "Привязка к странице",
+            {
+                "fields": ("page",),
+            },
+        ),
+        (
             "Ссылки",
             {
                 "fields": (
                     "link",
                     "external_link",
                 ),
+                "classes": ["collapse"],  # Добавляем класс 'collapse'
             },
         ),
         (
@@ -63,12 +99,7 @@ class BlockAdmin(admin.ModelAdmin):
             "Меню",
             {
                 "fields": ("menu_title",),
-            },
-        ),
-        (
-            "Привязка к странице",
-            {
-                "fields": ("page",),
+                "classes": ["collapse"],  # Добавляем класс 'collapse'
             },
         ),
     )
@@ -76,7 +107,8 @@ class BlockAdmin(admin.ModelAdmin):
     readonly_fields = (
         "content_rendered",
     )  # Делаем отрендеренный контент только для чтения
-    
+
+
 class BlockInline(admin.StackedInline):
     model = Block
     extra = 1
@@ -110,9 +142,7 @@ class BlockInline(admin.StackedInline):
         (
             "Контент",
             {
-                "fields": (
-                    "content",
-                ),
+                "fields": ("content",),
             },
         ),
     )
@@ -124,6 +154,7 @@ class PageAdmin(admin.ModelAdmin):
     list_display = ("title", "slug", "is_homepage")
     prepopulated_fields = {"slug": ("title",)}
     inlines = [BlockInline]  # Добавляем инлайн для блоков
+
 
 class ImageAdmin(admin.ModelAdmin):
     list_display = (
@@ -153,9 +184,7 @@ class ImageAdmin(admin.ModelAdmin):
         (
             "Ссылки",
             {
-                "fields": (
-                    "url",
-                ),
+                "fields": ("url",),
             },
         ),
         (
@@ -169,7 +198,10 @@ class ImageAdmin(admin.ModelAdmin):
         ),
     )
 
-    readonly_fields = ("text_rendered",)  # Делаем отрендеренный контент только для чтения
+    readonly_fields = (
+        "text_rendered",
+    )  # Делаем отрендеренный контент только для чтения
+
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
@@ -181,6 +213,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     list_filter = ("is_enabled",)
     search_fields = ("phone_number", "footer_text")
     actions = ["make_enabled"]
+    inlines = [DocumentInline]
 
     fieldsets = (
         (
@@ -212,6 +245,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         )
 
     footer_text_short.short_description = "Текст футера"
+
 
 from django.contrib import admin
 from .models import Feedback

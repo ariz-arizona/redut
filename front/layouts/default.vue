@@ -9,7 +9,7 @@ const { isVisible: isSliderVisible } = useMainSlider();
 <template>
     <div>
         <div class="w-full z-20" :ref="menuRef" :class="[
-            isSliderVisible ? 'h-52 absolute top-20' : 'h-32 fixed bg-primary-800/75',
+            isSliderVisible ? 'h-36 absolute top-20' : 'h-28 fixed bg-primary-800/75',
             'transition-all duration-300 ease-in-out'
         ]">
             <div class="container grid grid-cols-1 md:grid-cols-[1fr_10rem_1fr] xl:grid-cols-[1fr_14rem_1fr] items-start gap-4 px-2 h-full"

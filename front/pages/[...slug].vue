@@ -6,6 +6,7 @@ const route = useRoute()
 
 const config = useRuntimeConfig()
 const imgBase = config.public.imgBase
+const { settings, loading: settingLoading } = useSiteSettings();
 
 const path = ['page', route.params.slug].filter(Boolean)
 const { data, status, error } = await fetchData<PageData>(path.join('/'))
@@ -28,6 +29,12 @@ useSeoMeta({
     twitterDescription: data.value?.meta_description,
     twitterImage: data.value?.blocks[0]?.images[0]?.image || './og_image.jpg', // Берем первое изображение из блока
 });
+
+watch(settingLoading, () => {
+    if (settingLoading.value == false) {
+        useSeoMeta({ title: settings.value?.name + ' | ' + data.value?.title, })
+    }
+})
 
 const mainSlider = computed(() =>
     data.value?.blocks.find(el => el.type == 'slider')
@@ -128,8 +135,14 @@ watchEffect(() => {
                         <div v-if="block.images.length" class="col-span-1" :class="[
                             !block.is_text_right ? 'order-last' : '',
                         ]">
-                            <img :src="`${imgBase}/${block.images[0].image}`" :alt="block.title"
-                                class="w-full h-auto shadow-md" />
+                            <div class="p-4">
+                                <div class="bg-no-repeat bg-cover bg-center  p-4  relative pointer-events-none" :style="{
+                                    backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`,
+                                        'rgba(var(--color-primary), 0.5)', 'rgba(var(--color-primary), 0.5)')
+                                }" v-if="block.images.length">
+                                    <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Текст -->

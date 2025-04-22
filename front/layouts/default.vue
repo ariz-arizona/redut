@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import("~/assets/tailwind.scss");
-import { useSiteSettings } from '@/composables/useSiteSettings';
 
 const { settings, loading, error, fetchSettings } = useSiteSettings();
 

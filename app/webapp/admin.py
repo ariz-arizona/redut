@@ -16,26 +16,87 @@ class DocumentInline(admin.TabularInline):
     verbose_name_plural = _("Документы")
 
 
-@admin.register(Document)
-class DocumentAdmin(admin.ModelAdmin):
-    list_display = ("title", "uploaded_at", "description_short")
-    list_filter = ("uploaded_at",)
-    search_fields = ("title", "description")
-    readonly_fields = ("uploaded_at",)
-
-    @admin.display(description=_("Описание"))
-    def description_short(self, obj):
-        """
-        Отображает первые 50 символов описания.
-        """
-        return obj.description[:50] + "..." if obj.description else "-"
-
-
 # Инлайн для изображений
 class ImageInline(admin.StackedInline):
     model = Image
     extra = 1
     classes = ["collapse"]  # Сворачиваем весь инлайн
+
+    fieldsets = (
+        (
+            "Основная информация",
+            {
+                "fields": (
+                    "image",
+                    "alt_text",
+                    "title",
+                    "order",
+                ),
+            },
+        ),
+        (
+            "Ссылки",
+            {
+                "fields": (
+                    "external_link",
+                    "link",
+                ),
+                "classes": ["collapse"],
+            },
+        ),
+        (
+            "Контент",
+            {
+                "fields": (
+                    "text",
+                    "text_rendered",
+                ),
+                "classes": ["collapse"],
+            },
+        ),
+    )
+
+    readonly_fields = ("text_rendered",)
+
+
+class BlockInline(admin.StackedInline):
+    model = Block
+    extra = 1
+    fk_name = "page"
+    ordering = ["order"]
+    inlines = [ImageInline]
+
+    fieldsets = (
+        (
+            "Основная информация",
+            {
+                "fields": (
+                    "type",
+                    "title",
+                    "slug",
+                    "sub_title",
+                    "btn_title",
+                    "order",
+                    "is_text_right",
+                ),
+            },
+        ),
+        (
+            "Ссылки",
+            {
+                "fields": (
+                    "link",
+                    "external_link",
+                ),
+            },
+        ),
+        (
+            "Контент",
+            {
+                "fields": ("content",),
+            },
+        ),
+    )
 
 
 @admin.register(Block)
@@ -109,46 +170,6 @@ class BlockAdmin(admin.ModelAdmin):
     )  # Делаем отрендеренный контент только для чтения
 
 
-class BlockInline(admin.StackedInline):
-    model = Block
-    extra = 1
-    fk_name = "page"
-    ordering = ["order"]
-    inlines = [ImageInline]
-
-    fieldsets = (
-        (
-            "Основная информация",
-            {
-                "fields": (
-                    "type",
-                    "title",
-                    "slug",
-                    "sub_title",
-                    "btn_title",
-                    "order",
-                    "is_text_right",
-                ),
-            },
-        ),
-        (
-            "Ссылки",
-            {
-                "fields": (
-                    "link",
-                    "external_link",
-                ),
-            },
-        ),
-        (
-            "Контент",
-            {
-                "fields": ("content",),
-            },
-        ),
-    )
-
-
 # Админка для страниц
 @admin.register(Page)
 class PageAdmin(admin.ModelAdmin):
@@ -157,13 +178,15 @@ class PageAdmin(admin.ModelAdmin):
     inlines = [BlockInline]  # Добавляем инлайн для блоков
 
 
+@admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     list_display = (
         "title",
         "block",
         "order",
         "alt_text",
-        "url",
+        "external_link",
+        "link",
     )
     list_filter = ("block",)  # Фильтр по блокам
     search_fields = ("title", "alt_text")  # Поиск по заголовку и альтернативному тексту
@@ -185,7 +208,11 @@ class ImageAdmin(admin.ModelAdmin):
         (
             "Ссылки",
             {
-                "fields": ("url",),
+                "fields": (
+                    "external_link",
+                    "link",
+                    "btn_title",
+                )
             },
         ),
         (
@@ -262,10 +289,6 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     footer_text_short.short_description = "Текст футера"
 
 
-from django.contrib import admin
-from .models import Feedback
-
-
 @admin.register(Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = (
@@ -284,3 +307,18 @@ class FeedbackAdmin(admin.ModelAdmin):
         Проверяет, есть ли текст в поле `message`.
         """
         return bool(obj.message)
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ("title", "uploaded_at", "description_short")
+    list_filter = ("uploaded_at",)
+    search_fields = ("title", "description")
+    readonly_fields = ("uploaded_at",)
+
+    @admin.display(description=_("Описание"))
+    def description_short(self, obj):
+        """
+        Отображает первые 50 символов описания.
+        """
+        return obj.description[:50] + "..." if obj.description else "-"

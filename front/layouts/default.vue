@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import("~/assets/tailwind.scss");
-const { fetchData } = useApiFetch()
-const { data: settings } = fetchData<SiteSettings>('site-settings')
+import { useSiteSettings } from '@/composables/useSiteSettings';
+
+const { settings, loading, error, fetchSettings } = useSiteSettings();
 
 const menuRef = ref()
 const { isVisible: isSliderVisible } = useMainSlider();

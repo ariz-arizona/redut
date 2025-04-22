@@ -99,7 +99,7 @@ watchEffect(() => {
 <template>
     <div>
         <template v-if="mainSlider">
-            <Slider :slides="mainSlider.images" :content="mainSlider.content_rendered" />
+            <Slider :slides="mainSlider.images" />
         </template>
         <template v-if="!mainSlider">
             <div class="h-40" />

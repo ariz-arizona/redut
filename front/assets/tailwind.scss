@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-  --color-primary: 24,29,36;
+  --color-primary: 24, 29, 36;
   --color-secondary: 172, 131, 94;
 }
 
@@ -37,7 +37,7 @@ body {
   @apply leading-loose text-xs uppercase tracking-[0.2rem];
 }
 .menubtn {
-  @apply border rounded-full border-secondary-500 px-4 py-2 inline-flex gap-2 items-center cursor-pointer;
+  @apply border rounded-full border-secondary-500 px-4 py-2 inline-flex gap-2 items-center cursor-pointer transition-colors;
 }
 .leadbtn {
   @apply relative overflow-hidden flex items-center justify-center

@@ -273,14 +273,24 @@ class Image(models.Model):
     alt_text = models.CharField(
         max_length=255, blank=True, null=True, verbose_name="Альтернативный текст"
     )
-    url = models.URLField(blank=True, null=True, verbose_name="Ссылка (для галереи)")
+    external_link = models.URLField(blank=True, null=True, verbose_name="Ссылка")
+    link = models.ForeignKey(
+        "Page",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Внутренняя ссылка",
+    )
+    btn_title = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Текст кнопки"
+    )
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     text = MarkdownField(
         blank=True,
         null=True,
         validator=VALIDATOR_STANDARD,  # Валидатор для Markdown
         rendered_field="text_rendered",  # Поле для хранения HTML
-        verbose_name="Контент (Markdown)",
+        verbose_name="Текст (Markdown)",
     )
     text_rendered = models.TextField(blank=True, null=True, editable=False)
     order = models.PositiveIntegerField(default=0, verbose_name="Порядок")

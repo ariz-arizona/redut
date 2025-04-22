@@ -4,9 +4,13 @@ interface Image {
     id: number;
     image: string;
     alt_text: string | null;
-    url: string | null;
     title: string | null;
     text: string | null;
+    link: string | null; // Внутренняя ссылка (опционально)
+    external_link: string | null; // Внешняя ссылка (опционально)
+    btn_title: string | null;
+    text: string | null
+    text_rendered: string | null
 }
 type BlockType = 'text' | 'lead' | 'gallery' | 'slider' | 'feedback';
 
@@ -20,7 +24,7 @@ interface Block {
     title: string; // Заголовок блока
     sub_title: string | null; // Подзаголовок (опционально)
     menu_title: string | null; // Заголовок для меню (опционально)
-    btn_title: string | null; 
+    btn_title: string | null;
     slug: string; // Уникальный идентификатор блока
     type: BlockType; // Тип блока
     link: string | null; // Внутренняя ссылка (опционально)

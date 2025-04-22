@@ -34,9 +34,7 @@ const { isVisible: isSliderVisible } = useMainSlider();
             <div class="container flex items-center gap-4 p-2 py-8">
                 <div class="grid grid-cols-3">
                     <div class="col-span-2">
-                        <div class="text-xs">
-                            {{ settings?.footer_text }}
-                        </div>
+                        <div class="text-xs" v-html="settings?.footer_text" />
                     </div>
                 </div>
             </div>

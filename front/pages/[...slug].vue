@@ -177,7 +177,7 @@ watchEffect(() => {
                 </div>
                 <div class="bg-no-repeat bg-cover bg-center h-[50vh] p-4 -z-10 relative pointer-events-none"
                     :class="[{ '-mt-[25vh]': (block.link || block.external_link) }]"
-                    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`, 'rgba(24,29,36,1)', 'rgba(0,0,0,0)') }"
+                    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`, 'rgba(var(--color-primary), 1)', 'rgba(var(--color-primary), 0.75)') }"
                     v-if="block.images.length">
                     <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
                 </div>
@@ -194,7 +194,7 @@ watchEffect(() => {
                         </div>
                     </div>
                     <div class="col-span-full xl:col-span-1 xl:col-start-2 flex justify-center">
-                        <Feedback :btn="block.btn_title" />
+                        <Feedback :btn="(block.btn_title as string)" />
                     </div>
                 </div>
             </div>

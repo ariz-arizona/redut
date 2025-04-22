@@ -221,7 +221,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         (
             None,
             {
-                "fields": ("phone_number", "logo", "footer_text", "is_enabled"),
+                "fields": ("phone_number", "logo", "footer_text_md", "is_enabled"),
             },
         ),
     )

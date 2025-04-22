@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-primary: 24,29,36;
+  --color-secondary: 172, 131, 94;
+}
+
 body {
   @apply font-euclid bg-primary-950 text-secondary-100;
 }

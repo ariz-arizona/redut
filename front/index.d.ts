@@ -37,10 +37,20 @@ interface PageData {
     slug: string;
     title: string;
 }
+interface Document {
+    id: number; // Уникальный идентификатор документа
+    title: string; // Название документа
+    file: string; // Путь к файлу документа
+    description: string | null; // Описание документа (может быть null)
+    uploaded_at: string; // Дата загрузки документа (ISO формат, например, "2023-10-01T12:34:56Z")
+}
+
 interface SiteSettings {
     id: number; // Уникальный идентификатор
+    name: string;
     phone_number: string; // Номер телефона
     logo: string | null; // Логотип (путь к файлу или null)
     footer_text: string; // Текст футера
     is_enabled: boolean; // Флаг активности
+    documents: Document[]; // Массив связанных документов
 }

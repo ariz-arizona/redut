@@ -164,7 +164,7 @@ watchEffect(() => {
             </div>
             <div :id="block.slug" v-if="block.type == 'lead'" class="overflow-hidden">
                 <div class="container pt-4">
-                    <h3 class="text-[8vmin] font-bleu text-center w-3/4 m-auto uppercase leading-tight"
+                    <h3 class="text-[6.5vh] font-bleu text-center w-3/4 m-auto uppercase leading-tight"
                         v-if="block.title" v-html="block.title"></h3>
                     <div class="relative flex justify-center w-full mt-20" v-if="(block.link || block.external_link)">
                         <NuxtLink :to="((block.link || block.external_link) as string)"

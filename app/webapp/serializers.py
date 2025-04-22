@@ -1,6 +1,19 @@
 from rest_framework import serializers
-from .models import Page, Block, Image, SiteSettings, Feedback
+from .models import Page, Block, Image, SiteSettings, Feedback, Document
 
+class DocumentSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели Document.
+    """
+    class Meta:
+        model = Document
+        fields = [
+            "id",
+            "title",
+            "file",  # URL файла будет автоматически сгенерирован через FileField
+            "description",
+            "uploaded_at",
+        ]
 
 class ImageSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=False)
@@ -36,12 +49,11 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     Сериализатор для модели SiteSettings.
     """
     logo = serializers.FileField(use_url=False)
+    documents = DocumentSerializer(many=True, read_only=True)
+
     class Meta:
         model = SiteSettings
         fields = '__all__'
-        
-from rest_framework import serializers
-from .models import Feedback
 
 
 class FeedbackSerializer(serializers.ModelSerializer):

@@ -12,6 +12,8 @@ class SiteSettings(models.Model):
     Модель для хранения общих сведений о сайте.
     """
 
+    name = models.CharField(max_length=255)
+
     phone_number = models.CharField(
         max_length=20,
         verbose_name="Номер телефона",

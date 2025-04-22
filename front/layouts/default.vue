@@ -5,6 +5,9 @@ const { data: settings } = fetchData<SiteSettings>('site-settings')
 
 const menuRef = ref()
 const { isVisible: isSliderVisible } = useMainSlider();
+
+const config = useRuntimeConfig()
+const imgBase = config.public.imgBase
 </script>
 <template>
     <div>
@@ -31,9 +34,20 @@ const { isVisible: isSliderVisible } = useMainSlider();
             <slot />
         </Suspense>
         <div class="bg-primary-800 text-white mt-8">
-            <div class="container flex items-center gap-4 p-2 py-8">
-                <div class="grid grid-cols-3">
-                    <div class="col-span-2">
+            <div class="container flex items-center gap-4 p-2 py-8 basetext">
+                <div class="grid grid-cols-3 w-full">
+                    <div class="col-span-1" v-if="settings?.documents">
+                        {{ new Date().getFullYear() }} © {{ settings.name }}<br />
+                        <template v-for="doc in settings.documents">
+                            <a :href="`${imgBase}/${doc.file}`" download>{{ doc.title }}</a><br />
+                        </template>
+                    </div>
+                    <div class="col-span-1 text-center">
+                        <span class="size-24">
+                            <HeaderLogo :logo="settings?.logo" />
+                        </span>
+                    </div>
+                    <div class="col-span-1 text-right">
                         <div class="text-xs" v-html="settings?.footer_text" />
                     </div>
                 </div>

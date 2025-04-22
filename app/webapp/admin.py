@@ -211,6 +211,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     """
 
     list_display = (
+        "name",
         "phone_number",
         "logo_preview",
         "footer_text_short",
@@ -226,6 +227,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             None,
             {
                 "fields": (
+                    "name",
                     "phone_number",
                     "logo",
                     "footer_text_md",

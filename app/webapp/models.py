@@ -35,6 +35,7 @@ class SiteSettings(models.Model):
         validator=VALIDATOR_STANDARD,  # Валидатор для Markdown
         verbose_name="Текст футера",
         help_text="Введите текст, который будет отображаться в нижней части сайта (футере).",
+        rendered_field="footer_text",  # Поле для хранения HTML
     )
     footer_text = models.TextField(blank=True, null=True, editable=False)
 
@@ -90,10 +91,6 @@ class SiteSettings(models.Model):
                 raise ValidationError(
                     "Может быть только одна активная запись настроек сайта."
                 )
-
-
-from django.db import models
-from django.utils.translation import gettext_lazy as _
 
 
 class Document(models.Model):

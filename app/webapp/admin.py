@@ -214,7 +214,6 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         "phone_number",
         "logo_preview",
         "footer_text_short",
-        "footer_text",
         "is_enabled",
     )
     list_filter = ("is_enabled",)
@@ -226,10 +225,17 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         (
             None,
             {
-                "fields": ("phone_number", "logo", "footer_text_md", "is_enabled"),
+                "fields": (
+                    "phone_number",
+                    "logo",
+                    "footer_text_md",
+                    "footer_text",
+                    "is_enabled",
+                ),
             },
         ),
     )
+    readonly_fields = ("footer_text",)
 
     def logo_preview(self, obj):
         """

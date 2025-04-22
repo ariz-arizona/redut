@@ -38,7 +38,6 @@ class ImageInline(admin.StackedInline):
     classes = ["collapse"]  # Сворачиваем весь инлайн
 
 
-
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
     list_display = (
@@ -211,7 +210,13 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     Админка для модели SiteSettings.
     """
 
-    list_display = ("phone_number", "logo_preview", "footer_text_short", "is_enabled")
+    list_display = (
+        "phone_number",
+        "logo_preview",
+        "footer_text_short",
+        "footer_text",
+        "is_enabled",
+    )
     list_filter = ("is_enabled",)
     search_fields = ("phone_number", "footer_text")
     actions = ["make_enabled"]

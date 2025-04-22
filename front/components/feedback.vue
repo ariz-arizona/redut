@@ -1,5 +1,10 @@
 <script setup>
 const { fetchData } = useApiFetch()
+const props = defineProps({
+    btn: {
+        type: String,
+    },
+});
 
 // Реактивные данные формы
 const formData = ref({
@@ -128,13 +133,13 @@ const clearError = (field) => {
             <label :data-error="errors.acceptance" class="flex gap-2 justify-start items-center"
                 :class="{ 'text-red-500': errors.acceptance }">
                 <input v-model="formData.acceptance" type="checkbox" class="input" @change="clearError('acceptance')" />
-                <span>Принимаю <NuxtLink to="policy">условия обработки персональных данных</NuxtLink></span>
+                <span><NuxtLink to="policy">Согласие на обработку персональных данных</NuxtLink></span>
             </label>
 
             <!-- Кнопка отправки -->
             <button class="leadbtn p-4" :class="{ 'ring-red-500 text-red-500': errors.submit }">
                 <span v-if="errors.submit !== ''">Ошибка при отправке</span>
-                <span v-else>Отправить</span>
+                <span v-else>{{props.btn || 'Отправить'}}</span>
             </button>
         </div>
         <!-- Сообщение об успешной отправке -->

@@ -156,7 +156,7 @@ watchEffect(() => {
                         <NuxtLink :to="((block.link || block.external_link) as string)"
                             :external="!!block.external_link" class="size-36 p-4 leadbtn">
                             <span class="leading-4">
-                                {{ block.sub_title || 'Читать далее' }}
+                                {{ block.btn_title || 'Читать далее' }}
                             </span>
                         </NuxtLink>
                     </div>
@@ -170,7 +170,7 @@ watchEffect(() => {
                         <NuxtLink :to="((block.link || block.external_link) as string)"
                             :external="!!block.external_link" class="leadbtn p-8">
                             <span class="leading-4">
-                                {{ block.sub_title || 'Читать далее' }}
+                                {{ block.btn_title || 'Читать далее' }}
                             </span>
                         </NuxtLink>
                     </div>
@@ -194,7 +194,7 @@ watchEffect(() => {
                         </div>
                     </div>
                     <div class="col-span-full xl:col-span-1 xl:col-start-2 flex justify-center">
-                        <Feedback />
+                        <Feedback :btn="block.btn_title" />
                     </div>
                 </div>
             </div>

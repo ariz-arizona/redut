@@ -146,11 +146,13 @@ watchEffect(() => {
                 </div>
             </div>
             <div :id="block.slug" v-if="block.type == 'gallery'" class="overflow-hidden relative">
-                <div class="text-[50vh] text-center text-secondary-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 leading-none"
-                    v-if="block.title">
-                    {{ block.title }}
+                <div class="relative">
+                    <div class="text-[50vmin] text-center text-secondary-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 top-1/2 -translate-y-1/2 leading-none"
+                        v-if="block.title">
+                        {{ block.title }}
+                    </div>
+                    <Gallery :slides="block.images" />
                 </div>
-                <Gallery :slides="block.images" />
                 <template v-if="block.link || block.external_link">
                     <div class="relative -translate-y-1/2 z-10 flex justify-center w-full">
                         <NuxtLink :to="((block.link || block.external_link) as string)"
@@ -164,7 +166,7 @@ watchEffect(() => {
             </div>
             <div :id="block.slug" v-if="block.type == 'lead'" class="overflow-hidden">
                 <div class="container pt-4">
-                    <h3 class="text-[6.5vh] font-bleu text-center w-3/4 m-auto uppercase leading-tight"
+                    <h3 class="text-4xl md:text-[6.5vh] font-bleu text-center w-full md:w-3/4 m-auto uppercase leading-tight"
                         v-if="block.title" v-html="block.title"></h3>
                     <div class="relative flex justify-center w-full mt-20" v-if="(block.link || block.external_link)">
                         <NuxtLink :to="((block.link || block.external_link) as string)"
@@ -176,9 +178,10 @@ watchEffect(() => {
                     </div>
                 </div>
                 <div class="bg-no-repeat bg-cover bg-center h-[50vh] p-4 -z-10 relative pointer-events-none"
-                    :class="[{ '-mt-[25vh]': (block.link || block.external_link) }]"
-                    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`, 'rgba(var(--color-primary), 1)', 'rgba(var(--color-primary), 0.75)') }"
-                    v-if="block.images.length">
+                    :class="[{ '-mt-[25vh]': (block.link || block.external_link) }]" :style="{
+                        backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`,
+                            'rgba(var(--color-primary), 1)', 'rgba(var(--color-primary), 0.75)')
+                    }" v-if="block.images.length">
                     <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
                 </div>
             </div>

@@ -37,7 +37,9 @@ const imgBase = config.public.imgBase
             <div class="container flex items-center gap-4 p-2 py-8 basetext">
                 <div class="grid grid-cols-3 w-full">
                     <div class="col-span-1" v-if="settings?.documents">
-                        {{ new Date().getFullYear() }} © {{ settings.name }}<br />
+                        <span class="text-secondary-400/50">
+                            {{ new Date().getFullYear() }} © {{ settings.name }}<br />
+                        </span>
                         <template v-for="doc in settings.documents">
                             <a :href="`${imgBase}/${doc.file}`" download>{{ doc.title }}</a><br />
                         </template>

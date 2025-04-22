@@ -43,6 +43,10 @@ export default <Partial<Config>>{
                 primary: {
                     ...new_colors.midnight,
                     DEFAULT: new_colors.midnight[500],
+                },
+                secondary:{
+                    ...new_colors.sandal,
+                    DEFAULT: new_colors.sandal[500],
                 }
             },
             fontFamily: {

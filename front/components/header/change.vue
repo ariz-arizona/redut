@@ -1,6 +1,6 @@
 <template>
     <NuxtLink to="change" class="contents">
-        <div class="menubtn text-nowrap bg-sandal-500 hover:bg-sandal-700 transition-colors">
+        <div class="menubtn text-nowrap bg-secondary-500 hover:bg-secondary-700 transition-colors">
             <span>
                 Выбор квартир
             </span>

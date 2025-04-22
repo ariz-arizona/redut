@@ -136,7 +136,7 @@ watchEffect(() => {
                         <div class="col-span-1">
                             <div class="title mt-16 mb-20" v-if="block.title">
                                 {{ block.title }}
-                                <span v-if="block.sub_title" class="text-sandal-400">
+                                <span v-if="block.sub_title" class="text-secondary-400">
                                     {{ block.sub_title }}
                                 </span>
                             </div>
@@ -146,7 +146,7 @@ watchEffect(() => {
                 </div>
             </div>
             <div :id="block.slug" v-if="block.type == 'gallery'" class="overflow-hidden relative">
-                <div class="text-[50vh] text-center text-sandal-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 leading-none"
+                <div class="text-[50vh] text-center text-secondary-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 leading-none"
                     v-if="block.title">
                     {{ block.title }}
                 </div>
@@ -188,7 +188,7 @@ watchEffect(() => {
                         <div class="text-center font-bleu text-[12vmin] relative">
                             <span v-html="block.title" v-if="block.title" />
                             <span
-                                class="font-wonder text-[24vmin] text-sandal-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                class="font-wonder text-[24vmin] text-secondary-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                                 {{ block.sub_title }}
                             </span>
                         </div>

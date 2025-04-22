@@ -19,7 +19,7 @@ const scrollToFeedback = () => {
 
 <template>
     <NuxtLink to="#feedback" class="menubtn" @click.prevent="scrollToFeedback">
-        <Icon name="mdi:chevron-down" class="text-sandal-500 text-xl" />
+        <Icon name="mdi:chevron-down" class="text-secondary-500 text-xl" />
         <span>
             Обратная связь
         </span>

@@ -159,7 +159,7 @@ watchEffect(() => {
                         <NuxtLink :to="((block.link || block.external_link) as string)"
                             :external="!!block.external_link" class="size-36 p-4 leadbtn">
                             <span class="leading-4">
-                                Читать далее
+                                {{ block.sub_title || 'Читать далее' }}
                             </span>
                         </NuxtLink>
                     </div>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useElementBounding, useIntersectionObserver, useWindowScroll } from '@vueuse/core'
 
 const { fetchData } = useApiFetch()
 const route = useRoute()
@@ -43,64 +42,6 @@ const mainSlider = computed(() =>
 const blocksByType = (types: BlockType[]) => {
     return data.value?.blocks.filter(el => types.includes(el.type)) || []
 }
-
-const activeBlock = ref<string | null>(null);
-const { y: scrollY } = useWindowScroll();
-const isSticky = ref(false);
-const initialMenuPosition = ref()
-const menuRef = ref<HTMLElement | null>(null);
-const placeholderRef = ref<HTMLElement | null>(null); // Заполнитель
-
-
-onMounted(async () => {
-    // Получаем элементы для наблюдения за блоками контента
-    const observerTargets = blocksByType(['text', 'gallery'])
-        .map(block => document.getElementById(block.slug))
-        .filter(Boolean); // Удаляем null или undefined
-
-    // Наблюдатель за активными блоками
-    useIntersectionObserver(
-        observerTargets,
-        ([entry]) => {
-            if (entry.isIntersecting) {
-                activeBlock.value = entry.target.id; // Устанавливаем ID активного блока
-            }
-        },
-        {
-            threshold: 0.5, // Порог видимости (30% блока должно быть видно)
-        }
-    );
-
-    await nextTick(); // Ждём, пока DOM обновится
-
-    if (menuRef.value) {
-        const { top, height } = useElementBounding(menuRef);
-        initialMenuPosition.value = top.value;
-
-        // Создаём заполнитель, если его ещё нет
-        if (!placeholderRef.value) {
-            placeholderRef.value = document.createElement('div');
-            placeholderRef.value.style.height = `${height.value}px`;
-            placeholderRef.value.style.display = 'none'; // Скрываем по умолчанию
-            menuRef.value.parentNode?.insertBefore(placeholderRef.value, menuRef.value.nextSibling);
-        }
-    }
-});
-
-// Sticky-эффект при скролле
-watchEffect(() => {
-    if (initialMenuPosition.value !== null) {
-        isSticky.value = scrollY.value > initialMenuPosition.value; // Меню становится sticky, если скролл ниже начальной позиции
-
-        if (isSticky.value) {
-            // Показываем заполнитель
-            if (placeholderRef.value) placeholderRef.value.style.display = 'block';
-        } else {
-            // Скрываем заполнитель
-            if (placeholderRef.value) placeholderRef.value.style.display = 'none';
-        }
-    }
-});
 </script>
 
 <template>
@@ -111,22 +52,6 @@ watchEffect(() => {
         <template v-if="!mainSlider">
             <div class="h-40" />
         </template>
-        <nav class="menu z-10 bg-white" :class="{ 'fixed top-0 right-0 left-0': isSticky }" ref="menuRef" v-if="false">
-            <div class="container flex gap-2 items-stretch">
-                <div class="flex items-center">
-                    <PageLogo />
-                </div>
-                <ul class="menu flex gap-2 grow-1">
-                    <template v-for="block in blocksByType(['text', 'gallery'])" :key="block.slug">
-                        <li>
-                            <NuxtLink :href="`#${block.slug}`"
-                                :class="{ 'active': isSticky && activeBlock === block.slug }">{{
-                                    block.menu_title || block.title }}</NuxtLink>
-                        </li>
-                    </template>
-                </ul>
-            </div>
-        </nav>
         <template v-for="block in blocksByType(['text', 'gallery', 'lead', 'feedback'])" :key="block.id">
             <div :id="block.slug" v-if="block.type === 'text'">
                 <div class="container pt-4">

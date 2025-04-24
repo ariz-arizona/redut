@@ -65,12 +65,19 @@ class ImageInline(admin.StackedInline):
     readonly_fields = ("text_rendered",)
 
 
-# Inline для связей "многие ко многим" между страницами и блоками
 class BlockInline(admin.StackedInline):
-    model = Block.pages.through
+    model = Block.pages.through  # Используем промежуточную модель ManyToMany
     extra = 1
     verbose_name = _("Блок")
     verbose_name_plural = _("Блоки")
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        Настройка виджета для выбора блоков.
+        """
+        if db_field.name == "block":
+            kwargs["queryset"] = Block.objects.all().order_by("order")
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(SiteSettings)
@@ -165,20 +172,29 @@ class BlockAdmin(admin.ModelAdmin):
         "type",
         "order",
         "sub_title",
-        "menu_title",
         "slug",
         "is_text_right",
-        "first_page",  # Новое поле для отображения первой страницы
+        "pages_list",  # Поле для отображения всех связанных страниц
+        "first_page",  # Поле для отображения первой страницы
     )
-    list_filter = ("type", "is_text_right")
-    search_fields = ("type", "title", "menu_title", "content")
-    prepopulated_fields = {"slug": ("title",)}
+    list_filter = (
+        "type",
+        "is_text_right",
+        "pages",
+    )  # Фильтр по типу, тексту и страницам
+    search_fields = (
+        "type",
+        "title",
+        "content",
+    )  # Поиск по ключевым полям
+    prepopulated_fields = {"slug": ("title",)}  # Автозаполнение slug из title
     filter_horizontal = ("pages",)  # Удобный виджет для выбора страниц
+    inlines = [ImageInline]
 
     def get_queryset(self, request):
         """
         Переопределяем queryset для админки.
-        Добавляем аннотацию для первой страницы из связанных.
+        Добавляем аннотации для первой страницы и оптимизируем запросы.
         """
         queryset = super().get_queryset(request)
         # Подзапрос для получения первой страницы (по ID)
@@ -186,7 +202,17 @@ class BlockAdmin(admin.ModelAdmin):
         queryset = queryset.annotate(
             first_page_title=Subquery(first_page.values("title"))
         )
+        # Предварительная загрузка связанных страниц для оптимизации
+        queryset = queryset.prefetch_related("pages")
         return queryset
+
+    def pages_list(self, obj):
+        """
+        Возвращает список названий страниц, связанных с блоком.
+        """
+        return ", ".join([page.title for page in obj.pages.all()])
+
+    pages_list.short_description = _("Связанные страницы")
 
     def first_page(self, obj):
         """
@@ -195,6 +221,51 @@ class BlockAdmin(admin.ModelAdmin):
         return obj.first_page_title or "-"
 
     first_page.short_description = _("Первая страница")
+
+    fieldsets = (
+        (
+            "Основная информация",
+            {
+                "fields": (
+                    "type",
+                    "title",
+                    "sub_title",
+                    "slug",
+                    "btn_title",
+                    "order",
+                    "is_text_right",
+                ),
+            },
+        ),
+        (
+            "Привязка к страницам",
+            {
+                "fields": ("pages",),  # Меняем поле page на pages
+            },
+        ),
+        (
+            "Ссылки",
+            {
+                "fields": (
+                    "link",
+                    "external_link",
+                ),
+                "classes": ["collapse"],  # Добавляем класс 'collapse'
+            },
+        ),
+        (
+            "Контент",
+            {
+                "fields": (
+                    "content",
+                    "content_rendered",  # Отрендеренный контент (только для чтения)
+                ),
+                "classes": ["collapse"],  # Добавляем класс 'collapse'
+            },
+        ),
+    )
+
+    readonly_fields = ("content_rendered",)
 
 
 @admin.register(Page)

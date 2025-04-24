@@ -245,13 +245,6 @@ class Block(models.Model):
         null=True,
         verbose_name="Внешняя ссылка",
     )
-    menu_title = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Заголовок меню",
-        help_text="Если указано, будет использоваться в меню вместо основного заголовка.",
-    )
     btn_title = models.CharField(
         max_length=255,
         blank=True,

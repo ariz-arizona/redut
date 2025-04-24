@@ -23,7 +23,6 @@ interface Block {
     page: number; // ID страницы, к которой привязан блок
     title: string; // Заголовок блока
     sub_title: string | null; // Подзаголовок (опционально)
-    menu_title: string | null; // Заголовок для меню (опционально)
     btn_title: string | null;
     slug: string; // Уникальный идентификатор блока
     type: BlockType; // Тип блока

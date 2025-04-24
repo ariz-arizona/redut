@@ -174,52 +174,22 @@ class BlockAdmin(admin.ModelAdmin):
         "sub_title",
         "slug",
         "is_text_right",
-        "pages_list",  # Поле для отображения всех связанных страниц
-        "first_page",  # Поле для отображения первой страницы
+        "pages_list",  # Новое поле для отображения связанных страниц
     )
     list_filter = (
         "type",
         "is_text_right",
-        "pages",
-    )  # Фильтр по типу, тексту и страницам
+        (
+            "block_pages__page",
+            admin.RelatedOnlyFieldListFilter,
+        ),  # Фильтр по странице через block_pages
+    )
     search_fields = (
         "type",
         "title",
-        "content",
+        "content_md",
     )  # Поиск по ключевым полям
     prepopulated_fields = {"slug": ("title",)}  # Автозаполнение slug из title
-    inlines = [ImageInline]
-
-    def get_queryset(self, request):
-        """
-        Переопределяем queryset для админки.
-        Добавляем аннотации для первой страницы и оптимизируем запросы.
-        """
-        queryset = super().get_queryset(request)
-        # Подзапрос для получения первой страницы (по ID)
-        first_page = Page.objects.filter(blocks=OuterRef("pk")).order_by("id")[:1]
-        queryset = queryset.annotate(
-            first_page_title=Subquery(first_page.values("title"))
-        )
-        # Предварительная загрузка связанных страниц для оптимизации
-        queryset = queryset.prefetch_related("pages")
-        return queryset
-
-    def pages_list(self, obj):
-        """
-        Возвращает список названий страниц, связанных с блоком.
-        """
-        return ", ".join([page.title for page in obj.pages.all()])
-
-    pages_list.short_description = _("Связанные страницы")
-
-    def first_page(self, obj):
-        """
-        Возвращает название первой страницы, связанной с блоком.
-        """
-        return obj.first_page_title or "-"
-
-    first_page.short_description = _("Первая страница")
 
     fieldsets = (
         (
@@ -233,12 +203,6 @@ class BlockAdmin(admin.ModelAdmin):
                     "btn_title",
                     "is_text_right",
                 ),
-            },
-        ),
-        (
-            "Привязка к страницам",
-            {
-                "fields": ("pages",),  # Меняем поле page на pages
             },
         ),
         (
@@ -264,6 +228,45 @@ class BlockAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = ("content",)
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+
+        # Проверяем, выбрана ли страница в фильтре
+        page_filter = request.GET.get("block_pages__page__id__exact")
+        if page_filter:
+            # Если выбрана страница, используем её как первую страницу
+            first_page = PageBlock.objects.filter(
+                block=OuterRef("pk"), page_id=page_filter
+            ).order_by("order")[:1]
+        else:
+            # Подзапрос для первой страницы
+            first_page = PageBlock.objects.filter(block=OuterRef("pk")).order_by(
+                "order"
+            )[:1]
+            
+        queryset = queryset.annotate(
+            first_page_title=Subquery(first_page.values("page__title")),
+            block_order=Subquery(
+                first_page.values("order")
+            ),  # Порядок блока на первой странице
+            block_id=Subquery(
+                PageBlock.objects.filter(block=OuterRef("pk")).values("id")[:1]
+            ),
+        )
+
+        # Предварительная загрузка связанных страниц
+        queryset = queryset.prefetch_related("pages")
+
+        return queryset.order_by("first_page_title", "block_order", "block_id")
+
+    def pages_list(self, obj):
+        """
+        Возвращает список названий страниц, связанных с блоком.
+        """
+        return ", ".join([page.title for page in obj.pages.all()])
+
+    pages_list.short_description = _("Связанные страницы")
 
 
 @admin.register(Page)

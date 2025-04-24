@@ -296,6 +296,7 @@ class Block(models.Model):
         return f"{self.get_type_display()} {self.title}"
 
     class Meta:
+        ordering = ["block_pages__order"]
         verbose_name = "Блок"
         verbose_name_plural = "Блоки"
 

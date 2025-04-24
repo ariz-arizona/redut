@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-from django.db.models import OuterRef, Subquery
+from django.db.models import OuterRef, Subquery, Prefetch
 
+from server.logger import logger
 from .models import (
     SiteSettings,
     Document,
@@ -13,7 +14,6 @@ from .models import (
     Feedback,
     PageBlock,
 )
-
 
 # Inline для документов в админке SiteSettings
 class DocumentInline(admin.TabularInline):
@@ -190,6 +190,7 @@ class BlockAdmin(admin.ModelAdmin):
         "content_md",
     )  # Поиск по ключевым полям
     prepopulated_fields = {"slug": ("title",)}  # Автозаполнение slug из title
+    inlines = [ImageInline]
 
     fieldsets = (
         (
@@ -245,6 +246,7 @@ class BlockAdmin(admin.ModelAdmin):
                 "order"
             )[:1]
             
+        # Аннотация для первой страницы и её порядка
         queryset = queryset.annotate(
             first_page_title=Subquery(first_page.values("page__title")),
             block_order=Subquery(
@@ -253,12 +255,18 @@ class BlockAdmin(admin.ModelAdmin):
             block_id=Subquery(
                 PageBlock.objects.filter(block=OuterRef("pk")).values("id")[:1]
             ),
-        )
-
+        ).distinct()
+        
         # Предварительная загрузка связанных страниц
-        queryset = queryset.prefetch_related("pages")
-
-        return queryset.order_by("first_page_title", "block_order", "block_id")
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                "block_pages",
+                queryset=PageBlock.objects.order_by("order"),
+            )
+        )
+        return queryset.order_by(
+            "first_page_title", "block_order", "block_id"
+        )
 
     def pages_list(self, obj):
         """

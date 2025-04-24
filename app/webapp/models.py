@@ -142,6 +142,37 @@ class Document(models.Model):
     def __str__(self):
         return self.title
 
+class Category(models.Model):
+    """
+    Модель для категорий страниц.
+    """
+    title = models.CharField(
+        max_length=255,
+        verbose_name=_("Заголовок"),
+        help_text=_("Введите заголовок категории."),
+    )
+
+    sub_title = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name=_("Подзаголовок"),
+        help_text=_("Введите подзаголовок категории (необязательно)."),
+    )
+
+    slug = models.SlugField(
+        unique=True,
+        verbose_name=_("Slug"),
+        help_text=_("Уникальный идентификатор категории для URL."),
+    )
+
+    class Meta:
+        verbose_name = _("Категория")
+        verbose_name_plural = _("Категории")
+        ordering = ["title"]
+
+    def __str__(self):
+        return self.title
 
 class Page(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
@@ -157,6 +188,15 @@ class Page(models.Model):
         upload_to="site_logos/",
         verbose_name="Логотип",
         help_text="Загрузите логотип сайта.",
+        blank=True,
+        null=True,
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        related_name="pages",
+        verbose_name=_("Категория"),
+        help_text=_("Выберите категорию для страницы (необязательно)."),
         blank=True,
         null=True,
     )

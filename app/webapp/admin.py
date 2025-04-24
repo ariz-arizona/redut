@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from .models import Page, Block, Image, SiteSettings, Feedback, Document
+from .models import Page, Block, Image, SiteSettings, Feedback, Document, Category
 
 
 class DocumentInline(admin.TabularInline):
@@ -99,6 +99,35 @@ class BlockInline(admin.StackedInline):
     )
 
 
+class PageInline(admin.TabularInline):
+    """
+    Inline для отображения страниц в админке категории.
+    """
+
+    model = Page
+    extra = 0
+    fields = ("title", "slug", "is_homepage")  # Отображаемые поля
+    readonly_fields = ("slug",)  # Slug только для чтения
+    show_change_link = True  # Позволяет переходить к редактированию страницы
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("title", "sub_title", "slug", "pages_count")
+    search_fields = ("title", "sub_title")
+    prepopulated_fields = {"slug": ("title",)}  # Автозаполнение slug из title
+    inlines = [PageInline]
+
+    def pages_count(self, obj):
+        """
+        Возвращает количество страниц в категории.
+        """
+        return obj.pages.count()
+
+    pages_count.short_description = _("Количество страниц")
+    pages_count.admin_order_field = "pages__count"
+
+
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
     list_display = (
@@ -170,12 +199,42 @@ class BlockAdmin(admin.ModelAdmin):
     )  # Делаем отрендеренный контент только для чтения
 
 
-# Админка для страниц
-@admin.register(Page)
 class PageAdmin(admin.ModelAdmin):
-    list_display = ("title", "slug", "is_homepage")
-    prepopulated_fields = {"slug": ("title",)}
+    list_display = (
+        "title",
+        "slug",
+        "meta_title",
+        "is_homepage",
+        "category",
+    )
+    list_filter = ("is_homepage", "category")  # Фильтр по категории
+    search_fields = ("title", "slug", "meta_title")
+    prepopulated_fields = {"slug": ("title",)}  # Автозаполнение slug из title
     inlines = [BlockInline]  # Добавляем инлайн для блоков
+
+    fieldsets = (
+        (
+            "Основная информация",
+            {
+                "fields": (
+                    "title",
+                    "slug",
+                    "meta_title",
+                    "meta_description",
+                ),
+            },
+        ),
+        (
+            "Настройки",
+            {
+                "fields": (
+                    "is_homepage",
+                    "logo",
+                    "category",
+                ),
+            },
+        ),
+    )
 
 
 @admin.register(Image)

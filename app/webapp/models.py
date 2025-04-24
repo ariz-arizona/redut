@@ -165,6 +165,31 @@ class Category(models.Model):
         return self.title
 
 
+class PageBlock(models.Model):
+    page = models.ForeignKey(
+        "Page",
+        on_delete=models.CASCADE,
+        related_name="page_blocks",
+        verbose_name="Страница",
+    )
+    block = models.ForeignKey(
+        "Block",
+        on_delete=models.CASCADE,
+        related_name="block_pages",
+        verbose_name="Блок",
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
+
+    class Meta:
+        ordering = ["order"]  # Сортировка по полю order
+        unique_together = ("page", "block")  # Уникальность связи
+
+    def __str__(self):
+        return (
+            f"Page {self.page.title} - Block {self.block.title} (Order: {self.order})"
+        )
+
+
 class Page(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     slug = models.SlugField(unique=True, verbose_name="Slug")
@@ -191,6 +216,14 @@ class Page(models.Model):
         blank=True,
         null=True,
     )
+    blocks = models.ManyToManyField(
+        "Block",
+        through="PageBlock",  # Указываем промежуточную модель
+        related_name="pages",
+        blank=True,
+        verbose_name="Блоки",
+        help_text="Выберите блоки, которые будут отображаться на этой странице.",
+    )
 
     def __str__(self):
         return self.title
@@ -215,13 +248,6 @@ class Block(models.Model):
         ("gallery", "Карусель"),
         ("feedback", "Форма обратной связи"),
     ]
-    pages = models.ManyToManyField(
-        "Page",
-        related_name="blocks",
-        blank=True,
-        verbose_name="Страницы",
-        help_text="Выберите страницы, к которым относится этот блок.",
-    )
     type = models.CharField(
         choices=BLOCK_TYPES, max_length=20, verbose_name="Тип блока"
     )
@@ -252,15 +278,14 @@ class Block(models.Model):
         verbose_name="Текст кнопки",
         help_text="Введите текст для кнопки (необязательно).",
     )
-    order = models.PositiveIntegerField(verbose_name="Порядок", default=1)
-    content = MarkdownField(
+    content_md = MarkdownField(
         blank=True,
         null=True,
         validator=VALIDATOR_STANDARD,
-        rendered_field="content_rendered",
+        rendered_field="content",
         verbose_name="Контент (Markdown)",
     )
-    content_rendered = models.TextField(blank=True, null=True, editable=False)
+    content = models.TextField(blank=True, null=True, editable=False)
     is_text_right = models.BooleanField(
         default=False,
         verbose_name="Текст справа",
@@ -268,10 +293,9 @@ class Block(models.Model):
     )
 
     def __str__(self):
-        return f"{self.get_type_display()} {self.title} (Order: {self.order})"
+        return f"{self.get_type_display()} {self.title}"
 
     class Meta:
-        ordering = ["order"]
         verbose_name = "Блок"
         verbose_name_plural = "Блоки"
 

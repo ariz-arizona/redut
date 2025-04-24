@@ -11,6 +11,7 @@ from .models import (
     Block,
     Image,
     Feedback,
+    PageBlock,
 )
 
 
@@ -65,8 +66,8 @@ class ImageInline(admin.StackedInline):
     readonly_fields = ("text_rendered",)
 
 
-class BlockInline(admin.StackedInline):
-    model = Block.pages.through  # Используем промежуточную модель ManyToMany
+class PageBlockInline(admin.TabularInline):
+    model = PageBlock  # Используем промежуточную модель
     extra = 1
     verbose_name = _("Блок")
     verbose_name_plural = _("Блоки")
@@ -76,7 +77,7 @@ class BlockInline(admin.StackedInline):
         Настройка виджета для выбора блоков.
         """
         if db_field.name == "block":
-            kwargs["queryset"] = Block.objects.all().order_by("order")
+            kwargs["queryset"] = Block.objects.all().order_by("id")
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -170,7 +171,6 @@ class BlockAdmin(admin.ModelAdmin):
     list_display = (
         "title",
         "type",
-        "order",
         "sub_title",
         "slug",
         "is_text_right",
@@ -188,7 +188,6 @@ class BlockAdmin(admin.ModelAdmin):
         "content",
     )  # Поиск по ключевым полям
     prepopulated_fields = {"slug": ("title",)}  # Автозаполнение slug из title
-    filter_horizontal = ("pages",)  # Удобный виджет для выбора страниц
     inlines = [ImageInline]
 
     def get_queryset(self, request):
@@ -232,7 +231,6 @@ class BlockAdmin(admin.ModelAdmin):
                     "sub_title",
                     "slug",
                     "btn_title",
-                    "order",
                     "is_text_right",
                 ),
             },
@@ -257,15 +255,15 @@ class BlockAdmin(admin.ModelAdmin):
             "Контент",
             {
                 "fields": (
-                    "content",
-                    "content_rendered",  # Отрендеренный контент (только для чтения)
+                    "content_md",
+                    "content",  # Отрендеренный контент (только для чтения)
                 ),
                 "classes": ["collapse"],  # Добавляем класс 'collapse'
             },
         ),
     )
 
-    readonly_fields = ("content_rendered",)
+    readonly_fields = ("content",)
 
 
 @admin.register(Page)
@@ -276,12 +274,12 @@ class PageAdmin(admin.ModelAdmin):
         "meta_title",
         "is_homepage",
         "category",
-        "blocks_count",  # Новое поле для отображения количества блоков
+        "blocks_count",  # Количество блоков
     )
     list_filter = ("is_homepage", "category")
     search_fields = ("title", "slug", "meta_title")
     prepopulated_fields = {"slug": ("title",)}
-    inlines = [BlockInline]  # Инлайн для блоков
+    inlines = [PageBlockInline]  # Добавляем инлайн для блоков
 
     def blocks_count(self, obj):
         """

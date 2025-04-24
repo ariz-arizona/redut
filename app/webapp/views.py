@@ -6,9 +6,20 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 
-from .models import Page, SiteSettings, Feedback
+from .models import Page, SiteSettings, Feedback, Category
 
-from .serializers import SiteSettingsSerializer, PageSerializer, FeedbackSerializer
+from .serializers import (
+    SiteSettingsSerializer,
+    PageSerializer,
+    FeedbackSerializer,
+    CategorySerializer,
+)
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all().prefetch_related("pages")
+    serializer_class = CategorySerializer
+    lookup_field = "slug"  # Используем slug вместо id для поиска
 
 
 class PageViewSet(viewsets.ModelViewSet):

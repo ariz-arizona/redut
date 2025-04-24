@@ -41,7 +41,7 @@ const imgBase = config.public.imgBase
                             {{ new Date().getFullYear() }} © {{ settings.name }}<br />
                         </span>
                         <template v-for="doc in settings.documents">
-                            <a :href="`${imgBase}/${doc.file}`" download>{{ doc.title }}</a><br />
+                            <a :href="`${imgBase}/${doc.file}`" :download="doc.file.split('/').pop()" target="_blank">{{ doc.title }}</a><br />
                         </template>
                     </div>
                     <div class="col-span-1 text-center">

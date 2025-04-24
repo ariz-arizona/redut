@@ -2,7 +2,6 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.utils.translation import gettext_lazy as _
-
 from markdownfield.models import MarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 
@@ -13,13 +12,11 @@ class SiteSettings(models.Model):
     """
 
     name = models.CharField(max_length=255)
-
     phone_number = models.CharField(
         max_length=20,
         verbose_name="Номер телефона",
         help_text="Введите номер телефона в международном формате (например, +79991234567).",
     )
-
     logo = models.FileField(
         upload_to="site_logos/",
         verbose_name="Логотип",
@@ -30,17 +27,15 @@ class SiteSettings(models.Model):
             FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "svg"])
         ],
     )
-
     footer_text_md = MarkdownField(
         blank=True,
         null=True,
-        validator=VALIDATOR_STANDARD,  # Валидатор для Markdown
+        validator=VALIDATOR_STANDARD,
         verbose_name="Текст футера",
         help_text="Введите текст, который будет отображаться в нижней части сайта (футере).",
-        rendered_field="footer_text",  # Поле для хранения HTML
+        rendered_field="footer_text",
     )
     footer_text = models.TextField(blank=True, null=True, editable=False)
-
     is_enabled = models.BooleanField(
         default=False,
         verbose_name="Активен",
@@ -85,7 +80,6 @@ class SiteSettings(models.Model):
         Проверяет, что только одна запись может быть активной (is_enabled=True).
         """
         if self.is_enabled:
-            # Ищем другие активные записи, исключая текущую
             enabled_settings = SiteSettings.objects.filter(is_enabled=True)
             if self.pk:
                 enabled_settings = enabled_settings.exclude(pk=self.pk)
@@ -105,27 +99,23 @@ class Document(models.Model):
         verbose_name=_("Название документа"),
         help_text=_("Введите название документа."),
     )
-
     file = models.FileField(
         upload_to="documents/",
         verbose_name=_("Файл документа"),
         help_text=_("Загрузите файл документа."),
         validators=[FileExtensionValidator(allowed_extensions=["pdf", "docx", "txt"])],
     )
-
     description = models.TextField(
         blank=True,
         null=True,
         verbose_name=_("Описание"),
         help_text=_("Введите описание документа (необязательно)."),
     )
-
     uploaded_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_("Дата загрузки"),
         help_text=_("Дата и время загрузки документа."),
     )
-
     site_settings = models.ManyToManyField(
         SiteSettings,
         related_name="documents",
@@ -142,16 +132,17 @@ class Document(models.Model):
     def __str__(self):
         return self.title
 
+
 class Category(models.Model):
     """
     Модель для категорий страниц.
     """
+
     title = models.CharField(
         max_length=255,
         verbose_name=_("Заголовок"),
         help_text=_("Введите заголовок категории."),
     )
-
     sub_title = models.CharField(
         max_length=255,
         blank=True,
@@ -159,7 +150,6 @@ class Category(models.Model):
         verbose_name=_("Подзаголовок"),
         help_text=_("Введите подзаголовок категории (необязательно)."),
     )
-
     slug = models.SlugField(
         unique=True,
         verbose_name=_("Slug"),
@@ -173,6 +163,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Page(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
@@ -224,14 +215,12 @@ class Block(models.Model):
         ("gallery", "Карусель"),
         ("feedback", "Форма обратной связи"),
     ]
-
-    page = models.ForeignKey(
+    pages = models.ManyToManyField(
         "Page",
         related_name="blocks",
-        on_delete=models.SET_NULL,
-        null=True,
         blank=True,
-        verbose_name="Страница",
+        verbose_name="Страницы",
+        help_text="Выберите страницы, к которым относится этот блок.",
     )
     type = models.CharField(
         choices=BLOCK_TYPES, max_length=20, verbose_name="Тип блока"
@@ -274,8 +263,8 @@ class Block(models.Model):
     content = MarkdownField(
         blank=True,
         null=True,
-        validator=VALIDATOR_STANDARD,  # Валидатор для Markdown
-        rendered_field="content_rendered",  # Поле для хранения HTML
+        validator=VALIDATOR_STANDARD,
+        rendered_field="content_rendered",
         verbose_name="Контент (Markdown)",
     )
     content_rendered = models.TextField(blank=True, null=True, editable=False)
@@ -289,15 +278,9 @@ class Block(models.Model):
         return f"{self.get_type_display()} {self.title} (Order: {self.order})"
 
     class Meta:
-        ordering = ["page", "order"]
+        ordering = ["order"]
         verbose_name = "Блок"
         verbose_name_plural = "Блоки"
-        constraints = [
-            models.UniqueConstraint(
-                fields=["page", "slug"],
-                name="unique_slug_per_page",
-            ),
-        ]
 
 
 class Image(models.Model):
@@ -328,8 +311,8 @@ class Image(models.Model):
     text = MarkdownField(
         blank=True,
         null=True,
-        validator=VALIDATOR_STANDARD,  # Валидатор для Markdown
-        rendered_field="text_rendered",  # Поле для хранения HTML
+        validator=VALIDATOR_STANDARD,
+        rendered_field="text_rendered",
         verbose_name="Текст (Markdown)",
     )
     text_rendered = models.TextField(blank=True, null=True, editable=False)

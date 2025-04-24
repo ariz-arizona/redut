@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const { fetchData } = useApiFetch()
 const route = useRoute()
 

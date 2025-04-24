@@ -41,6 +41,13 @@ interface PageData {
     slug: string;
     title: string;
 }
+interface CategoryData {
+    id: number; // Уникальный идентификатор категории
+    title: string; // Заголовок категории
+    sub_title: string | null; // Подзаголовок (может быть null)
+    slug: string; // Slug для URL
+    pages: PageData[]; // Массив связанных страниц (может быть пустым)
+}
 interface Document {
     id: number; // Уникальный идентификатор документа
     title: string; // Название документа

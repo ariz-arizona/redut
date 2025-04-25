@@ -5,15 +5,18 @@ from django.db.models import OuterRef, Subquery, Prefetch
 
 from server.logger import logger
 from .models import (
-    SiteSettings,
-    Document,
-    Category,
-    Page,
     Block,
-    Image,
+    Category,
+    CategoryBlock,
+    Document,
     Feedback,
+    Image,
+    Page,
     PageBlock,
+    SiteSettings,
+    TopItem,
 )
+
 
 # Inline для документов в админке SiteSettings
 class DocumentInline(admin.TabularInline):
@@ -81,6 +84,40 @@ class PageBlockInline(admin.TabularInline):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
+class CategoryBlockInline(admin.TabularInline):
+    model = CategoryBlock  # Используем промежуточную модель
+    extra = 1
+    verbose_name = _("Блок")
+    verbose_name_plural = _("Блоки")
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        Настройка виджета для выбора блоков.
+        """
+        if db_field.name == "block":
+            kwargs["queryset"] = Block.objects.all().order_by("id")
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+class TopItemInline(admin.TabularInline):
+    """
+    Inline для управления TopItem в админке.
+    """
+    model = TopItem
+    extra = 1  # Количество дополнительных строк для новых элементов
+    fields = ('title', 'page_block', 'category_block', 'order')  # Поля для отображения
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        Ограничиваем выбор page_block и category_block только активными объектами.
+        """
+        if db_field.name == "page_block":
+            kwargs["queryset"] = PageBlock.objects.select_related("page", "block").all()
+        elif db_field.name == "category_block":
+            kwargs["queryset"] = CategoryBlock.objects.select_related("category", "block").all()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     list_display = (
@@ -93,7 +130,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     list_filter = ("is_enabled",)
     search_fields = ("phone_number", "footer_text")
     actions = ["make_enabled"]
-    inlines = [DocumentInline]
+    inlines = [TopItemInline, DocumentInline]
 
     fieldsets = (
         (
@@ -155,6 +192,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("title", "sub_title", "slug", "pages_count")
     search_fields = ("title", "sub_title")
     prepopulated_fields = {"slug": ("title",)}  # Автозаполнение slug из title
+    inlines = [CategoryBlockInline]  # Добавляем инлайн для блоков
 
     def pages_count(self, obj):
         """
@@ -245,7 +283,7 @@ class BlockAdmin(admin.ModelAdmin):
             first_page = PageBlock.objects.filter(block=OuterRef("pk")).order_by(
                 "order"
             )[:1]
-            
+
         # Аннотация для первой страницы и её порядка
         queryset = queryset.annotate(
             first_page_title=Subquery(first_page.values("page__title")),
@@ -256,7 +294,7 @@ class BlockAdmin(admin.ModelAdmin):
                 PageBlock.objects.filter(block=OuterRef("pk")).values("id")[:1]
             ),
         ).distinct()
-        
+
         # Предварительная загрузка связанных страниц
         queryset = queryset.prefetch_related(
             Prefetch(
@@ -264,9 +302,7 @@ class BlockAdmin(admin.ModelAdmin):
                 queryset=PageBlock.objects.order_by("order"),
             )
         )
-        return queryset.order_by(
-            "first_page_title", "block_order", "block_id"
-        )
+        return queryset.order_by("first_page_title", "block_order", "block_id")
 
     def pages_list(self, obj):
         """

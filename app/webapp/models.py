@@ -1,9 +1,86 @@
 from django.db import models
+
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
+
 from django.utils.translation import gettext_lazy as _
+
 from markdownfield.models import MarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
+
+class TopItem(models.Model):
+    """
+    Промежуточная модель для хранения ссылок на блоки на страницах или категориях.
+    """
+    site_settings = models.ForeignKey(
+        "SiteSettings",
+        on_delete=models.CASCADE,
+        related_name="top_items",
+        verbose_name="Настройки сайта",
+    )
+
+    # Связь с блоком на странице
+    page_block = models.ForeignKey(
+        "PageBlock",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="top_items",
+        verbose_name="Блок на странице",
+    )
+
+    # Связь с блоком на категории
+    category_block = models.ForeignKey(
+        "CategoryBlock",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="top_items",
+        verbose_name="Блок на категории",
+    )
+
+    title = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Заголовок",
+        help_text="Необязательный заголовок. Если не указан, используется название страницы или категории."
+    )
+
+    order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = "Top Item"
+        verbose_name_plural = "Top Items"
+
+    def clean(self):
+        """
+        Проверяет, что выбран только один из вариантов: блок на странице или блок на категории.
+        """
+        if self.page_block and self.category_block:
+            raise ValidationError("Можно выбрать либо блок на странице, либо блок на категории, но не оба.")
+        if not self.page_block and not self.category_block:
+            raise ValidationError("Необходимо выбрать блок на странице или блок на категории.")
+
+    def get_title(self):
+        """
+        Возвращает заголовок TopItem.
+        Если title не указан, использует название страницы или категории.
+        """
+        if self.title:
+            return self.title
+        if self.page_block:
+            return self.page_block.page.title
+        elif self.category_block:
+            return self.category_block.category.title
+        return "Несвязанный TopItem"
+
+    def __str__(self):
+        return f"{self.get_title()} (Order: {self.order})"
 
 
 class SiteSettings(models.Model):
@@ -155,6 +232,14 @@ class Category(models.Model):
         verbose_name=_("Slug"),
         help_text=_("Уникальный идентификатор категории для URL."),
     )
+    blocks = models.ManyToManyField(
+        "Block",
+        through="CategoryBlock",  # Указываем промежуточную модель
+        related_name="categories",
+        blank=True,
+        verbose_name="Блоки",
+        help_text="Выберите блоки, которые будут отображаться на этой странице.",
+    )
 
     class Meta:
         verbose_name = _("Категория")
@@ -165,29 +250,27 @@ class Category(models.Model):
         return self.title
 
 
-class PageBlock(models.Model):
-    page = models.ForeignKey(
-        "Page",
+class CategoryBlock(models.Model):
+    category = models.ForeignKey(
+        "Category",
         on_delete=models.CASCADE,
-        related_name="page_blocks",
-        verbose_name="Страница",
+        related_name="category_blocks",
+        verbose_name="Категория",
     )
     block = models.ForeignKey(
         "Block",
         on_delete=models.CASCADE,
-        related_name="block_pages",
+        related_name="block_categories",
         verbose_name="Блок",
     )
     order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
 
     class Meta:
         ordering = ["order"]  # Сортировка по полю order
-        unique_together = ("page", "block")  # Уникальность связи
+        unique_together = ("category", "block")  # Уникальность связи
 
     def __str__(self):
-        return (
-            f"Page {self.page.title} - Block {self.block.title} (Order: {self.order})"
-        )
+        return f"Category {self.category.title} - Block {self.block.title} (Order: {self.order})"
 
 
 class Page(models.Model):
@@ -238,6 +321,31 @@ class Page(models.Model):
                 name="only_one_homepage",
             )
         ]
+
+
+class PageBlock(models.Model):
+    page = models.ForeignKey(
+        "Page",
+        on_delete=models.CASCADE,
+        related_name="page_blocks",
+        verbose_name="Страница",
+    )
+    block = models.ForeignKey(
+        "Block",
+        on_delete=models.CASCADE,
+        related_name="block_pages",
+        verbose_name="Блок",
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
+
+    class Meta:
+        ordering = ["order"]  # Сортировка по полю order
+        unique_together = ("page", "block")  # Уникальность связи
+
+    def __str__(self):
+        return (
+            f"Page {self.page.title} - Block {self.block.title[:20]} (Order: {self.order})"
+        )
 
 
 class Block(models.Model):

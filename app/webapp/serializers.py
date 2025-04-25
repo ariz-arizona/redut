@@ -1,11 +1,21 @@
 from rest_framework import serializers
-from .models import Page, Block, Image, SiteSettings, Feedback, Document, Category
+from .models import (
+    Block,
+    Category,
+    Document,
+    Feedback,
+    Image,
+    Page,
+    SiteSettings,
+    TopItem,
+)
 
 
 class DocumentSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели Document.
     """
+
     file = serializers.FileField(use_url=False)
 
     class Meta:
@@ -64,6 +74,60 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class TopItemSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели TopItem.
+    """
+
+    type = serializers.SerializerMethodField()
+    slug = serializers.SerializerMethodField()
+    block = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TopItem
+        fields = ["id", "type", "slug", "block", "title", "order"]
+
+    def get_type(self, obj):
+        """
+        Возвращает тип элемента: 'page' или 'category'.
+        """
+        if obj.page_block:
+            return "page"
+        elif obj.category_block:
+            return "category"
+        return None
+
+    def get_slug(self, obj):
+        """
+        Возвращает slug страницы или категории.
+        """
+        if obj.page_block:
+            if obj.page_block.page.is_homepage:
+                return ""
+            return obj.page_block.page.slug
+        elif obj.category_block:
+            return obj.category_block.category.slug
+        return None
+
+    def get_block(self, obj):
+        """
+        Возвращает slug блока.
+        """
+        if obj.page_block:
+            return obj.page_block.block.slug
+        elif obj.category_block:
+            return obj.category_block.block.slug
+        return None
+
+    def get_title(self, obj):
+        """
+        Возвращает заголовок TopItem.
+        Если title не указан, используется название страницы или категории.
+        """
+        return obj.get_title()
+
+
 class SiteSettingsSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели SiteSettings.
@@ -71,6 +135,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
 
     logo = serializers.FileField(use_url=False)
     documents = DocumentSerializer(many=True, read_only=True)
+    top_items = TopItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = SiteSettings

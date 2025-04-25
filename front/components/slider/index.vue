@@ -28,7 +28,7 @@ const swiperOptions: SwiperOptions = {
     loop: true, // Зацикливание
     effect: 'fade', // Эффект затухания
     fadeEffect: { crossFade: true }, // Плавное перекрытие слайдов
-    autoplay: { delay: 5000, disableOnInteraction: false } // Автопрокрутка
+    // autoplay: { delay: 5000, disableOnInteraction: false } // Автопрокрутка
 };
 
 // Ссылка на Swiper для управления (например, пауза/воспроизведение)
@@ -37,8 +37,8 @@ const swiperRef = ref(null);
 <template>
     <template v-if="props.slides">
         <div class="min-h-[300px] overflow-visible relative" :ref="(setMainSliderRef as any)">
-            <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="h-full" v-if="props.slides.length > 1">
-                <swiper-slide v-for="(slide, index) in props.slides" :key="index">
+            <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="h-full overflow-y-visible" v-if="props.slides.length > 1">
+                <swiper-slide v-for="(slide, index) in props.slides" :key="index" class="h-auto">
                     <SliderItem :slide="slide" />
                 </swiper-slide>
             </swiper>

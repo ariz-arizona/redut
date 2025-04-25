@@ -37,7 +37,7 @@ const swiperRef = ref(null);
 <template>
     <template v-if="props.slides">
         <div class="min-h-[300px] overflow-visible relative" :ref="(setMainSliderRef as any)">
-            <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="h-full overflow-y-visible" v-if="props.slides.length > 1">
+            <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="h-full overflow-visible" v-if="props.slides.length > 1">
                 <swiper-slide v-for="(slide, index) in props.slides" :key="index" class="h-auto">
                     <SliderItem :slide="slide" />
                 </swiper-slide>
@@ -49,7 +49,7 @@ const swiperRef = ref(null);
 <style>
 .swiper-button-next,
 .swiper-button-prev {
-    @apply rounded-full size-10 text-white after:text-2xl border-white border-2 flex items-center;
+    @apply text-secondary-500 after:text-6xl flex items-center;
 }
 
 .swiper-button-next {
@@ -58,21 +58,5 @@ const swiperRef = ref(null);
 
 .swiper-button-prev {
     @apply after:content-['prev']
-}
-
-@media(min-width:1024px) {
-
-    .swiper-button-next,
-    .swiper-button-prev {
-        @apply right-1/2 left-[auto] top-[auto] bottom-4;
-    }
-
-    .swiper-button-next {
-        @apply translate-x-[calc((100%_-_1024px)*_-0.5)]
-    }
-
-    .swiper-button-prev {
-        @apply translate-x-[calc((100%_-_1024px)*_-0.5_-3rem)]
-    }
 }
 </style>

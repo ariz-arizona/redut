@@ -55,6 +55,24 @@ interface Document {
     uploaded_at: string; // Дата загрузки документа (ISO формат, например, "2023-10-01T12:34:56Z")
 }
 
+// Интерфейс для TopItem
+interface TopItem {
+    id: number; // Уникальный идентификатор элемента
+    type: "page" | "category"; // Тип элемента: страница или категория
+    slug: string; // Slug страницы или категории
+    block: string; // Slug блока
+    title: string; // Заголовок элемента
+    order: number; // Порядок элемента
+}
+
+// Общий интерфейс для ContentObject
+interface ContentObject {
+    id: number; // Уникальный идентификатор объекта
+    title: string; // Заголовок объекта
+    slug?: string; // Slug (необязательно, зависит от типа объекта)
+    description?: string; // Описание (необязательно, зависит от типа объекта)
+}
+
 interface SiteSettings {
     id: number; // Уникальный идентификатор
     name: string;
@@ -63,4 +81,5 @@ interface SiteSettings {
     footer_text: string; // Текст футера
     is_enabled: boolean; // Флаг активности
     documents: Document[]; // Массив связанных документов
+    top_items: TopItem[]; // Массив топовых элементов
 }

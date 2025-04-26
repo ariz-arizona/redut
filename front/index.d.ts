@@ -15,8 +15,8 @@ interface Image {
 type BlockType = 'text' | 'lead' | 'gallery' | 'slider' | 'feedback';
 
 interface Block {
-    content: string; // Markdown-контент
-    content_rendered: string; // Отрендеренный HTML
+    content_md: string; // Markdown-контент
+    content: string; // Отрендеренный HTML
     id: number; // ID блока
     images: Image[]; // Массив изображений (если применимо)
     order: number; // Порядок отображения
@@ -43,9 +43,10 @@ interface PageData {
 interface CategoryData {
     id: number; // Уникальный идентификатор категории
     title: string; // Заголовок категории
-    sub_title: string | null; // Подзаголовок (может быть null)
     slug: string; // Slug для URL
-    pages: PageData[]; // Массив связанных страниц (может быть пустым)
+    meta_description: string;
+    meta_title: string | null;
+    blocks: Block[]; // Массив связанных страниц (может быть пустым)
 }
 interface Document {
     id: number; // Уникальный идентификатор документа

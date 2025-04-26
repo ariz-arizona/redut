@@ -1,6 +1,6 @@
 from django.db import models
 
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 
 from django.core.exceptions import ValidationError
@@ -11,73 +11,60 @@ from django.utils.translation import gettext_lazy as _
 from markdownfield.models import MarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 
+
 class TopItem(models.Model):
     """
     Промежуточная модель для хранения ссылок на блоки на страницах или категориях.
     """
+
     site_settings = models.ForeignKey(
         "SiteSettings",
         on_delete=models.CASCADE,
         related_name="top_items",
-        verbose_name="Настройки сайта",
+        verbose_name=_("Настройки сайта"),
     )
-
-    # Связь с блоком на странице
-    page_block = models.ForeignKey(
-        "PageBlock",
+    content_block = models.ForeignKey(
+        "ContentBlock",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="top_items",
-        verbose_name="Блок на странице",
+        verbose_name=_("Блок контента"),
     )
-
-    # Связь с блоком на категории
-    category_block = models.ForeignKey(
-        "CategoryBlock",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="top_items",
-        verbose_name="Блок на категории",
-    )
-
     title = models.CharField(
         max_length=255,
         blank=True,
         null=True,
-        verbose_name="Заголовок",
-        help_text="Необязательный заголовок. Если не указан, используется название страницы или категории."
+        verbose_name=_("Заголовок"),
+        help_text=_(
+            "Необязательный заголовок. Если не указан, используется название страницы или категории."
+        ),
     )
-
-    order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
+    order = models.PositiveIntegerField(default=0, verbose_name=_("Порядок"))
 
     class Meta:
         ordering = ["order"]
-        verbose_name = "Top Item"
-        verbose_name_plural = "Top Items"
+        verbose_name = _("Top Item")
+        verbose_name_plural = _("Top Items")
 
     def clean(self):
         """
-        Проверяет, что выбран только один из вариантов: блок на странице или блок на категории.
+        Проверяет, что выбран блок контента.
         """
-        if self.page_block and self.category_block:
-            raise ValidationError("Можно выбрать либо блок на странице, либо блок на категории, но не оба.")
-        if not self.page_block and not self.category_block:
-            raise ValidationError("Необходимо выбрать блок на странице или блок на категории.")
+        if not self.content_block:
+            raise ValidationError(_("Необходимо выбрать блок контента."))
 
     def get_title(self):
         """
         Возвращает заголовок TopItem.
-        Если title не указан, использует название страницы или категории.
+        Если title не указан, использует название связанного объекта (страницы или категории).
         """
         if self.title:
             return self.title
-        if self.page_block:
-            return self.page_block.page.title
-        elif self.category_block:
-            return self.category_block.category.title
-        return "Несвязанный TopItem"
+        if self.content_block:
+            content_object = self.content_block.content_object
+            return getattr(content_object, "title", _("Несвязанный TopItem"))
+        return _("Несвязанный TopItem")
 
     def __str__(self):
         return f"{self.get_title()} (Order: {self.order})"
@@ -210,88 +197,118 @@ class Document(models.Model):
         return self.title
 
 
-class Category(models.Model):
+class BaseContentModel(models.Model):
     """
-    Модель для категорий страниц.
+    Абстрактная базовая модель для Category и Page.
     """
 
     title = models.CharField(
         max_length=255,
         verbose_name=_("Заголовок"),
-        help_text=_("Введите заголовок категории."),
-    )
-    sub_title = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name=_("Подзаголовок"),
-        help_text=_("Введите подзаголовок категории (необязательно)."),
+        help_text=_("Введите заголовок."),
     )
     slug = models.SlugField(
         unique=True,
         verbose_name=_("Slug"),
-        help_text=_("Уникальный идентификатор категории для URL."),
+        help_text=_("Уникальный идентификатор для URL."),
     )
-    blocks = models.ManyToManyField(
-        "Block",
-        through="CategoryBlock",  # Указываем промежуточную модель
-        related_name="categories",
+    meta_title = models.CharField(
+        max_length=255,
         blank=True,
-        verbose_name="Блоки",
-        help_text="Выберите блоки, которые будут отображаться на этой странице.",
+        null=True,
+        verbose_name=_("Meta Title"),
+    )
+    meta_description = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name=_("Meta Description"),
     )
 
     class Meta:
-        verbose_name = _("Категория")
-        verbose_name_plural = _("Категории")
+        abstract = True
         ordering = ["title"]
 
     def __str__(self):
         return self.title
+    
+    def get_blocks(self):
+        """
+        Возвращает список связанных блоков (Block) через ContentBlock.
+        """
+        content_blocks = self.blocks.select_related("block").all()
+        return [content_block.block for content_block in content_blocks]
 
 
-class CategoryBlock(models.Model):
-    category = models.ForeignKey(
-        "Category",
+class ContentBlock(models.Model):
+    """
+    Универсальная промежуточная модель для связи контента (Category или Page) с блоками.
+    """
+
+    content_type = models.ForeignKey(
+        ContentType,
         on_delete=models.CASCADE,
-        related_name="category_blocks",
-        verbose_name="Категория",
+        verbose_name=_("Тип контента"),
     )
+    object_id = models.PositiveIntegerField(
+        verbose_name=_("ID объекта"),
+    )
+    content_object = GenericForeignKey("content_type", "object_id")
     block = models.ForeignKey(
         "Block",
         on_delete=models.CASCADE,
-        related_name="block_categories",
-        verbose_name="Блок",
+        related_name="content_blocks",
+        verbose_name=_("Блок"),
     )
-    order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name=_("Порядок"),
+    )
 
     class Meta:
-        ordering = ["order"]  # Сортировка по полю order
-        unique_together = ("category", "block")  # Уникальность связи
+        ordering = ["order"]
+        unique_together = ("content_type", "object_id", "block")
+        verbose_name = _("Связь контента с блоком")
+        verbose_name_plural = _("Связи контента с блоками")
 
     def __str__(self):
-        return f"Category {self.category.title} - Block {self.block.title} (Order: {self.order})"
+        return f"{self.content_object} - Block {self.block.title} (Order: {self.order})"
 
 
-class Page(models.Model):
-    title = models.CharField(max_length=255, verbose_name="Заголовок")
-    slug = models.SlugField(unique=True, verbose_name="Slug")
-    meta_title = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="Meta Title"
+class Category(BaseContentModel):
+    """
+    Модель для категорий страниц.
+    """
+
+    blocks = GenericRelation(
+        "ContentBlock",
+        related_query_name="category",
+        verbose_name=_("Блоки"),
     )
-    meta_description = models.TextField(
-        blank=True, null=True, verbose_name="Meta Description"
+
+    class Meta(BaseContentModel.Meta):
+        verbose_name = _("Категория")
+        verbose_name_plural = _("Категории")
+
+
+class Page(BaseContentModel):
+    """
+    Модель для страниц.
+    """
+
+    is_homepage = models.BooleanField(
+        default=False,
+        verbose_name=_("Главная страница"),
+        help_text=_("Установите этот флаг, если это главная страница."),
     )
-    is_homepage = models.BooleanField(default=False, verbose_name="Главная страница")
     logo = models.ImageField(
         upload_to="site_logos/",
-        verbose_name="Логотип",
-        help_text="Загрузите логотип сайта.",
+        verbose_name=_("Логотип"),
+        help_text=_("Загрузите логотип страницы."),
         blank=True,
         null=True,
     )
     category = models.ForeignKey(
-        Category,
+        "Category",
         on_delete=models.SET_NULL,
         related_name="pages",
         verbose_name=_("Категория"),
@@ -299,21 +316,15 @@ class Page(models.Model):
         blank=True,
         null=True,
     )
-    blocks = models.ManyToManyField(
-        "Block",
-        through="PageBlock",  # Указываем промежуточную модель
-        related_name="pages",
-        blank=True,
-        verbose_name="Блоки",
-        help_text="Выберите блоки, которые будут отображаться на этой странице.",
+    blocks = GenericRelation(
+        "ContentBlock",
+        related_query_name="page",
+        verbose_name=_("Блоки"),
     )
 
-    def __str__(self):
-        return self.title
-
-    class Meta:
-        verbose_name = "Страница"
-        verbose_name_plural = "Страницы"
+    class Meta(BaseContentModel.Meta):
+        verbose_name = _("Страница")
+        verbose_name_plural = _("Страницы")
         constraints = [
             models.UniqueConstraint(
                 fields=["is_homepage"],
@@ -321,31 +332,6 @@ class Page(models.Model):
                 name="only_one_homepage",
             )
         ]
-
-
-class PageBlock(models.Model):
-    page = models.ForeignKey(
-        "Page",
-        on_delete=models.CASCADE,
-        related_name="page_blocks",
-        verbose_name="Страница",
-    )
-    block = models.ForeignKey(
-        "Block",
-        on_delete=models.CASCADE,
-        related_name="block_pages",
-        verbose_name="Блок",
-    )
-    order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
-
-    class Meta:
-        ordering = ["order"]  # Сортировка по полю order
-        unique_together = ("page", "block")  # Уникальность связи
-
-    def __str__(self):
-        return (
-            f"Page {self.page.title} - Block {self.block.title[:20]} (Order: {self.order})"
-        )
 
 
 class Block(models.Model):
@@ -404,7 +390,7 @@ class Block(models.Model):
         return f"{self.get_type_display()} {self.title}"
 
     class Meta:
-        ordering = ["block_pages__order"]
+        ordering = ["content_blocks__order"]
         verbose_name = "Блок"
         verbose_name_plural = "Блоки"
 

@@ -40,15 +40,6 @@ class PageViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(homepage)
         return Response(serializer.data)
 
-    def retrieve(self, request, *args, **kwargs):
-        """
-        Переопределяем метод retrieve, чтобы искать страницу по slug.
-        """
-        slug = kwargs.get("slug")
-        page = get_object_or_404(Page, slug=slug)
-        serializer = self.get_serializer(page)
-        return Response(serializer.data)
-
 
 class EnabledSiteSettingsView(APIView):
     """

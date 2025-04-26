@@ -9,6 +9,7 @@ from .models import (
     SiteSettings,
     TopItem,
 )
+from server.logger import logger
 
 
 class DocumentSerializer(serializers.ModelSerializer):
@@ -45,7 +46,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class BlockSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
-
+    
     link = serializers.SlugRelatedField(
         slug_field="slug",  # Указываем, что нужно использовать поле slug
         queryset=Page.objects.all(),  # Queryset для поля ForeignKey
@@ -59,26 +60,32 @@ class BlockSerializer(serializers.ModelSerializer):
 
 
 class PageSerializer(serializers.ModelSerializer):
-    blocks = BlockSerializer(many=True, read_only=True)
+    blocks = serializers.SerializerMethodField()
 
     class Meta:
         model = Page
         fields = "__all__"
+        
+    def get_blocks(self, obj):
+        blocks = obj.get_blocks()
+        return BlockSerializer(blocks, many=True).data
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    pages = PageSerializer(many=True, read_only=True)
+    blocks = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
         fields = "__all__"
-
+        
+    def get_blocks(self, obj):
+        blocks = obj.get_blocks()
+        return BlockSerializer(blocks, many=True).data
 
 class TopItemSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели TopItem.
     """
-
     type = serializers.SerializerMethodField()
     slug = serializers.SerializerMethodField()
     block = serializers.SerializerMethodField()
@@ -92,9 +99,10 @@ class TopItemSerializer(serializers.ModelSerializer):
         """
         Возвращает тип элемента: 'page' или 'category'.
         """
-        if obj.page_block:
+        content_object = obj.content_block.content_object
+        if isinstance(content_object, Page):
             return "page"
-        elif obj.category_block:
+        elif isinstance(content_object, Category):
             return "category"
         return None
 
@@ -102,31 +110,29 @@ class TopItemSerializer(serializers.ModelSerializer):
         """
         Возвращает slug страницы или категории.
         """
-        if obj.page_block:
-            if obj.page_block.page.is_homepage:
-                return ""
-            return obj.page_block.page.slug
-        elif obj.category_block:
-            return obj.category_block.category.slug
+        content_object = obj.content_block.content_object
+        if isinstance(content_object, Page):
+            # Если это главная страница, возвращаем пустую строку
+            return "" if content_object.is_homepage else content_object.slug
+        elif isinstance(content_object, Category):
+            return content_object.slug
         return None
 
     def get_block(self, obj):
         """
         Возвращает slug блока.
         """
-        if obj.page_block:
-            return obj.page_block.block.slug
-        elif obj.category_block:
-            return obj.category_block.block.slug
-        return None
+        return obj.content_block.block.slug
 
     def get_title(self, obj):
         """
         Возвращает заголовок TopItem.
         Если title не указан, используется название страницы или категории.
         """
-        return obj.get_title()
-
+        if obj.title:
+            return obj.title
+        content_object = obj.content_block.content_object
+        return getattr(content_object, "title", "Несвязанный TopItem")
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
     """

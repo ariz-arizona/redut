@@ -6,13 +6,69 @@ const config = useRuntimeConfig()
 const imgBase = config.public.imgBase
 const { settings, loading: settingLoading } = useSiteSettings();
 
-const path = ['page', route.params.slug].filter(Boolean)
-const { data, status, error } = await fetchData<PageData>(path.join('/'))
+// Приводим slug к массиву
+const slug = Array.isArray(route.params.slug)
+    ? route.params.slug.filter(Boolean) // Убираем пустые значения
+    : [route.params.slug].filter(Boolean);
+
+const data = ref<PageData | CategoryData | null>()
+const status = ref();
+const error = ref();
+
+// Функция для получения данных
+const fetchDataBySlug = async () => {
+    let path: string;
+    let res;
+
+    data.value = null
+    error.value = null
+    status.value = null
+
+    if (slug[0] === 'cat') {
+        // Маршрут начинается с "cat"
+        if (slug.length === 2) {
+            // Конкретная категория (/cat/CAT)
+            const categoryName = slug[1];
+            path = ['cat', categoryName].join('/');
+            res = await fetchData<CategoryData>(path);
+        } else if (slug.length === 3) {
+            // Страница внутри категории (/cat/CAT/PAGE)
+            const pageName = slug[2];
+            path = ['cat', pageName].join('/');
+            res = await fetchData<PageData>(path);
+        } else {
+            // Неизвестный маршрут
+            throw new Error('Unknown category route');
+        }
+    } else {
+        // Маршрут без "cat"
+        if (slug.length === 0) {
+            // Главная страница (/)
+            path = 'page';
+            res = await fetchData<PageData>(path);
+        } else if (slug.length === 1) {
+            // Страница (/PAGE)
+            const pageName = slug[0];
+            path = ['page', pageName].join('/');
+            res = await fetchData<PageData>(path);
+        } else {
+            // Неизвестный маршрут
+            throw new Error('Unknown page route');
+        }
+    }
+
+    data.value = res.data.value
+    error.value = res.error.value
+    status.value = res.status.value
+};
+
+// Получаем данные
+await fetchDataBySlug();
 
 if (status.value == 'error') {
     showError({
         statusCode: error.value?.statusCode,
-        message: `Ошибка при запросе к ${path.join('/')}`,
+        message: `Ошибка при запросе к ${slug.join('/')}`,
         fatal: true, // Указывает, что ошибка фатальная
     })
 }
@@ -35,11 +91,11 @@ watch(settingLoading, () => {
 })
 
 const mainSlider = computed(() =>
-    data.value?.blocks.find(el => el.type == 'slider')
+    data.value?.blocks.find((el: Block) => el.type == 'slider')
 )
 
 const blocksByType = (types: BlockType[]) => {
-    return data.value?.blocks.filter(el => types.includes(el.type)) || []
+    return data.value?.blocks.filter((el: Block) => types.includes(el.type)) || []
 }
 </script>
 
@@ -52,92 +108,10 @@ const blocksByType = (types: BlockType[]) => {
             <div class="h-40" />
         </template>
         <template v-for="block in blocksByType(['text', 'gallery', 'lead', 'feedback'])" :key="block.id">
-            <div :id="block.slug" v-if="block.type === 'text'">
-                <div class="container pt-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
-                        <!-- Картинка -->
-                        <div v-if="block.images.length" class="col-span-1" :class="[
-                            !block.is_text_right ? 'order-last' : '',
-                        ]">
-                            <div class="p-4">
-                                <div class="bg-no-repeat bg-cover bg-center  p-4  relative pointer-events-none" :style="{
-                                    backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`,
-                                        'rgba(var(--color-primary), 0.5)', 'rgba(var(--color-primary), 0.5)')
-                                }" v-if="block.images.length">
-                                    <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Текст -->
-                        <div class="col-span-1">
-                            <div class="title mt-16 mb-20" v-if="block.title">
-                                {{ block.title }}
-                                <span v-if="block.sub_title" class="text-secondary-400">
-                                    {{ block.sub_title }}
-                                </span>
-                            </div>
-                            <div class="basetext mb-20 prose" v-html="block.content_rendered" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div :id="block.slug" v-if="block.type == 'gallery'" class="overflow-hidden relative">
-                <div class="relative">
-                    <div class="text-[50vmin] text-center text-secondary-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 top-1/2 -translate-y-1/2 leading-none"
-                        v-if="block.title">
-                        {{ block.title }}
-                    </div>
-                    <Gallery :slides="block.images" />
-                </div>
-                <template v-if="block.link || block.external_link">
-                    <div class="relative -translate-y-1/2 z-10 flex justify-center w-full">
-                        <NuxtLink :to="((block.link || block.external_link) as string)"
-                            :external="!!block.external_link" class="size-36 p-4 leadbtn">
-                            <span class="leading-4">
-                                {{ block.btn_title || 'Читать далее' }}
-                            </span>
-                        </NuxtLink>
-                    </div>
-                </template>
-            </div>
-            <div :id="block.slug" v-if="block.type == 'lead'" class="overflow-hidden">
-                <div class="container pt-4">
-                    <h3 class="text-4xl md:text-[6.5vh] font-bleu text-center w-full md:w-3/4 m-auto uppercase leading-tight"
-                        v-if="block.title" v-html="block.title"></h3>
-                    <div class="relative flex justify-center w-full mt-20" v-if="(block.link || block.external_link)">
-                        <NuxtLink :to="((block.link || block.external_link) as string)"
-                            :external="!!block.external_link" class="leadbtn p-8">
-                            <span class="leading-4">
-                                {{ block.btn_title || 'Читать далее' }}
-                            </span>
-                        </NuxtLink>
-                    </div>
-                </div>
-                <div class="bg-no-repeat bg-cover bg-center h-[50vh] p-4 -z-10 relative pointer-events-none"
-                    :class="[{ '-mt-[25vh]': (block.link || block.external_link) }]" :style="{
-                        backgroundImage: createBgWithGrad(`${imgBase}/${block.images[0].image}`,
-                            'rgba(var(--color-primary), 1)', 'rgba(var(--color-primary), 0.75)')
-                    }" v-if="block.images.length">
-                    <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
-                </div>
-            </div>
-            <div :id="block.slug" v-if="block.type == 'feedback'">
-                <div class="container p-4 grid grid-cols-1 xl:grid-cols-3">
-                    <div class="col-span-full">
-                        <div class="text-center font-bleu text-[12vmin] relative">
-                            <span v-html="block.title" v-if="block.title" />
-                            <span
-                                class="font-wonder text-[24vmin] text-secondary-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                                {{ block.sub_title }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-span-full xl:col-span-1 xl:col-start-2 flex justify-center">
-                        <Feedback :btn="(block.btn_title as string)" />
-                    </div>
-                </div>
-            </div>
+            <BlockText v-if="block.type === 'text'" :block="block" :img-base="imgBase" />
+            <BlockGallery v-else-if="block.type === 'gallery'" :block="block" />
+            <BlockLead v-else-if="block.type === 'lead'" :block="block" :img-base="imgBase" />
+            <BlockFeedback v-else-if="block.type === 'feedback'" :block="block" />
         </template>
     </div>
 </template>

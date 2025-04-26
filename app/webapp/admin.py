@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.contenttypes.admin import GenericTabularInline
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from django.db.models import OuterRef, Subquery, Prefetch
@@ -7,14 +8,13 @@ from server.logger import logger
 from .models import (
     Block,
     Category,
-    CategoryBlock,
     Document,
     Feedback,
     Image,
     Page,
-    PageBlock,
     SiteSettings,
     TopItem,
+    ContentBlock
 )
 
 
@@ -69,23 +69,11 @@ class ImageInline(admin.StackedInline):
     readonly_fields = ("text_rendered",)
 
 
-class PageBlockInline(admin.TabularInline):
-    model = PageBlock  # Используем промежуточную модель
-    extra = 1
-    verbose_name = _("Блок")
-    verbose_name_plural = _("Блоки")
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        """
-        Настройка виджета для выбора блоков.
-        """
-        if db_field.name == "block":
-            kwargs["queryset"] = Block.objects.all().order_by("id")
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
-class CategoryBlockInline(admin.TabularInline):
-    model = CategoryBlock  # Используем промежуточную модель
+class ContentBlockInline(GenericTabularInline):
+    """
+    Универсальный инлайн для связи блоков с категориями или страницами.
+    """
+    model = ContentBlock
     extra = 1
     verbose_name = _("Блок")
     verbose_name_plural = _("Блоки")
@@ -105,16 +93,16 @@ class TopItemInline(admin.TabularInline):
     """
     model = TopItem
     extra = 1  # Количество дополнительных строк для новых элементов
-    fields = ('title', 'page_block', 'category_block', 'order')  # Поля для отображения
+    fields = ("title", "content_block", "order")  # Поля для отображения
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """
-        Ограничиваем выбор page_block и category_block только активными объектами.
+        Ограничиваем выбор content_block только активными объектами.
         """
-        if db_field.name == "page_block":
-            kwargs["queryset"] = PageBlock.objects.select_related("page", "block").all()
-        elif db_field.name == "category_block":
-            kwargs["queryset"] = CategoryBlock.objects.select_related("category", "block").all()
+        if db_field.name == "content_block":
+            kwargs["queryset"] = ContentBlock.objects.select_related(
+                "content_type", "block"
+            ).all()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -189,10 +177,10 @@ class DocumentAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("title", "sub_title", "slug", "pages_count")
-    search_fields = ("title", "sub_title")
+    list_display = ("title", "slug", "pages_count")
+    search_fields = ("title",)
     prepopulated_fields = {"slug": ("title",)}  # Автозаполнение slug из title
-    inlines = [CategoryBlockInline]  # Добавляем инлайн для блоков
+    inlines = [ContentBlockInline]  # Добавляем инлайн для блоков
 
     def pages_count(self, obj):
         """
@@ -275,12 +263,12 @@ class BlockAdmin(admin.ModelAdmin):
         page_filter = request.GET.get("block_pages__page__id__exact")
         if page_filter:
             # Если выбрана страница, используем её как первую страницу
-            first_page = PageBlock.objects.filter(
+            first_page = ContentBlockInline.objects.filter(
                 block=OuterRef("pk"), page_id=page_filter
             ).order_by("order")[:1]
         else:
             # Подзапрос для первой страницы
-            first_page = PageBlock.objects.filter(block=OuterRef("pk")).order_by(
+            first_page = ContentBlockInline.objects.filter(block=OuterRef("pk")).order_by(
                 "order"
             )[:1]
 
@@ -291,7 +279,7 @@ class BlockAdmin(admin.ModelAdmin):
                 first_page.values("order")
             ),  # Порядок блока на первой странице
             block_id=Subquery(
-                PageBlock.objects.filter(block=OuterRef("pk")).values("id")[:1]
+                ContentBlockInline.objects.filter(block=OuterRef("pk")).values("id")[:1]
             ),
         ).distinct()
 
@@ -299,7 +287,7 @@ class BlockAdmin(admin.ModelAdmin):
         queryset = queryset.prefetch_related(
             Prefetch(
                 "block_pages",
-                queryset=PageBlock.objects.order_by("order"),
+                queryset=ContentBlockInline.objects.order_by("order"),
             )
         )
         return queryset.order_by("first_page_title", "block_order", "block_id")
@@ -326,7 +314,7 @@ class PageAdmin(admin.ModelAdmin):
     list_filter = ("is_homepage", "category")
     search_fields = ("title", "slug", "meta_title")
     prepopulated_fields = {"slug": ("title",)}
-    inlines = [PageBlockInline]  # Добавляем инлайн для блоков
+    inlines = [ContentBlockInline]  # Добавляем инлайн для блоков
 
     def blocks_count(self, obj):
         """

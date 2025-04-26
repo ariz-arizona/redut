@@ -11,8 +11,8 @@ const imgBase = config.public.imgBase
 
 const topItems = computed(() => settings.value?.top_items || [])
 const makeLink = (el: TopItem) => {
-    if (el.type == 'page') return el.slug + '#' + el.block
-    if (el.type == 'category') return 'cat/' + el.slug + '#' + el.block
+    if (el.type == 'page') return '/' + el.slug + '#' + el.block
+    if (el.type == 'category') return '/cat/' + el.slug + '#' + el.block
 }
 
 /**
@@ -72,7 +72,7 @@ const scrollToAnchor = (e: PointerEvent) => {
         <Suspense>
             <slot />
         </Suspense>
-        <div class="bg-primary-800 text-white mt-8">
+        <div class="bg-primary-800 text-white">
             <div class="container flex items-center gap-4 p-2 py-8 basetext">
                 <div class="grid grid-cols-3 w-full">
                     <div class="col-span-1" v-if="settings?.documents">

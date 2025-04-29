@@ -247,7 +247,7 @@ class RelatedObjectFilter(admin.SimpleListFilter):
             except Exception:
                 return queryset
 
-        return queryset
+        return queryset.distinct()
     
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):

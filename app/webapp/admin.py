@@ -1,8 +1,11 @@
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
+from django.contrib.contenttypes.models import ContentType
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-from django.db.models import OuterRef, Subquery, Prefetch
+from django.db.models import OuterRef, Subquery, Q, CharField, Case, When, Value, F
+from django.db.models.functions import Concat
+from django.db.models.fields import IntegerField
 
 from server.logger import logger
 from .models import (
@@ -14,7 +17,7 @@ from .models import (
     Page,
     SiteSettings,
     TopItem,
-    ContentBlock
+    ContentBlock,
 )
 
 
@@ -73,6 +76,7 @@ class ContentBlockInline(GenericTabularInline):
     """
     Универсальный инлайн для связи блоков с категориями или страницами.
     """
+
     model = ContentBlock
     extra = 1
     verbose_name = _("Блок")
@@ -91,6 +95,7 @@ class TopItemInline(admin.TabularInline):
     """
     Inline для управления TopItem в админке.
     """
+
     model = TopItem
     extra = 1  # Количество дополнительных строк для новых элементов
     fields = ("title", "content_block", "order")  # Поля для отображения
@@ -191,7 +196,59 @@ class CategoryAdmin(admin.ModelAdmin):
     pages_count.short_description = _("Количество страниц")
     pages_count.admin_order_field = "pages__count"
 
+class RelatedObjectFilter(admin.SimpleListFilter):
+    title = _('Связанный объект')  # заголовок фильтра
+    parameter_name = 'related_object'  # параметр в URL (?related_object=...)
 
+    def lookups(self, request, model_admin):
+        """
+        Возвращает список доступных вариантов для фильтрации.
+        Собираем все Page + Category в формате:
+        (type_id:object_id, "Заголовок (slug) | Тип")
+        """
+        results = []
+
+        # Добавляем страницы
+        for page in Page.objects.all():
+            key = f"page_{page.id}"
+            label = f"{page.title} ({page.slug}) | Страница"
+            results.append((key, label))
+
+        # Добавляем категории
+        for category in Category.objects.all():
+            key = f"category_{category.id}"
+            label = f"{category.title} ({category.slug}) | Категория"
+            results.append((key, label))
+
+        return results
+
+    def queryset(self, request, queryset):
+        """
+        Фильтрует Block по выбранному связанному объекту.
+        """
+        value = self.value()
+        if value:
+            try:
+                content_type_name, obj_id = value.split("_", 1)
+                obj_id = int(obj_id)
+
+                if content_type_name == "page":
+                    content_type = ContentType.objects.get_for_model(Page)
+                elif content_type_name == "category":
+                    content_type = ContentType.objects.get_for_model(Category)
+                else:
+                    return queryset
+
+                return queryset.filter(
+                    content_blocks__content_type=content_type,
+                    content_blocks__object_id=obj_id,
+                )
+
+            except Exception:
+                return queryset
+
+        return queryset
+    
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
     list_display = (
@@ -200,105 +257,22 @@ class BlockAdmin(admin.ModelAdmin):
         "sub_title",
         "slug",
         "is_text_right",
-        "pages_list",  # Новое поле для отображения связанных страниц
+        "related_objects"
     )
     list_filter = (
         "type",
         "is_text_right",
-        (
-            "block_pages__page",
-            admin.RelatedOnlyFieldListFilter,
-        ),  # Фильтр по странице через block_pages
+        RelatedObjectFilter,
     )
-    search_fields = (
-        "type",
-        "title",
-        "content_md",
-    )  # Поиск по ключевым полям
-    prepopulated_fields = {"slug": ("title",)}  # Автозаполнение slug из title
+    search_fields = ("type", "title", "content_md")
+    prepopulated_fields = {"slug": ("title",)}
     inlines = [ImageInline]
-
-    fieldsets = (
-        (
-            "Основная информация",
-            {
-                "fields": (
-                    "type",
-                    "title",
-                    "sub_title",
-                    "slug",
-                    "btn_title",
-                    "is_text_right",
-                ),
-            },
-        ),
-        (
-            "Ссылки",
-            {
-                "fields": (
-                    "link",
-                    "external_link",
-                ),
-                "classes": ["collapse"],  # Добавляем класс 'collapse'
-            },
-        ),
-        (
-            "Контент",
-            {
-                "fields": (
-                    "content_md",
-                    "content",  # Отрендеренный контент (только для чтения)
-                ),
-                "classes": ["collapse"],  # Добавляем класс 'collapse'
-            },
-        ),
-    )
-
     readonly_fields = ("content",)
+    
+    def related_objects(self, obj):
+        return obj.related_objects
 
-    def get_queryset(self, request):
-        queryset = super().get_queryset(request)
-
-        # Проверяем, выбрана ли страница в фильтре
-        page_filter = request.GET.get("block_pages__page__id__exact")
-        if page_filter:
-            # Если выбрана страница, используем её как первую страницу
-            first_page = ContentBlockInline.objects.filter(
-                block=OuterRef("pk"), page_id=page_filter
-            ).order_by("order")[:1]
-        else:
-            # Подзапрос для первой страницы
-            first_page = ContentBlockInline.objects.filter(block=OuterRef("pk")).order_by(
-                "order"
-            )[:1]
-
-        # Аннотация для первой страницы и её порядка
-        queryset = queryset.annotate(
-            first_page_title=Subquery(first_page.values("page__title")),
-            block_order=Subquery(
-                first_page.values("order")
-            ),  # Порядок блока на первой странице
-            block_id=Subquery(
-                ContentBlockInline.objects.filter(block=OuterRef("pk")).values("id")[:1]
-            ),
-        ).distinct()
-
-        # Предварительная загрузка связанных страниц
-        queryset = queryset.prefetch_related(
-            Prefetch(
-                "block_pages",
-                queryset=ContentBlockInline.objects.order_by("order"),
-            )
-        )
-        return queryset.order_by("first_page_title", "block_order", "block_id")
-
-    def pages_list(self, obj):
-        """
-        Возвращает список названий страниц, связанных с блоком.
-        """
-        return ", ".join([page.title for page in obj.pages.all()])
-
-    pages_list.short_description = _("Связанные страницы")
+    related_objects.short_description = "Связанные страницы/категории"
 
 
 @admin.register(Page)

@@ -393,6 +393,19 @@ class Block(models.Model):
         ordering = ["content_blocks__order"]
         verbose_name = "Блок"
         verbose_name_plural = "Блоки"
+        
+    @property
+    def related_objects(self):
+        """
+        Возвращает список строк формата 'Заголовок (slug)' 
+        для всех Page и Category, где этот блок используется.
+        """
+        result = []
+        for cb in self.content_blocks.all():
+            obj = cb.content_object
+            if obj and hasattr(obj, "title") and hasattr(obj, "slug"):
+                result.append(f"{obj.title} ({obj.slug})")
+        return result
 
 
 class Image(models.Model):

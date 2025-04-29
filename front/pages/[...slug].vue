@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useScroll } from '@vueuse/core';
 const { fetchData } = useApiFetch()
 const route = useRoute()
 
@@ -15,6 +16,8 @@ const data = ref<PageData | CategoryData | null>()
 const status = ref();
 const error = ref();
 
+const pageType = ref<'page' | 'category'>()
+const combineData = ref()
 // Функция для получения данных
 const fetchDataBySlug = async () => {
     let path: string;
@@ -25,6 +28,7 @@ const fetchDataBySlug = async () => {
     status.value = null
 
     if (slug[0] === 'cat') {
+        pageType.value = 'category'
         // Маршрут начинается с "cat"
         if (slug.length === 2) {
             // Конкретная категория (/cat/CAT)
@@ -41,10 +45,11 @@ const fetchDataBySlug = async () => {
             throw new Error('Unknown category route');
         }
     } else {
+        pageType.value = 'page'
         // Маршрут без "cat"
         if (slug.length === 0) {
             // Главная страница (/)
-            path = 'page';
+            path = ['page', 'homepage'].join('/');
             res = await fetchData<PageData>(path);
         } else if (slug.length === 1) {
             // Страница (/PAGE)
@@ -60,6 +65,8 @@ const fetchDataBySlug = async () => {
     data.value = res.data.value
     error.value = res.error.value
     status.value = res.status.value
+
+    combineData.value = data.value?.blocks
 };
 
 // Получаем данные
@@ -71,6 +78,45 @@ if (status.value == 'error') {
         message: `Ошибка при запросе к ${slug.join('/')}`,
         fatal: true, // Указывает, что ошибка фатальная
     })
+}
+const cat = ref({
+    items: null as PageData[] | null,
+    pagination: null as Pagination | null,
+    link: null as string | null
+})
+const fetchPagesInCat = async () => {
+    const res = await fetchData<PaginatedResponse<PageData>>(cat.value.link || `page?cat=${slug[1].trim()}`);
+    if (res.data.value && res.status.value == 'success') {
+        const { results, ...pagination } = res.data.value;
+
+        cat.value.items = results;
+        cat.value.pagination = {
+            count: pagination.count,
+            next: pagination.next,
+            previous: pagination.previous,
+        };
+        const blocksFromPages = results.map(page => page.blocks.find(el => ['text', 'lead'].includes(el.type)))
+
+        if (data.value && data.value.blocks) {
+            const half = Math.floor(data.value.blocks.length / 2);
+            const newBlocks = [
+                ...data.value.blocks.slice(0, half),
+                ...blocksFromPages,
+                ...data.value.blocks.slice(half),
+            ];
+
+            combineData.value = newBlocks as Block[];
+        }
+    }
+}
+if (pageType.value == 'category' && slug.length > 1) {
+    await fetchPagesInCat()
+}
+const paginate = async (e: any) => {
+    cat.value.link = e.target.href.split('api/')[1]
+    await fetchPagesInCat()
+    const { y } = useScroll(window, { behavior: 'smooth' });
+    y.value = 0
 }
 
 useSeoMeta({
@@ -91,11 +137,11 @@ watch(settingLoading, () => {
 })
 
 const mainSlider = computed(() =>
-    data.value?.blocks.find((el: Block) => el.type == 'slider')
+    combineData.value.find((el: Block) => el.type == 'slider')
 )
 
 const blocksByType = (types: BlockType[]) => {
-    return data.value?.blocks.filter((el: Block) => types.includes(el.type)) || []
+    return combineData.value.filter((el: Block) => types.includes(el.type)) || []
 }
 </script>
 
@@ -112,6 +158,16 @@ const blocksByType = (types: BlockType[]) => {
             <BlockGallery v-else-if="block.type === 'gallery'" :block="block" />
             <BlockLead v-else-if="block.type === 'lead'" :block="block" :img-base="imgBase" />
             <BlockFeedback v-else-if="block.type === 'feedback'" :block="block" />
+        </template>
+        <template v-if="cat.pagination?.previous || cat.pagination?.next">
+            <div class="container py-4 w-full md:max-w-screen-md items-center justify-center flex gap-4">
+                <template v-if="cat.pagination?.previous">
+                    <a :href="cat.pagination.previous" @click.prevent="paginate" class="leadbtn px-8 p-4">Назад</a>
+                </template>
+                <template v-if="cat.pagination?.next">
+                    <a :href="cat.pagination.next" @click.prevent="paginate" class="leadbtn px-8 p-4">Вперед</a>
+                </template>
+            </div>
         </template>
     </div>
 </template>

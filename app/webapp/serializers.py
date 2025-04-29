@@ -81,7 +81,7 @@ class CategorySerializer(serializers.ModelSerializer):
     def get_blocks(self, obj):
         blocks = obj.get_blocks()
         return BlockSerializer(blocks, many=True).data
-
+    
 class TopItemSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели TopItem.

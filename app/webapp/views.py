@@ -4,6 +4,7 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound
 from rest_framework.throttling import AnonRateThrottle
 
 from .models import Page, SiteSettings, Feedback, Category
@@ -27,17 +28,23 @@ class PageViewSet(viewsets.ModelViewSet):
     serializer_class = PageSerializer
     lookup_field = "slug"  # Используем slug вместо id для поиска
 
-    def list(self, request, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
         """
-        Переопределяем метод list, чтобы возвращать только главную страницу.
+        Если slug == 'homepage' — возвращаем главную страницу.
+        Иначе — стандартное поведение (поиск по slug).
         """
-        homepage = Page.objects.filter(is_homepage=True).first()
-        if not homepage:
-            return Response(
-                {"detail": "Главная страница не найдена."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        serializer = self.get_serializer(homepage)
+        slug = self.kwargs.get("slug")
+
+        if slug == "homepage":
+            page = Page.objects.filter(is_homepage=True).first()
+            if not page:
+                raise NotFound({"detail": "Главная страница не найдена."})
+        else:
+            page = self.get_queryset().filter(slug=slug).first()
+            if not page:
+                raise NotFound({"detail": f"Страница с slug='{slug}' не найдена."})
+
+        serializer = self.get_serializer(page)
         return Response(serializer.data)
 
 

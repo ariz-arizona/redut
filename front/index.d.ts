@@ -84,3 +84,12 @@ interface SiteSettings {
     documents: Document[]; // Массив связанных документов
     top_items: TopItem[]; // Массив топовых элементов
 }
+
+interface Pagination {
+    count: number;
+    next: string | null;
+    previous: string | null;
+}
+interface PaginatedResponse<T> extends Pagination {
+    results: T[];
+}

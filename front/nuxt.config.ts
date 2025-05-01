@@ -5,9 +5,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   modules: [
+    '@nuxtjs/tailwindcss',
     '@nuxt/icon',
     '@nuxt/image',
-    '@nuxtjs/tailwindcss',
     '@nuxtjs/robots',
   ],
   site: { indexable: false },

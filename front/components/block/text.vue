@@ -3,6 +3,15 @@ defineProps<{
     block: Block;
     imgBase: string;
 }>();
+
+const lightboxVisible = ref(false);
+const indexRef = ref(0)
+const openLightbox = () => {
+    lightboxVisible.value = true;
+};
+const closeLightbox = () => {
+    lightboxVisible.value = false;
+};
 </script>
 <template>
     <div :id="block.slug">
@@ -11,15 +20,17 @@ defineProps<{
                 <!-- Картинка -->
                 <div v-if="block.images.length" class="col-span-1" :class="[!block.is_text_right ? 'order-last' : '']">
                     <div class="p-4">
-                        <div class="bg-no-repeat bg-cover bg-center p-4 relative pointer-events-none" :style="{
+                        <div class="bg-no-repeat bg-cover bg-center p-4 relative" :style="{
                             backgroundImage: createBgWithGrad(
                                 `${imgBase}/${block.images[0].image}`,
                                 'rgba(var(--color-primary), 0.5)',
                                 'rgba(var(--color-primary), 0.5)'
                             ),
-                        }" v-if="block.images.length">
+                        }" @click="openLightbox">
                             <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
                         </div>
+                        <vue-easy-lightbox :visible="lightboxVisible" :imgs="block.images.map(el => `${imgBase}/${el.image}`)"
+                            :index="indexRef" @hide="closeLightbox" />
                     </div>
                 </div>
 

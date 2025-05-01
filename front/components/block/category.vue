@@ -25,7 +25,8 @@ onMounted(() => { loadPages() })
     <div :id="block.slug">
         <div class="container p-4 grid grid-cols-1 xl:grid-cols-[1fr_2fr] gap-4 mb-8">
             <div class="col-span-1">
-                {{ block.title || block.category.title }}
+                <div class="text-secondary-400 text-7xl font-bleu uppercase sideways-writing-lr text-left indent-20"
+                    v-html="block.title || block.category.title" />
             </div>
             <div class="col-span-1">
                 <template v-for="item in pages">

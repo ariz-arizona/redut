@@ -3,6 +3,7 @@ import colors from 'tailwindcss/colors'
 import _fontFamily from 'tailwindcss/'
 import typography from '@tailwindcss/typography'
 import forms from '@tailwindcss/forms';
+import plugin from 'tailwindcss/plugin';
 
 const new_colors = {
     'midnight': {
@@ -44,7 +45,7 @@ export default <Partial<Config>>{
                     ...new_colors.midnight,
                     DEFAULT: new_colors.midnight[500],
                 },
-                secondary:{
+                secondary: {
                     ...new_colors.sandal,
                     DEFAULT: new_colors.sandal[500],
                 }
@@ -59,5 +60,22 @@ export default <Partial<Config>>{
             },
         }
     },
-    plugins: [typography, forms]
+    plugins: [typography, forms,
+        plugin(function ({ addUtilities }) {
+            addUtilities({
+                // https://developer.mozilla.org/en-US/docs/Web/CSS/writing-mode
+                ".horizontal-writing-tb": { "writing-mode": "horizontal-tb" },
+                ".vertical-writing-rl": { "writing-mode": "vertical-rl" },
+                ".vertical-writing-lr": { "writing-mode": "vertical-lr" },
+                ".sideways-writing-rl": { "writing-mode": "sideways-rl" },
+                ".sideways-writing-lr": { "writing-mode": "sideways-lr" },
+                // https://developer.mozilla.org/en-US/docs/Web/CSS/text-orientation
+                ".orientation-mixed": { "text-orientation": "mixed" },
+                ".orientation-upright": { "text-orientation": "upright" },
+                ".orientation-sideways-right": { "text-orientation": "sideways-right" },
+                ".orientation-sideways": { "text-orientation": "sideways" },
+                ".orientation-glyph": { "text-orientation": "use-glyph-orientation" },
+            })
+        }),
+    ]
 }

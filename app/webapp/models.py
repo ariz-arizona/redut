@@ -396,6 +396,17 @@ class Block(models.Model):
         verbose_name="Категория",
         related_name="cat"
     )
+    created_at = models.DateTimeField(
+        auto_now_add=True,  # Устанавливается только при создании объекта
+        verbose_name="Дата создания",
+        help_text="Дата и время создания блока."
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,  # Обновляется при каждом сохранении объекта
+        verbose_name="Дата изменения",
+        help_text="Дата и время последнего изменения блока."
+    )
+
 
     def __str__(self):
         return f"{self.get_type_display()} {self.title}"

@@ -232,7 +232,7 @@ class BaseContentModel(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def get_blocks(self):
         """
         Возвращает список связанных блоков (Block) через ContentBlock.
@@ -343,6 +343,7 @@ class Block(models.Model):
         ("slider", "Главная картинка"),
         ("gallery", "Карусель"),
         ("feedback", "Форма обратной связи"),
+        ("category", "Вывод категории"),
     ]
     type = models.CharField(
         choices=BLOCK_TYPES, max_length=20, verbose_name="Тип блока"
@@ -387,6 +388,14 @@ class Block(models.Model):
         verbose_name="Текст справа",
         help_text="Если выбрано, текст будет расположен справа. Иначе — слева.",
     )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Категория",
+        related_name="cat"
+    )
 
     def __str__(self):
         return f"{self.get_type_display()} {self.title}"
@@ -395,11 +404,11 @@ class Block(models.Model):
         ordering = ["content_blocks__order"]
         verbose_name = "Блок"
         verbose_name_plural = "Блоки"
-        
+
     @property
     def related_objects(self):
         """
-        Возвращает список строк формата 'Заголовок (slug)' 
+        Возвращает список строк формата 'Заголовок (slug)'
         для всех Page и Category, где этот блок используется.
         """
         result = []

@@ -256,7 +256,6 @@ class BlockAdmin(admin.ModelAdmin):
         "type",
         "sub_title",
         "slug",
-        "is_text_right",
         "related_objects"
     )
     list_filter = (

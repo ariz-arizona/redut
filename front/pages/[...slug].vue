@@ -85,7 +85,7 @@ const cat = ref({
     link: null as string | null
 })
 const fetchPagesInCat = async () => {
-    const res = await fetchData<PaginatedResponse<PageData>>(cat.value.link || `page?cat=${slug[1].trim()}`);
+    const res = await fetchData<PaginatedResponse<PageData>>(cat.value.link || `page?category__slug=${slug[1].trim()}`);
     if (res.data.value && res.status.value == 'success') {
         const { results, ...pagination } = res.data.value;
 
@@ -153,11 +153,12 @@ const blocksByType = (types: BlockType[]) => {
         <template v-if="!mainSlider">
             <div class="h-40" />
         </template>
-        <template v-for="block in blocksByType(['text', 'gallery', 'lead', 'feedback'])" :key="block.id">
+        <template v-for="block in blocksByType(['text', 'gallery', 'lead', 'feedback', 'category'])" :key="block.id">
             <BlockText v-if="block.type === 'text'" :block="block" :img-base="imgBase" />
             <BlockGallery v-else-if="block.type === 'gallery'" :block="block" />
             <BlockLead v-else-if="block.type === 'lead'" :block="block" :img-base="imgBase" />
             <BlockFeedback v-else-if="block.type === 'feedback'" :block="block" />
+            <BlockCategory v-else-if="block.type === 'category'" :block="block" />
         </template>
         <template v-if="cat.pagination?.previous || cat.pagination?.next">
             <div class="container py-4 w-full md:max-w-screen-md items-center justify-center flex gap-4">

@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import Feedback from '../feedback.vue';
 

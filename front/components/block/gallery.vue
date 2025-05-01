@@ -10,7 +10,8 @@ defineProps<{
     <div :id="block.slug" class="overflow-hidden relative">
         <div class="relative">
             <div
-                class="text-[50vmin] text-center text-secondary-200 font-wonder pointer-events-none z-20 absolute left-0 right-0 top-1/2 -translate-y-1/2 leading-none"
+                class="text-[50vmin] text-center text-secondary-200 font-wonder pointer-events-none z-20 
+                absolute left-0 right-0 top-1/2 -translate-y-1/2 leading-[0.25]"
                 v-if="block.title"
             >
                 {{ block.title }}

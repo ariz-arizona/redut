@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework.throttling import AnonRateThrottle
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from .models import Page, SiteSettings, Feedback, Category
 
 from .serializers import (
@@ -27,6 +29,10 @@ class PageViewSet(viewsets.ModelViewSet):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
     lookup_field = "slug"  # Используем slug вместо id для поиска
+    filter_backends = [DjangoFilterBackend]  # Добавляем поддержку фильтрации
+    filterset_fields = {
+        'category__slug': ['exact'],  # Фильтрация по category__slug
+    }
 
     def retrieve(self, request, *args, **kwargs):
         """

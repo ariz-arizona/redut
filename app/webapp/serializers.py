@@ -44,15 +44,22 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class SmallCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ("title", "slug")
+
+
 class BlockSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
-    
+
     link = serializers.SlugRelatedField(
         slug_field="slug",  # Указываем, что нужно использовать поле slug
         queryset=Page.objects.all(),  # Queryset для поля ForeignKey
         allow_null=True,  # Разрешаем null значения
         required=False,  # Поле необязательное
     )
+    category = SmallCategorySerializer()
 
     class Meta:
         model = Block
@@ -65,7 +72,7 @@ class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = "__all__"
-        
+
     def get_blocks(self, obj):
         blocks = obj.get_blocks()
         return BlockSerializer(blocks, many=True).data
@@ -77,15 +84,17 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = "__all__"
-        
+
     def get_blocks(self, obj):
         blocks = obj.get_blocks()
         return BlockSerializer(blocks, many=True).data
-    
+
+
 class TopItemSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели TopItem.
     """
+
     type = serializers.SerializerMethodField()
     slug = serializers.SerializerMethodField()
     block = serializers.SerializerMethodField()
@@ -133,6 +142,7 @@ class TopItemSerializer(serializers.ModelSerializer):
             return obj.title
         content_object = obj.content_block.content_object
         return getattr(content_object, "title", "Несвязанный TopItem")
+
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
     """

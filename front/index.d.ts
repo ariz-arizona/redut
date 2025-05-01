@@ -12,8 +12,12 @@ interface Image {
     text: string | null
     text_rendered: string | null
 }
-type BlockType = 'text' | 'lead' | 'gallery' | 'slider' | 'feedback';
+type BlockType = 'text' | 'lead' | 'gallery' | 'slider' | 'feedback' | 'category';
 
+interface SmallCategory {
+    title: string; // Название категории
+    slug: string;  // Уникальный идентификатор категории
+}
 interface Block {
     content_md: string; // Markdown-контент
     content: string; // Отрендеренный HTML
@@ -29,6 +33,7 @@ interface Block {
     link: string | null; // Внутренняя ссылка (опционально)
     external_link: string | null; // Внешняя ссылка (опционально)
     is_text_right: boolean; // Флаг для расположения текста справа (true) или слева (false)
+    category: SmallCategory
 }
 
 interface PageData {

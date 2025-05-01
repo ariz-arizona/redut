@@ -70,7 +70,9 @@ const scrollToAnchor = (e: PointerEvent) => {
             </div>
         </div>
         <Suspense>
-            <slot />
+            <div class="min-h-[calc(100vh-10rem)]">
+                <slot />
+            </div>
         </Suspense>
         <div class="bg-primary-800 text-white">
             <div class="container flex items-center gap-4 p-2 py-8 basetext">

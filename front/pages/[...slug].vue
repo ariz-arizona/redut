@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useScroll } from '@vueuse/core';
+import { useFavicon, useScroll } from '@vueuse/core';
 const { fetchData } = useApiFetch()
 const route = useRoute()
 
@@ -35,11 +35,6 @@ const fetchDataBySlug = async () => {
             const categoryName = slug[1];
             path = ['cat', categoryName].join('/');
             res = await fetchData<CategoryData>(path);
-        } else if (slug.length === 3) {
-            // Страница внутри категории (/cat/CAT/PAGE)
-            const pageName = slug[2];
-            path = ['cat', pageName].join('/');
-            res = await fetchData<PageData>(path);
         } else {
             // Неизвестный маршрут
             throw new Error('Unknown category route');
@@ -95,18 +90,8 @@ const fetchPagesInCat = async () => {
             next: pagination.next,
             previous: pagination.previous,
         };
-        const blocksFromPages = results.map(page => page.blocks.find(el => ['text', 'lead'].includes(el.type)))
 
-        if (data.value && data.value.blocks) {
-            const half = Math.floor(data.value.blocks.length / 2);
-            const newBlocks = [
-                ...data.value.blocks.slice(0, half),
-                ...blocksFromPages,
-                ...data.value.blocks.slice(half),
-            ];
-
-            combineData.value = newBlocks as Block[];
-        }
+        console.log(cat.value.items)
     }
 }
 if (pageType.value == 'category' && slug.length > 1) {
@@ -133,6 +118,9 @@ useSeoMeta({
 watch(settingLoading, () => {
     if (settingLoading.value == false) {
         useSeoMeta({ title: settings.value?.name + ' | ' + data.value?.title, })
+        if (settings.value?.favicon) {
+            useFavicon(`${imgBase}/${settings.value?.favicon}`)
+        }
     }
 })
 
@@ -153,22 +141,33 @@ const blocksByType = (types: BlockType[]) => {
         <template v-if="!mainSlider">
             <div class="h-40" />
         </template>
-        <template v-for="block in blocksByType(['text', 'gallery', 'lead', 'feedback', 'category'])" :key="block.id">
+        <template v-for="(block, index) in blocksByType(['text', 'gallery', 'lead', 'feedback', 'category'])"
+            :key="block.id">
+            <template v-if="(index + 1) === Math.floor(combineData.length / 2)">
+                <template v-if="cat.items?.length">
+                    <div class="container p-4 grid grid-cols-2 xl:grid-cols-3 gap-6">
+                        <template v-for="item in cat.items" :key="item.slug">
+                            <BlockCategoryItem :item="item" :img-base="imgBase" class="min-h-72" />
+                        </template>
+                    </div>
+                </template>
+                <template v-if="cat.pagination?.previous || cat.pagination?.next">
+                    <div class="container py-4 w-full md:max-w-screen-md items-center justify-center flex gap-4">
+                        <template v-if="cat.pagination?.previous">
+                            <a :href="cat.pagination.previous" @click.prevent="paginate"
+                                class="leadbtn px-8 p-4">Назад</a>
+                        </template>
+                        <template v-if="cat.pagination?.next">
+                            <a :href="cat.pagination.next" @click.prevent="paginate" class="leadbtn px-8 p-4">Вперед</a>
+                        </template>
+                    </div>
+                </template>
+            </template>
             <BlockText v-if="block.type === 'text'" :block="block" :img-base="imgBase" />
             <BlockGallery v-else-if="block.type === 'gallery'" :block="block" />
             <BlockLead v-else-if="block.type === 'lead'" :block="block" :img-base="imgBase" />
             <BlockFeedback v-else-if="block.type === 'feedback'" :block="block" />
-            <BlockCategory v-else-if="block.type === 'category'" :block="block" />
-        </template>
-        <template v-if="cat.pagination?.previous || cat.pagination?.next">
-            <div class="container py-4 w-full md:max-w-screen-md items-center justify-center flex gap-4">
-                <template v-if="cat.pagination?.previous">
-                    <a :href="cat.pagination.previous" @click.prevent="paginate" class="leadbtn px-8 p-4">Назад</a>
-                </template>
-                <template v-if="cat.pagination?.next">
-                    <a :href="cat.pagination.next" @click.prevent="paginate" class="leadbtn px-8 p-4">Вперед</a>
-                </template>
-            </div>
+            <BlockCategory v-else-if="block.type === 'category'" :block="block" :img-base="imgBase" />
         </template>
     </div>
 </template>

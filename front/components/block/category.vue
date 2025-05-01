@@ -3,6 +3,7 @@ const { fetchData } = useApiFetch()
 
 const props = defineProps<{
     block: Block;
+    imgBase: string;
 }>();
 
 // Состояние для хранения данных новостей
@@ -20,6 +21,9 @@ async function loadPages() {
     }
 }
 onMounted(() => { loadPages() })
+const getBg = (page: PageData) => {
+    return page.blocks.find(el => el.type !== 'slider' && el.images.length > 0)?.images[0]
+}
 </script>
 <template>
     <div :id="block.slug">
@@ -32,11 +36,9 @@ onMounted(() => { loadPages() })
                     <Icon name="mdi:arrow-right" class="w-3/4 h-3/4 text-secondary-200" />
                 </NuxtLink>
             </div>
-            <div class="col-span-1">
+            <div class="col-span-1 grid grid-cols-1 xl:grid-cols-2 gap-8 ">
                 <template v-for="item in pages">
-                    <div class="border">
-                        {{ item.title }}
-                    </div>
+                    <BlockCategoryItem :img-base="imgBase" :item="item" />
                 </template>
             </div>
         </div>

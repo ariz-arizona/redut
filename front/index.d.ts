@@ -44,6 +44,8 @@ interface PageData {
     meta_title: string | null;
     slug: string;
     title: string;
+    created_at: string
+    updated_at: string
 }
 interface CategoryData {
     id: number; // Уникальный идентификатор категории
@@ -84,6 +86,7 @@ interface SiteSettings {
     name: string;
     phone_number: string; // Номер телефона
     logo: string | null; // Логотип (путь к файлу или null)
+    favicon: string | null;
     footer_text: string; // Текст футера
     is_enabled: boolean; // Флаг активности
     documents: Document[]; // Массив связанных документов

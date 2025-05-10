@@ -31,8 +31,8 @@ const imgBase = config.public.imgBase
         </div>
       </div>
     </div>
-    <div class="container relative hidden lg:grid grid-cols-1 md:grid-cols-3 h-full items-center">
-      <div class="col-span-1 col-start-3 p-8 overflow-hidden bg-midnight-950 mt-48 mb-4">
+    <div class="container relative hidden lg:grid grid-cols-1 md:grid-cols-4 h-full items-center">
+      <div class="col-span-1 col-start-4 p-8 overflow-hidden bg-midnight-950 mt-48 mb-4">
         <div class="text-center">
           <span class="size-24">
             <HeaderLogo :logo="settings?.logo" />

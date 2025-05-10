@@ -21,10 +21,10 @@ const imgBase = config.public.imgBase
   <div class="h-full bg-cover relative" :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${slide.image}`) }">
     <div class="absolute bottom-2 right-2 left-2 text-left">
       <div class="container m-auto">
-        <div class="max-w-[85%] select-none leading-none relative">
+        <div class="max-w-[85%] select-none leading-none relative inline-block">
           <h3 class="text-[5vw] font-bleu" v-html="slide.title"></h3>
           <p v-if="slide.alt_text"
-            class="font-wonder text-[8vw] text-secondary-200 absolute right-0 top-1/4 left-3/4">
+            class="font-wonder text-[12vw] text-secondary-200 absolute w-full top-1/2 -translate-y-1/2 left-3/4">
             {{ slide.alt_text }}
           </p>
         </div>

@@ -18,19 +18,20 @@ const imgBase = config.public.imgBase
 </script>
 
 <template>
-  <div class="h-full bg-cover relative" :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${slide.image}`) }">
+  <div class="h-full min-h-[50vh] bg-cover relative"
+    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${slide.image}`) }">
     <div class="absolute bottom-2 right-2 left-2 text-left">
       <div class="container m-auto">
-        <div class="max-w-[85%] select-none leading-none relative inline-block">
-          <h3 class="text-[5vw] font-bleu" v-html="slide.title"></h3>
-          <p v-if="slide.alt_text"
-            class="font-wonder text-[12vw] text-secondary-200 absolute w-full top-1/2 -translate-y-1/2 left-3/4">
+        <div class="max-w-full md:max-w-[85%] select-none leading-none relative inline-block">
+          <h3 class="text-5xl sm:text-[7rem] font-bleu" v-html="slide.title"></h3>
+          <p v-if="slide.alt_text" class="text-9xl sm:text-[16rem] font-wonder 
+            text-secondary-200 absolute w-full lg:top-1/2 -translate-y-1/2 left-1/4 lg:left-3/4">
             {{ slide.alt_text }}
           </p>
         </div>
       </div>
     </div>
-    <div class="container relative grid grid-cols-1 md:grid-cols-3 h-full items-center">
+    <div class="container relative hidden lg:grid grid-cols-1 md:grid-cols-3 h-full items-center">
       <div class="col-span-1 col-start-3 p-8 overflow-hidden bg-midnight-950 mt-48 mb-4">
         <div class="text-center">
           <span class="size-24">

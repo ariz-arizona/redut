@@ -34,7 +34,7 @@ const scrollToAnchor = (e: PointerEvent) => {
 };
 </script>
 <template>
-    <div>
+    <div class="overflow-hidden">
         <div class="w-full z-20" :ref="menuRef" :class="[
             isSliderVisible ? 'h-36 absolute top-20' : 'h-28 fixed bg-primary-800/75',
             'transition-all duration-300 ease-in-out'

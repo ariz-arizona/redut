@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import (
     Block,
     Category,
+    ContentBlock,
     Document,
     Feedback,
     Image,
@@ -66,6 +67,27 @@ class BlockSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ContentBlockSerializer(serializers.ModelSerializer):
+    block = BlockSerializer(read_only=True)
+
+    class Meta:
+        model = ContentBlock
+        # fields = "__all__"
+        fields = ["block", "color_scheme"]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        # Получаем данные блока
+        block_data = data.pop("block")  # удаляем 'block' из данных
+
+        # Добавляем поля блока на верхний уровень
+        for key, value in block_data.items():
+            data[key] = value
+
+        return data
+
+
 class PageSerializer(serializers.ModelSerializer):
     blocks = serializers.SerializerMethodField()
 
@@ -74,8 +96,8 @@ class PageSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_blocks(self, obj):
-        blocks = obj.get_blocks()
-        return BlockSerializer(blocks, many=True).data
+        all_blocks = obj.get_blocks_with_settings()
+        return ContentBlockSerializer(all_blocks, many=True).data
 
 
 class CategorySerializer(serializers.ModelSerializer):

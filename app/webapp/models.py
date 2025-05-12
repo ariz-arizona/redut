@@ -270,12 +270,21 @@ class BaseContentModel(models.Model):
         content_blocks = self.blocks.select_related("block").all()
         return [content_block.block for content_block in content_blocks]
 
-
+    def get_blocks_with_settings(self):
+        """
+        Возвращает QuerySet ContentBlock с предзагруженными связями.
+        """
+        return self.blocks.select_related("block").all()
+    
 class ContentBlock(models.Model):
     """
     Универсальная промежуточная модель для связи контента (Category или Page) с блоками.
     """
 
+    COLOR_SCHEME_CHOICES = (
+        ("dark", _("Тёмная")),
+        ("light", _("Светлая")),
+    )
     content_type = models.ForeignKey(
         ContentType,
         on_delete=models.CASCADE,
@@ -295,6 +304,13 @@ class ContentBlock(models.Model):
         default=0,
         verbose_name=_("Порядок"),
     )
+    color_scheme = models.CharField(
+        max_length=5,
+        choices=COLOR_SCHEME_CHOICES,
+        default="light",
+        verbose_name=_("Цветовая схема"),
+        help_text=_("Выберите цветовую схему для этого блока."),
+    )
 
     class Meta:
         ordering = ["order"]
@@ -304,6 +320,21 @@ class ContentBlock(models.Model):
 
     def __str__(self):
         return f"{self.content_object} - Block {self.block.title} (Order: {self.order})"
+
+    def save(self, *args, **kwargs):
+        # Автоматически определяем цветовую схему, если значение не задано вручную
+        if not self.pk and not self._state.adding:
+            # Если объект ещё не сохранён и не указан явно цвет
+            existing_blocks = ContentBlock.objects.filter(
+                content_type=self.content_type, object_id=self.object_id
+            ).order_by("order")
+
+            # Подсчитываем текущее количество блоков
+            count = existing_blocks.count()
+
+            # Назначаем цвет: нечётные — dark, чётные — light
+            self.color_scheme = "dark" if count % 2 == 0 else "light"
+        super().save(*args, **kwargs)
 
 
 class Category(BaseContentModel):

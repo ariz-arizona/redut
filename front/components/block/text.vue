@@ -18,8 +18,8 @@ const closeLightbox = () => {
         <div class="container pt-4">
             <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
                 <!-- Картинка -->
-                <div v-if="block.images.length" class="col-span-1" :class="[!block.is_text_right ? 'order-last' : '']">
-                    <div class="p-4">
+                <div class="col-span-1" :class="[!block.is_text_right ? 'order-last' : '']">
+                    <div class="p-4" v-if="block.images.length">
                         <div class="bg-no-repeat bg-cover bg-center p-4 relative" :style="{
                             backgroundImage: createBgWithGrad(
                                 `${imgBase}/${block.images[0].image}`,

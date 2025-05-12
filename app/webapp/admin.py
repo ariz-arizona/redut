@@ -129,18 +129,17 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         (
             None,
             {
-                "fields": (
-                    "name",
-                    "phone_number",
-                    "logo",
-                    "footer_text_md",
-                    "footer_text",
-                    "is_enabled",
-                ),
+                "fields": ("name", "phone_number", "logo", "favicon", "is_enabled"),
+            },
+        ),
+        (
+            "Футер",
+            {
+                "fields": ("footer_text_md",),
             },
         ),
     )
-    readonly_fields = ("footer_text",)
+    readonly_fields = ("footer_text", "documents_count")
 
     def logo_preview(self, obj):
         """
@@ -196,9 +195,10 @@ class CategoryAdmin(admin.ModelAdmin):
     pages_count.short_description = _("Количество страниц")
     pages_count.admin_order_field = "pages__count"
 
+
 class RelatedObjectFilter(admin.SimpleListFilter):
-    title = _('Связанный объект')  # заголовок фильтра
-    parameter_name = 'related_object'  # параметр в URL (?related_object=...)
+    title = _("Связанный объект")  # заголовок фильтра
+    parameter_name = "related_object"  # параметр в URL (?related_object=...)
 
     def lookups(self, request, model_admin):
         """
@@ -248,16 +248,11 @@ class RelatedObjectFilter(admin.SimpleListFilter):
                 return queryset
 
         return queryset.distinct()
-    
+
+
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
-    list_display = (
-        "title",
-        "type",
-        "sub_title",
-        "slug",
-        "related_objects"
-    )
+    list_display = ("title", "type", "sub_title", "slug", "related_objects")
     list_filter = (
         "type",
         "is_text_right",
@@ -267,7 +262,7 @@ class BlockAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     inlines = [ImageInline]
     readonly_fields = ("content",)
-    
+
     def related_objects(self, obj):
         return obj.related_objects
 

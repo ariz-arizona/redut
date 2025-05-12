@@ -11,6 +11,8 @@ from django.utils.translation import gettext_lazy as _
 from markdownfield.models import MarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 
+from colorfield.fields import ColorField
+
 from server.logger import logger
 
 

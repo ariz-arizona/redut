@@ -23,8 +23,6 @@ const closeLightbox = () => {
                         <div class="bg-no-repeat bg-cover bg-center p-4 relative" :style="{
                             backgroundImage: createBgWithGrad(
                                 `${imgBase}/${block.images[0].image}`,
-                                'rgba(var(--color-primary), 0.5)',
-                                'rgba(var(--color-primary), 0.5)'
                             ),
                         }" @click="openLightbox">
                             <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />

@@ -17,14 +17,17 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
     "@vueuse/core": "^13.0.0",
+    "axios": "^1.9.0",
     "libphonenumber-js": "^1.12.6",
     "nuxt": "^3.16.0",
     "swiper": "^11.2.5",
+    "tinycolor2": "^1.6.0",
     "vue": "^3.5.13",
     "vue-easy-lightbox": "^1.19.0",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@types/tinycolor2": "^1.4.6",
     "dotenv-cli": "^8.0.0",
     "sass": "^1.85.1"
   }

@@ -91,6 +91,7 @@ interface SiteSettings {
     is_enabled: boolean; // Флаг активности
     documents: Document[]; // Массив связанных документов
     top_items: TopItem[]; // Массив топовых элементов
+    overlay_opacity: number
 }
 
 interface Pagination {

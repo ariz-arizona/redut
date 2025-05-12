@@ -14,7 +14,6 @@ const makeLink = (el: TopItem) => {
     if (el.type == 'page') return '/' + el.slug + '#' + el.block
     if (el.type == 'category') return '/cat/' + el.slug + '#' + el.block
 }
-
 /**
  * Плавная прокрутка к якорю.
  */
@@ -32,6 +31,12 @@ const scrollToAnchor = (e: PointerEvent) => {
         navigateTo(`/#${anchor}`);
     }
 };
+onMounted(() => {
+    const darkBgColor = (twConfig.theme?.extend?.colors as any).primary['950']
+    const darkBgColorRGB = (hexToRgb(darkBgColor))
+    document.documentElement.style.setProperty('--image-overlay-color', darkBgColorRGB)
+    document.documentElement.style.setProperty('--image-overlay-opacity', (settings.value?.overlay_opacity || 0.3).toString())
+})
 </script>
 <template>
     <div class="overflow-hidden">

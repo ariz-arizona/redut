@@ -133,6 +133,12 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             },
         ),
         (
+            "Цветовые настройки",
+            {
+                "fields": ("overlay_opacity",),
+            },
+        ),
+        (
             "Футер",
             {
                 "fields": ("footer_text_md",),

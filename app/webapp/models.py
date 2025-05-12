@@ -4,6 +4,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.validators import FileExtensionValidator
 
 from django.utils.translation import gettext_lazy as _
@@ -122,6 +123,12 @@ class SiteSettings(models.Model):
             "Может быть только одна активная запись."
         ),
     )
+    overlay_opacity = models.FloatField(
+        default=0.5,
+        verbose_name="Прозрачность оверлея",
+        help_text="Укажите значение от 0 (полностью прозрачный) до 1 (непрозрачный).",
+        validators=[MinValueValidator(0.0), MaxValueValidator(1.0)],
+    )
 
     def documents_count(self):
         """
@@ -237,16 +244,16 @@ class BaseContentModel(models.Model):
         null=True,
         verbose_name=_("Meta Description"),
     )
-    
+
     created_at = models.DateTimeField(
         auto_now_add=True,  # Устанавливается только при создании объекта
         verbose_name="Дата создания",
-        help_text="Дата и время создания блока."
+        help_text="Дата и время создания блока.",
     )
     updated_at = models.DateTimeField(
         auto_now=True,  # Обновляется при каждом сохранении объекта
         verbose_name="Дата изменения",
-        help_text="Дата и время последнего изменения блока."
+        help_text="Дата и время последнего изменения блока.",
     )
 
     class Meta:
@@ -417,9 +424,8 @@ class Block(models.Model):
         blank=True,
         null=True,
         verbose_name="Категория",
-        related_name="cat"
+        related_name="cat",
     )
-
 
     def __str__(self):
         return f"{self.get_type_display()} {self.title}"

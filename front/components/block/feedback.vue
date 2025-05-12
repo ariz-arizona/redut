@@ -7,7 +7,7 @@ defineProps<{
 </script>
 <template>
     <BlockWrapper :block="block">
-        <div class="container p-4 grid grid-cols-1 xl:grid-cols-3 mb-8">
+        <div class="container p-4 py-16 grid grid-cols-1 xl:grid-cols-3">
             <div class="col-span-full">
                 <div class="text-center font-bleu text-[12vmin] relative">
                     <span v-html="block.title" v-if="block.title" />

@@ -34,14 +34,18 @@ const scrollToAnchor = (e: PointerEvent) => {
 onMounted(() => {
     const darkBgColor = (twConfig.theme?.extend?.colors as any).primary['950']
     const darkBgColorRGB = (hexToRgb(darkBgColor))
-    document.documentElement.style.setProperty('--image-overlay-color', darkBgColorRGB)
+    const lightBgColor = (twConfig.theme?.extend?.colors as any).secondary['50']
+    const lightBgColorRGB = (hexToRgb(lightBgColor))
+
+    document.documentElement.style.setProperty('--image-overlay-dark', darkBgColorRGB)
+    document.documentElement.style.setProperty('--image-overlay-light', lightBgColorRGB)
     document.documentElement.style.setProperty('--image-overlay-opacity', (settings.value?.overlay_opacity || 0.3).toString())
 })
 </script>
 <template>
     <div class="overflow-hidden">
-        <div class="w-full z-20" :ref="menuRef" :class="[
-            isSliderVisible ? 'h-36 absolute top-20' : 'h-28 fixed bg-primary-800/75',
+        <div class="w-full z-20 text-secondary-50" :ref="menuRef" :class="[
+            isSliderVisible ? 'h-36 absolute top-20' : 'h-28 fixed bg-primary-800/90',
             'transition-all duration-300 ease-in-out'
         ]">
             <div class="container grid grid-cols-1 md:grid-cols-[1fr_10rem_1fr] xl:grid-cols-[1fr_14rem_1fr] items-start gap-4 px-2 h-full"

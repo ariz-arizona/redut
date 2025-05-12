@@ -9,7 +9,7 @@
 }
 
 body {
-  @apply font-euclid bg-primary-950 text-secondary-100;
+  @apply font-euclid;
 }
 
 .container {
@@ -40,7 +40,7 @@ body {
 }
 .leadbtn {
   @apply relative overflow-hidden flex items-center justify-center
-  rounded-full border border-secondary-500 bg-midnight-950 text-white hover:bg-midnight-800
+  rounded-full border border-secondary-500 bg-primary-950 text-white hover:bg-primary-800
   text-center
   basetext
   transition-all duration-300 ease-in-out;
@@ -61,9 +61,33 @@ input:-internal-autofill-selected {
   }
 }
 .prose {
-  @apply prose-invert;
-
   a {
     @apply text-secondary-500;
+  }
+}
+.cat-title {
+  @apply text-secondary-400;
+  .iconify {
+    @apply text-secondary-200;
+  }
+}
+.scheme-light {
+  @apply bg-secondary-50 text-primary-950;
+
+  .leadbtn {
+    @apply bg-secondary-600 text-white hover:bg-secondary-800;
+  }
+}
+.scheme-dark {
+  @apply bg-primary-950 text-secondary-100;
+
+  .prose {
+    @apply prose-invert;
+  }
+  .cat-title {
+    @apply text-secondary-600;
+    .iconify {
+      @apply text-secondary-400;
+    }
   }
 }

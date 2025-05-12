@@ -136,7 +136,9 @@ const blocksByType = (types: BlockType[]) => {
 <template>
     <div>
         <template v-if="mainSlider">
-            <Slider :slides="mainSlider.images" />
+            <BlockWrapper :block="mainSlider">
+                <Slider :slides="mainSlider.images" />
+            </BlockWrapper>
         </template>
         <template v-if="!mainSlider">
             <div class="h-40" />

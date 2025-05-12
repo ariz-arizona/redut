@@ -27,13 +27,13 @@ const getBg = (page: PageData) => {
 </script>
 <template>
     <BlockWrapper :block="block">
-        <div class="container p-4 grid grid-cols-1 xl:grid-cols-[1fr_2fr] gap-4 mb-8">
-            <div class="col-span-1 flex items-end justify-center">
-                <div class="text-secondary-400 text-7xl font-bleu uppercase sideways-writing-lr text-left indent-20"
+        <div class="container p-4 py-16 grid grid-cols-1 xl:grid-cols-[1fr_2fr] gap-4">
+            <div class="col-span-1 flex items-end justify-center cat-title">
+                <div class="text-7xl font-bleu uppercase sideways-writing-lr text-left indent-20"
                     v-html="block.title || block.category.title" />
                 <NuxtLink :to="`cat/${block.category.slug}`"
-                    class=" flex items-center justify-center leading-none size-24 rounded-full border border-secondary-400">
-                    <Icon name="mdi:arrow-right" class="w-3/4 h-3/4 text-secondary-200" />
+                    class="flex items-center justify-center leading-none size-24 rounded-full border border-secondary-400">
+                    <Icon name="mdi:arrow-right" class="w-3/4 h-3/4" />
                 </NuxtLink>
             </div>
             <div class="col-span-1 grid grid-cols-1 xl:grid-cols-2 gap-8 ">

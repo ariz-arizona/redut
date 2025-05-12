@@ -14,7 +14,7 @@ const closeLightbox = () => {
 };
 </script>
 <template>
-    <div :id="block.slug">
+    <BlockWrapper :block="block">
         <div class="container pt-4">
             <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
                 <!-- Картинка -->
@@ -29,8 +29,9 @@ const closeLightbox = () => {
                         }" @click="openLightbox">
                             <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
                         </div>
-                        <vue-easy-lightbox :visible="lightboxVisible" :imgs="block.images.map(el => `${imgBase}/${el.image}`)"
-                            :index="indexRef" @hide="closeLightbox" />
+                        <vue-easy-lightbox :visible="lightboxVisible"
+                            :imgs="block.images.map(el => `${imgBase}/${el.image}`)" :index="indexRef"
+                            @hide="closeLightbox" />
                     </div>
                 </div>
 
@@ -44,5 +45,5 @@ const closeLightbox = () => {
                 </div>
             </div>
         </div>
-    </div>
+    </BlockWrapper>
 </template>

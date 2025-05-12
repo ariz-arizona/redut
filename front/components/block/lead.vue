@@ -5,7 +5,7 @@ defineProps<{
 }>();
 </script>
 <template>
-    <div :id="block.slug" class="overflow-hidden">
+    <BlockWrapper :block="block" class="overflow-hidden">
         <div class="container pt-4">
             <div class="relative">
                 <h3 class="text-4xl md:text-[6.5vh] font-bleu text-center w-full md:w-3/4 m-auto uppercase leading-tight"
@@ -32,5 +32,5 @@ defineProps<{
             }" v-if="block.images.length">
             <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
         </div>
-    </div>
+    </BlockWrapper>
 </template>

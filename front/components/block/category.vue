@@ -26,7 +26,7 @@ const getBg = (page: PageData) => {
 }
 </script>
 <template>
-    <div :id="block.slug">
+    <BlockWrapper :block="block">
         <div class="container p-4 grid grid-cols-1 xl:grid-cols-[1fr_2fr] gap-4 mb-8">
             <div class="col-span-1 flex items-end justify-center">
                 <div class="text-secondary-400 text-7xl font-bleu uppercase sideways-writing-lr text-left indent-20"
@@ -42,5 +42,5 @@ const getBg = (page: PageData) => {
                 </template>
             </div>
         </div>
-    </div>
+    </BlockWrapper>
 </template>

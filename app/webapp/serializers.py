@@ -96,8 +96,8 @@ class PageSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_blocks(self, obj):
-        all_blocks = obj.get_blocks_with_settings()
-        return ContentBlockSerializer(all_blocks, many=True).data
+        blocks = obj.get_blocks_with_settings()
+        return ContentBlockSerializer(blocks, many=True).data
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -108,8 +108,8 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_blocks(self, obj):
-        blocks = obj.get_blocks()
-        return BlockSerializer(blocks, many=True).data
+        blocks = obj.get_blocks_with_settings()
+        return ContentBlockSerializer(blocks, many=True).data
 
 
 class TopItemSerializer(serializers.ModelSerializer):

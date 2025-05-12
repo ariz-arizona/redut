@@ -34,6 +34,7 @@ interface Block {
     external_link: string | null; // Внешняя ссылка (опционально)
     is_text_right: boolean; // Флаг для расположения текста справа (true) или слева (false)
     category: SmallCategory
+    color_scheme: 'dark' | 'light'
 }
 
 interface PageData {

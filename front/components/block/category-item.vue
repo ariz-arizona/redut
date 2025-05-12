@@ -13,17 +13,12 @@ const getBg = () => {
 </script>
 
 <template>
-    <NuxtLink
-        :to="`/${item.slug}`"
-        class="border p-8 xl:p-16 border-secondary-400 flex flex-col justify-between"
+    <NuxtLink :to="`/${item.slug}`" class="border p-8 xl:p-16 border-secondary-400 flex flex-col justify-between"
         :style="{
             backgroundImage: getBg() ? createBgWithGrad(
                 `${imgBase}/${getBg()}`,
-                'rgba(var(--color-primary), 0.5)',
-                'rgba(var(--color-primary), 0.5)'
             ) : 'transparent',
-        }"
-    >
+        }">
         <div class="w-1/2 xl:w-3/4 basetext leading-8">
             {{ item.title }}
         </div>

@@ -6,14 +6,13 @@ defineProps<{
 }>();
 </script>
 <template>
-    <div :id="block.slug">
+    <BlockWrapper :block="block">
         <div class="container p-4 grid grid-cols-1 xl:grid-cols-3 mb-8">
             <div class="col-span-full">
                 <div class="text-center font-bleu text-[12vmin] relative">
                     <span v-html="block.title" v-if="block.title" />
                     <span
-                        class="font-wonder text-[24vmin] text-secondary-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                    >
+                        class="font-wonder text-[24vmin] text-secondary-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                         {{ block.sub_title }}
                     </span>
                 </div>
@@ -22,5 +21,5 @@ defineProps<{
                 <Feedback :btn="(block.btn_title as string)" />
             </div>
         </div>
-    </div>
+    </BlockWrapper>
 </template>

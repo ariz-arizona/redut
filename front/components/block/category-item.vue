@@ -17,6 +17,9 @@ const getBg = () => {
         :style="{
             backgroundImage: getBg() ? createBgWithGrad(
                 `${imgBase}/${getBg()}`,
+                'var(--image-overlay-color)',
+                '0.7',
+                '0.7'
             ) : 'transparent',
         }">
         <div class="w-1/2 xl:w-3/4 basetext leading-8">

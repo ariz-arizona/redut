@@ -38,7 +38,7 @@ ALLOWED_HOSTS = [
 ]
 CSRF_TRUSTED_ORIGINS = (
     f"http://{HOST}:{PORT}",
-    f"http://{HOST}",
+    f"https://{HOST}",
     f"http://localhost:{PORT}",
     "http://localhost:8000",
     "http://localhost:3000",
@@ -46,7 +46,7 @@ CSRF_TRUSTED_ORIGINS = (
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = [
     f"http://{HOST}:{PORT}",
-    f"http://{HOST}",
+    f"https://{HOST}",
     f"http://localhost:{PORT}",
     "http://localhost:8000",
     "http://localhost:3000",

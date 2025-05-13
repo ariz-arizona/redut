@@ -14,7 +14,7 @@ async function loadPages() {
     try {
         const cat = props.block.category.slug
         // Получаем данные через API
-        const res = await fetchData<PaginatedResponse<PageData>>(`page?limit=2&category__slug=${cat.trim()}`);
+        const res = await fetchData<PaginatedResponse<PageData>>(`page?limit=4&category__slug=${cat.trim()}`);
         pages.value = res.data.value?.results as PageData[]
     } catch (error) {
         console.error('Ошибка при загрузке страниц:', error);

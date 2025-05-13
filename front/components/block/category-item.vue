@@ -8,12 +8,12 @@ const props = defineProps<CategoryItemProps>();
 
 // Функция для получения фонового изображения
 const getBg = () => {
-    return props.item.blocks.find(el => el.type !== 'slider' && el.images.length > 0)?.images[0];
+    return props.item.blocks.find(el => el.type !== 'slider' && el.images.length > 0)?.images[0].image;
 };
 </script>
 
 <template>
-    <NuxtLink :to="`/${item.slug}`" class="border p-8 xl:p-16 border-secondary-400 flex flex-col justify-between"
+    <NuxtLink :to="`/${item.slug}`" class="border p-6 xl:p-10 border-secondary-400 flex flex-col justify-between"
         :style="{
             backgroundImage: getBg() ? createBgWithGrad(
                 `${imgBase}/${getBg()}`,

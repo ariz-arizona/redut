@@ -1,13 +1,13 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
     block: Block;
 }>();
+const scheme = `var(--image-overlay-${props.block.color_scheme})`
 </script>
 <style scoped>
 .scheme-light,
 .scheme-dark {
-    --image-overlay-color: v-bind("block.color_scheme === 'dark' ? 'var(--image-overlay-dark)' : 'var(--image-overlay-light)'"
-        );
+    --image-overlay-color: v-bind(scheme);
 }
 </style>
 <template>

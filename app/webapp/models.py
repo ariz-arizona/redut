@@ -308,7 +308,7 @@ class ContentBlock(models.Model):
     color_scheme = models.CharField(
         max_length=5,
         choices=COLOR_SCHEME_CHOICES,
-        default="light",
+        default="dark",
         verbose_name=_("Цветовая схема"),
         help_text=_("Выберите цветовую схему для этого блока."),
     )

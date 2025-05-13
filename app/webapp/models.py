@@ -10,7 +10,8 @@ from django.core.validators import FileExtensionValidator
 from django.utils.translation import gettext_lazy as _
 
 from markdownfield.models import MarkdownField
-from markdownfield.validators import VALIDATOR_CLASSY
+
+from webapp.md import VALIDATOR_MY
 
 from colorfield.fields import ColorField
 
@@ -109,7 +110,7 @@ class SiteSettings(models.Model):
     footer_text_md = MarkdownField(
         blank=True,
         null=True,
-        validator=VALIDATOR_CLASSY,
+        validator=VALIDATOR_MY,
         verbose_name="Текст футера",
         help_text="Введите текст, который будет отображаться в нижней части сайта (футере).",
         rendered_field="footer_text",
@@ -439,7 +440,7 @@ class Block(models.Model):
     content_md = MarkdownField(
         blank=True,
         null=True,
-        validator=VALIDATOR_CLASSY,
+        validator=VALIDATOR_MY,
         rendered_field="content",
         verbose_name="Контент (Markdown)",
     )
@@ -508,7 +509,7 @@ class Image(models.Model):
     text = MarkdownField(
         blank=True,
         null=True,
-        validator=VALIDATOR_CLASSY,
+        validator=VALIDATOR_MY,
         rendered_field="text_rendered",
         verbose_name="Текст (Markdown)",
     )

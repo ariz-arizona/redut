@@ -2,7 +2,7 @@ import { useRuntimeConfig, useFetch, createError } from '#imports'
 
 export function useApiFetch() {
     const config = useRuntimeConfig()
-    const apiBase = config.public.apiBase.replace('http:', window.location.protocol)
+    const apiBase = config.public.apiBase
 
     const fetchData = <T>(path: string,
         method: 'get' | 'post' = 'get',

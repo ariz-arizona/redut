@@ -77,6 +77,13 @@ input:-internal-autofill-selected {
   .leadbtn {
     @apply bg-secondary-600 text-white hover:bg-secondary-800;
   }
+  .input {
+    @apply focus:border-secondary-400 bg-secondary-100
+    autofill:shadow-[inset_0_0_0px_1000px_rgb(24,29,36)];
+    &[type='checkbox'] {
+      @apply bg-secondary-400 focus:bg-secondary-600;
+    }
+  }
 }
 .scheme-dark {
   @apply bg-primary-950 text-secondary-100;

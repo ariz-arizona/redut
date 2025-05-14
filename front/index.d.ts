@@ -12,7 +12,7 @@ interface Image {
     text: string | null
     text_rendered: string | null
 }
-type BlockType = 'text' | 'lead' | 'gallery' | 'slider' | 'feedback' | 'category';
+type BlockType = 'text' | 'lead' | 'gallery' | 'slider' | 'full_image' | 'feedback' | 'category';
 
 interface SmallCategory {
     title: string; // Название категории

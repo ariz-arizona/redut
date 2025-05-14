@@ -143,7 +143,7 @@ const blocksByType = (types: BlockType[]) => {
         <template v-if="!mainSlider">
             <div class="h-40" />
         </template>
-        <template v-for="(block, index) in blocksByType(['text', 'gallery', 'lead', 'feedback', 'category'])"
+        <template v-for="(block, index) in blocksByType(['text', 'gallery', 'lead', 'full_image', 'feedback', 'category'])"
             :key="block.id">
             <template v-if="(index + 1) === Math.floor(combineData.length / 2)">
                 <template v-if="cat.items?.length">
@@ -168,6 +168,7 @@ const blocksByType = (types: BlockType[]) => {
             <BlockText v-if="block.type === 'text'" :block="block" :img-base="imgBase" />
             <BlockGallery v-else-if="block.type === 'gallery'" :block="block" />
             <BlockLead v-else-if="block.type === 'lead'" :block="block" :img-base="imgBase" />
+            <BlockFullImage v-else-if="block.type === 'full_image'" :block="block" :img-base="imgBase" />
             <BlockFeedback v-else-if="block.type === 'feedback'" :block="block" />
             <BlockCategory v-else-if="block.type === 'category'" :block="block" :img-base="imgBase" />
         </template>

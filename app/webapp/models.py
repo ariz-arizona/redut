@@ -404,6 +404,7 @@ class Block(models.Model):
         ("lead", "Лид"),
         ("slider", "Главная картинка"),
         ("gallery", "Карусель"),
+        ("full_image", "Большая картинка"),
         ("feedback", "Форма обратной связи"),
         ("category", "Вывод категории"),
     ]

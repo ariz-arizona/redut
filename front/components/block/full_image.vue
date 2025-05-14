@@ -1,0 +1,42 @@
+<script setup lang="ts">
+const props = defineProps<{
+    block: Block;
+    imgBase: string;
+}>();
+const aspectRatio = ref('auto')
+const onImageLoad = (event: Event) => {
+    const img = event.target as HTMLImageElement
+    if (img) {
+        aspectRatio.value = (img.naturalWidth / img.naturalHeight).toString()
+    }
+}
+</script>
+<template>
+    <BlockWrapper :block="block">
+        <div class="bg-no-repeat bg-cover bg-center min-h-[50vh] max-h-[83vh] w-full p-4 relative pointer-events-none"
+            :class="[{ '-mt-[33vh]': block.link || block.external_link }]" :style="{
+                backgroundImage: createBgWithGrad(
+                    `${imgBase}/${block.images[0].image}`,
+                    'var(--image-overlay-color)',
+                    '0',
+                    '0',
+                ),
+                aspectRatio: aspectRatio
+            }" v-if="block.images.length">
+            <NuxtImg @load="onImageLoad" :src="`${imgBase}/${block.images[0].image}`" class="invisible hidden" />
+
+            <div class="container pt-16 z-10 relative h-full flex items-center">
+                <div class="grid grid-cols-6 gap-y-10">
+                    <div class="col-span-full xl:col-span-3 xl:col-start-3">
+                        <div class="text-7xl md:text-[6.5vh] font-bleu uppercase leading-tight">
+                            {{ block.title }}
+                        </div>
+                    </div>
+                    <div class="col-span-full xl:col-span-2 xl:col-start-5">
+                        <span v-html="block.content" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </BlockWrapper>
+</template>

@@ -22,7 +22,7 @@ const onImageLoad = (event: Event) => {
 </script>
 <template>
     <BlockWrapper :block="block">
-        <div class="container pt-4 pb-10">
+        <div class="container pt-14 pb-20">
             <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-4">
                 <!-- Картинка -->
                 <div class="col-span-1" :class="[!block.is_text_right ? 'order-last' : '']">

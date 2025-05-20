@@ -15,11 +15,11 @@ const closeLightbox = () => {
 </script>
 <template>
     <BlockWrapper :block="block">
-        <div class="container pt-4">
+        <div class="container pt-4 pb-10">
             <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
                 <!-- Картинка -->
                 <div class="col-span-1" :class="[!block.is_text_right ? 'order-last' : '']">
-                    <div class="p-4" v-if="block.images.length">
+                    <div v-if="block.images.length">
                         <div class="bg-no-repeat bg-cover bg-center p-4 relative" :style="{
                             backgroundImage: createBgWithGrad(
                                 `${imgBase}/${block.images[0].image}`,
@@ -34,12 +34,15 @@ const closeLightbox = () => {
                 </div>
 
                 <!-- Текст -->
-                <div class="col-span-1">
-                    <div class="title mt-16 mb-20" v-if="block.title">
+                <div class="col-span-1 flex" :class="{ 'justify-end ': block.is_text_right }">
+                    <div class="title" v-if="block.title">
                         {{ block.title }}
                         <span v-if="block.sub_title" class="text-secondary-400">{{ block.sub_title }}</span>
                     </div>
-                    <div class="basetext mb-20 prose" v-html="block.content" />
+                    <div class="mb-20 prose" :class="{
+                        basetext: block.is_text_styled,
+                        'leading-normal text-lg': !block.is_text_styled
+                    }" v-html="block.content" />
                 </div>
             </div>
         </div>

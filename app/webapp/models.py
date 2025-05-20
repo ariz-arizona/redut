@@ -276,7 +276,8 @@ class BaseContentModel(models.Model):
         Возвращает QuerySet ContentBlock с предзагруженными связями.
         """
         return self.blocks.select_related("block").all()
-    
+
+
 class ContentBlock(models.Model):
     """
     Универсальная промежуточная модель для связи контента (Category или Page) с блоками.
@@ -450,6 +451,11 @@ class Block(models.Model):
         default=False,
         verbose_name="Текст справа",
         help_text="Если выбрано, текст будет расположен справа. Иначе — слева.",
+    )
+    is_text_styled = models.BooleanField(
+        default=True,
+        verbose_name="Текст стилизован",
+        help_text="Если выбрано, текст будет отображаться с дополнительным стилем (работает только для текстовых блоков).",
     )
     category = models.ForeignKey(
         Category,

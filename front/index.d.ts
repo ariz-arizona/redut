@@ -33,6 +33,7 @@ interface Block {
     link: string | null; // Внутренняя ссылка (опционально)
     external_link: string | null; // Внешняя ссылка (опционально)
     is_text_right: boolean; // Флаг для расположения текста справа (true) или слева (false)
+    is_text_styled: boolean;
     category: SmallCategory
     color_scheme: 'dark' | 'light'
 }

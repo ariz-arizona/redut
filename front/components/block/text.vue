@@ -12,11 +12,18 @@ const openLightbox = () => {
 const closeLightbox = () => {
     lightboxVisible.value = false;
 };
+const aspectRatio = ref('auto')
+const onImageLoad = (event: Event) => {
+    const img = event.target as HTMLImageElement
+    if (img) {
+        aspectRatio.value = (img.naturalWidth / img.naturalHeight).toString()
+    }
+}
 </script>
 <template>
     <BlockWrapper :block="block">
         <div class="container pt-4 pb-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-4">
                 <!-- Картинка -->
                 <div class="col-span-1" :class="[!block.is_text_right ? 'order-last' : '']">
                     <div v-if="block.images.length">
@@ -24,8 +31,9 @@ const closeLightbox = () => {
                             backgroundImage: createBgWithGrad(
                                 `${imgBase}/${block.images[0].image}`,
                             ),
+                            aspectRatio: aspectRatio
                         }" @click="openLightbox">
-                            <NuxtImg :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
+                            <NuxtImg @load="onImageLoad" :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
                         </div>
                         <vue-easy-lightbox :visible="lightboxVisible"
                             :imgs="block.images.map(el => `${imgBase}/${el.image}`)" :index="indexRef"
@@ -34,12 +42,12 @@ const closeLightbox = () => {
                 </div>
 
                 <!-- Текст -->
-                <div class="col-span-1 flex" :class="{ 'justify-end ': block.is_text_right }">
+                <div class="col-span-1 flex" :class="{ 'justify-end ': !block.is_text_right }">
                     <div class="title" v-if="block.title">
                         {{ block.title }}
                         <span v-if="block.sub_title" class="text-secondary-400">{{ block.sub_title }}</span>
                     </div>
-                    <div class="mb-20 prose" :class="{
+                    <div class="prose" :class="{
                         basetext: block.is_text_styled,
                         'leading-normal text-lg': !block.is_text_styled
                     }" v-html="block.content" />

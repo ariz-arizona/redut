@@ -8,7 +8,7 @@ const props = defineProps<CategoryItemProps>();
 
 // Функция для получения фонового изображения
 const getBg = () => {
-    return props.item.blocks.find(el => el.type !== 'slider' && el.images.length > 0)?.images[0].image;
+    return props.item.blocks.find(el => el.type == 'text' && el.images.length > 0)?.images[0].image;
 };
 </script>
 
@@ -18,8 +18,8 @@ const getBg = () => {
             backgroundImage: getBg() ? createBgWithGrad(
                 `${imgBase}/${getBg()}`,
                 'var(--image-overlay-color)',
-                '0.8',
-                '0.95'
+                '0.9',
+                '0.7'
             ) : 'transparent',
         }">
         <div class="w-1/2 xl:w-3/4 basetext leading-8">

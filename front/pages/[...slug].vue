@@ -131,6 +131,7 @@ const mainSlider = computed(() =>
 const blocksByType = (types: BlockType[]) => {
     return combineData.value.filter((el: Block) => types.includes(el.type)) || []
 }
+const dummyCatBlock = { color_scheme: 'light', slug: 'cat' } as Block
 </script>
 
 <template>
@@ -143,26 +144,32 @@ const blocksByType = (types: BlockType[]) => {
         <template v-if="!mainSlider">
             <div class="h-40" />
         </template>
-        <template v-for="(block, index) in blocksByType(['text', 'gallery', 'lead', 'full_image', 'feedback', 'category'])"
+        <template
+            v-for="(block, index) in blocksByType(['text', 'gallery', 'lead', 'full_image', 'feedback', 'category'])"
             :key="block.id">
             <template v-if="(index + 1) === Math.floor(combineData.length / 2)">
                 <template v-if="cat.items?.length">
-                    <div class="container p-4 grid grid-cols-2 xl:grid-cols-3 gap-6">
-                        <template v-for="item in cat.items" :key="item.slug">
-                            <BlockCategoryItem :item="item" :img-base="imgBase" class="min-h-72" />
-                        </template>
-                    </div>
+                    <BlockWrapper :block="dummyCatBlock">
+                        <div class="container p-4 grid grid-cols-2 xl:grid-cols-3 gap-6">
+                            <template v-for="item in cat.items" :key="item.slug">
+                                <BlockCategoryItem :item="item" :img-base="imgBase" class="min-h-72" />
+                            </template>
+                        </div>
+                    </BlockWrapper>
                 </template>
                 <template v-if="cat.pagination?.previous || cat.pagination?.next">
-                    <div class="container py-4 w-full md:max-w-screen-md items-center justify-center flex gap-4">
-                        <template v-if="cat.pagination?.previous">
-                            <a :href="cat.pagination.previous" @click.prevent="paginate"
-                                class="leadbtn px-8 p-4">Назад</a>
-                        </template>
-                        <template v-if="cat.pagination?.next">
-                            <a :href="cat.pagination.next" @click.prevent="paginate" class="leadbtn px-8 p-4">Вперед</a>
-                        </template>
-                    </div>
+                    <BlockWrapper :block="dummyCatBlock">
+                        <div class="container py-4 w-full md:max-w-screen-md items-center justify-center flex gap-4">
+                            <template v-if="cat.pagination?.previous">
+                                <a :href="cat.pagination.previous" @click.prevent="paginate"
+                                    class="leadbtn px-8 p-4">Назад</a>
+                            </template>
+                            <template v-if="cat.pagination?.next">
+                                <a :href="cat.pagination.next" @click.prevent="paginate"
+                                    class="leadbtn px-8 p-4">Вперед</a>
+                            </template>
+                        </div>
+                    </BlockWrapper>
                 </template>
             </template>
             <BlockText v-if="block.type === 'text'" :block="block" :img-base="imgBase" />

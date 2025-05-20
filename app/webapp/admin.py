@@ -268,7 +268,10 @@ class BlockAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     inlines = [ImageInline]
     readonly_fields = ("content",)
-    
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).distinct()  # Добавляем distinct()
+
     def title_and_excerpt(self, obj):
         title = obj.title or ""
         content = obj.content_md or ""
@@ -276,8 +279,8 @@ class BlockAdmin(admin.ModelAdmin):
         return format_html("<strong>{}</strong> — {}", title, excerpt)
 
     title_and_excerpt.short_description = "Название и отрывок"
-    title_and_excerpt.admin_order_field = 'title'  # сортировка по заголовку
-    
+    title_and_excerpt.admin_order_field = "title"  # сортировка по заголовку
+
     def related_objects(self, obj):
         return obj.related_objects
 

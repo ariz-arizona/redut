@@ -42,7 +42,7 @@ const onImageLoad = (event: Event) => {
                 </div>
 
                 <!-- Текст -->
-                <div class="col-span-1 flex" :class="{ 'justify-end ': !block.is_text_right }">
+                <div class="col-span-1 flex flex-col gap-4" :class="{ 'justify-end ': !block.is_text_right }">
                     <div class="title" v-if="block.title">
                         {{ block.title }}
                         <span v-if="block.sub_title" class="text-secondary-400">{{ block.sub_title }}</span>

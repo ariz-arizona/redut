@@ -150,7 +150,7 @@ const dummyCatBlock = { color_scheme: 'light', slug: 'cat' } as Block
             <template v-if="(index + 1) === Math.floor(combineData.length / 2)">
                 <template v-if="cat.items?.length">
                     <BlockWrapper :block="dummyCatBlock">
-                        <div class="container p-4 grid grid-cols-2 xl:grid-cols-3 gap-6">
+                        <div class="container px-4 py-10 grid grid-cols-2 xl:grid-cols-3 gap-6">
                             <template v-for="item in cat.items" :key="item.slug">
                                 <BlockCategoryItem :item="item" :img-base="imgBase" class="min-h-72" />
                             </template>
@@ -159,7 +159,7 @@ const dummyCatBlock = { color_scheme: 'light', slug: 'cat' } as Block
                 </template>
                 <template v-if="cat.pagination?.previous || cat.pagination?.next">
                     <BlockWrapper :block="dummyCatBlock">
-                        <div class="container py-4 w-full md:max-w-screen-md items-center justify-center flex gap-4">
+                        <div class="container px-4 py-10 w-full md:max-w-screen-md items-center justify-center flex gap-4">
                             <template v-if="cat.pagination?.previous">
                                 <a :href="cat.pagination.previous" @click.prevent="paginate"
                                     class="leadbtn px-8 p-4">Назад</a>

@@ -1,10 +1,10 @@
+// Реактивное состояние для хранения данных
+const settings = ref<SiteSettings | null>(null);
+const loading = ref<boolean>(false);
+const error = ref<string | null>(null);
+
 export function useSiteSettings() {
     const { fetchData } = useApiFetch()
-
-    // Реактивное состояние для хранения данных
-    const settings = ref<SiteSettings | null>(null);
-    const loading = ref<boolean>(false);
-    const error = ref<string | null>(null);
 
     // Метод для получения данных
     const fetchSettings = async () => {

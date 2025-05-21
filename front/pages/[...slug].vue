@@ -145,7 +145,7 @@ const dummyCatBlock = { color_scheme: 'light', slug: 'cat' } as Block
             <div class="h-40" />
         </template>
         <template
-            v-for="(block, index) in blocksByType(['text', 'gallery', 'lead', 'full_image', 'feedback', 'category'])"
+            v-for="(block, index) in blocksByType(['text', 'gallery', 'lead', 'full_image', 'feedback', 'category', 'calc'])"
             :key="block.id">
             <template v-if="(index + 1) === Math.floor(combineData.length / 2)">
                 <template v-if="cat.items?.length">
@@ -159,7 +159,8 @@ const dummyCatBlock = { color_scheme: 'light', slug: 'cat' } as Block
                 </template>
                 <template v-if="cat.pagination?.previous || cat.pagination?.next">
                     <BlockWrapper :block="dummyCatBlock">
-                        <div class="container px-4 py-10 w-full md:max-w-screen-md items-center justify-center flex gap-4">
+                        <div
+                            class="container px-4 py-10 w-full md:max-w-screen-md items-center justify-center flex gap-4">
                             <template v-if="cat.pagination?.previous">
                                 <a :href="cat.pagination.previous" @click.prevent="paginate"
                                     class="leadbtn px-8 p-4">Назад</a>
@@ -178,6 +179,7 @@ const dummyCatBlock = { color_scheme: 'light', slug: 'cat' } as Block
             <BlockFullImage v-else-if="block.type === 'full_image'" :block="block" :img-base="imgBase" />
             <BlockFeedback v-else-if="block.type === 'feedback'" :block="block" />
             <BlockCategory v-else-if="block.type === 'category'" :block="block" :img-base="imgBase" />
+            <BlockCalculator v-else-if="block.type === 'calc'" :block="block" />
         </template>
     </div>
 </template>

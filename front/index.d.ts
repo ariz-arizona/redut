@@ -12,7 +12,7 @@ interface Image {
     text: string | null
     text_rendered: string | null
 }
-type BlockType = 'text' | 'lead' | 'gallery' | 'slider' | 'full_image' | 'feedback' | 'category';
+type BlockType = 'text' | 'lead' | 'gallery' | 'slider' | 'full_image' | 'feedback' | 'category' | 'calc';
 
 interface SmallCategory {
     title: string; // Название категории
@@ -103,4 +103,27 @@ interface Pagination {
 }
 interface PaginatedResponse<T> extends Pagination {
     results: T[];
+}
+interface AdditionalService {
+    id: number
+    name: string
+    label: string
+    description: string
+    rate_increase: string
+    is_active: boolean
+}
+
+interface Range {
+    name: string
+    label: string
+    min_value: string
+    max_value: string
+    description: string
+    data_type: 'decimal' | 'integer' | 'percent'
+    is_active: boolean
+}
+
+interface CalcConfig {
+    ranges: Range[]
+    services: AdditionalService[]
 }

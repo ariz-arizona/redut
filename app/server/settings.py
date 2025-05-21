@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "colorfield",
     "rest_framework",
     "django_filters",
+    "calc",
     "webapp",
 ]
 

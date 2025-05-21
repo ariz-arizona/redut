@@ -408,6 +408,7 @@ class Block(models.Model):
         ("full_image", "Большая картинка"),
         ("feedback", "Форма обратной связи"),
         ("category", "Вывод категории"),
+        ("calc", "Калькулятор")
     ]
     type = models.CharField(
         choices=BLOCK_TYPES, max_length=20, verbose_name="Тип блока"

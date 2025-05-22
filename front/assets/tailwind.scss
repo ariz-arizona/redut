@@ -60,6 +60,38 @@ input:-internal-autofill-selected {
     -webkit-text-fill-color: white;
   }
 }
+// label + input[type='range'] {
+//   @apply block text-sm font-medium text-gray-900;
+// }
+input[type='range'] {
+  @apply appearance-none w-full flex bg-transparent
+  [&::-webkit-slider-runnable-track]:bg-primary-800
+  [&::-webkit-slider-runnable-track]:rounded-lg
+    [&::-webkit-slider-runnable-track]:w-full
+    [&::-webkit-slider-runnable-track]:h-5
+    [&::-webkit-slider-thumb]:appearance-none
+    [&::-webkit-slider-thumb]:rounded-full
+    [&::-webkit-slider-thumb]:size-10
+    [&::-webkit-slider-thumb]:-translate-y-3
+    [&::-webkit-slider-thumb]:bg-secondary-400
+
+    /* Поддержка Firefox */
+    [&::-moz-range-track]:appearance-none
+    [&::-moz-range-track]:outline-none
+    [&::-moz-range-track]:border-none
+    [&::-moz-range-track]:shadow-none
+  [&::-moz-range-track]:bg-primary-800
+    [&::-moz-range-track]:rounded-lg
+    [&::-moz-range-track]:w-full
+    [&::-moz-range-track]:h-5
+    [&::-moz-range-thumb]:appearance-none
+    [&::-moz-range-thumb]:outline-none
+    [&::-moz-range-thumb]:border-none
+    [&::-moz-range-thumb]:shadow-none
+    [&::-moz-range-thumb]:rounded-full
+    [&::-moz-range-thumb]:size-10
+    [&::-moz-range-thumb]:bg-secondary-400;
+}
 .prose {
   a {
     @apply text-secondary-500;
@@ -71,6 +103,7 @@ input:-internal-autofill-selected {
     @apply text-secondary-200;
   }
 }
+
 .scheme-light {
   @apply bg-secondary-50 text-primary-950;
 

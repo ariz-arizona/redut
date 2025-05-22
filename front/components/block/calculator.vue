@@ -230,6 +230,10 @@ const sliderDisplayValues = computed(() => {
                             {{ calcResult.term }} лет
                         </span>
                     </div>
+
+                    <div class="prose leading-normal text-lg" v-if="block.content">
+                        <span v-html="block.content" />
+                    </div>
                 </div>
             </template>
         </div>

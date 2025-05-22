@@ -123,6 +123,12 @@ input[type='range'] {
       @apply bg-secondary-400 focus:bg-secondary-600;
     }
   }
+  input[type='range'] {
+    @apply  [&::-webkit-slider-runnable-track]:bg-primary-100
+      [&::-webkit-slider-runnable-track]:shadow-primary-200
+      [&::-moz-range-track]:bg-primary-100
+      [&::-moz-range-track]:shadow-primary-200;
+  }
 }
 .scheme-dark {
   @apply bg-primary-950 text-secondary-100;

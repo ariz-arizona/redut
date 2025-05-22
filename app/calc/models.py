@@ -34,8 +34,8 @@ class Range(models.Model):
 
 class AdditionalService(models.Model):
     name = models.CharField(verbose_name="Название", max_length=255)
-    label =models.CharField(verbose_name="Ключ", max_length=100, blank=True, null=True)
-    
+    label = models.CharField(verbose_name="Ключ", max_length=100, blank=True, null=True)
+
     description = models.TextField(verbose_name="Описание")
     rate_increase = models.DecimalField(
         verbose_name="Изменение ставки (%)",
@@ -51,6 +51,23 @@ class AdditionalService(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class BaseRate(models.Model):
+    rate = models.DecimalField(
+        verbose_name="Базовая процентная ставка (%)",
+        max_digits=5,
+        decimal_places=2,
+        help_text="Например: 14.5%",
+    )
+
+    class Meta:
+        verbose_name = "Базовая ставка"
+        verbose_name_plural = "Базовые ставки"
+
+    def __str__(self):
+        return f"{self.rate}%"
+
 
 
 class CalculatorData(models.Model):

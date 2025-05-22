@@ -45,7 +45,7 @@ const loanTermMonths = computed(() => {
 
 // Процентная ставка с учетом сервисов
 const interestRate = computed(() => {
-    let rate = baseRate
+    let rate = calcData.value?.base_rate ?? 15
     if (!calcData.value?.services) return rate
 
     for (const service of calcData.value.services) {

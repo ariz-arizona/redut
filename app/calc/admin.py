@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Range, AdditionalService, CalculatorData
+from .models import Range, AdditionalService, CalculatorData, BaseRate
 
 # -------------------------------
 # Админка для модели Range
@@ -36,6 +36,11 @@ class AdditionalServiceAdmin(admin.ModelAdmin):
     fields = ("name", "label", "description", "rate_increase", "is_active")
     ordering = ("name",)
     save_on_top = True
+
+
+@admin.register(BaseRate)
+class BaseRateAdmin(admin.ModelAdmin):
+    list_display = ("rate",)
 
 
 # -------------------------------

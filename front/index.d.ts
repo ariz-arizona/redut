@@ -126,4 +126,5 @@ interface Range {
 interface CalcConfig {
     ranges: Range[]
     services: AdditionalService[]
+    base_rate: number
 }

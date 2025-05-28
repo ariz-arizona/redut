@@ -12,7 +12,7 @@ export function useApiFetch() {
         headers.set('Content-Type', 'application/json')
 
         // Логирование URL для отладки
-        console.log(`${apiBase}/api/${path}${path.indexOf('?') !== -1 ? '' : '/'}`)
+        // console.log(`${apiBase}/api/${path}${path.indexOf('?') !== -1 ? '' : '/'}`)
 
         return useFetch<T>(`${apiBase}/api/${path}${path.indexOf('?') !== -1 ? '' : '/'}`, {
             method: method as any,

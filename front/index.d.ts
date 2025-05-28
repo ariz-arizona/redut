@@ -91,6 +91,7 @@ interface SiteSettings {
     favicon: string | null;
     footer_text: string; // Текст футера
     is_enabled: boolean; // Флаг активности
+    allow_in_robots_txt: boolean; // Разрешено ли в robots.txt
     documents: Document[]; // Массив связанных документов
     top_items: TopItem[]; // Массив топовых элементов
     overlay_opacity: number

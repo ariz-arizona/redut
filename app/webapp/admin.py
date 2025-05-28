@@ -119,6 +119,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         "logo_preview",
         "footer_text_short",
         "is_enabled",
+        "allow_in_robots_txt",
     )
     list_filter = ("is_enabled",)
     search_fields = ("phone_number", "footer_text")
@@ -129,7 +130,18 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         (
             None,
             {
-                "fields": ("name", "phone_number", "logo", "favicon", "is_enabled"),
+                "fields": (
+                    "name",
+                    "phone_number",
+                    "logo",
+                    "favicon",
+                ),
+            },
+        ),
+        (
+            "Активность и доступность",
+            {
+                "fields": ("is_enabled", "allow_in_robots_txt"),
             },
         ),
         (

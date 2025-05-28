@@ -130,6 +130,11 @@ class SiteSettings(models.Model):
         help_text="Укажите значение от 0 (полностью прозрачный) до 1 (непрозрачный).",
         validators=[MinValueValidator(0.0), MaxValueValidator(1.0)],
     )
+    allow_in_robots_txt = models.BooleanField(
+        default=True,
+        verbose_name="Разрешено в robots.txt",
+        help_text="Если установлено, сайт будет доступен для индексации поисковыми роботами.",
+    )
 
     def documents_count(self):
         """

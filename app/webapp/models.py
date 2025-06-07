@@ -253,7 +253,9 @@ class BaseContentModel(models.Model):
     preview_image = models.ImageField(
         upload_to="page_previews/",
         verbose_name=_("Превью-картинка"),
-        help_text=_("Картинка для предварительного просмотра страницы (например, в категории)."),
+        help_text=_(
+            "Картинка для предварительного просмотра страницы (например, в категории)."
+        ),
         blank=True,
         null=True,
     )
@@ -340,7 +342,7 @@ class ContentBlock(models.Model):
         verbose_name_plural = _("Связи контента с блоками")
 
     def __str__(self):
-        return f"{self.content_object} - Block {self.block.title[0:30]} (Order: {self.order})"
+        return f"{self.content_object} - Block {self.block.type if not self.block.title else self.block.title[0:30]} (Order: {self.order})"
 
     def save(self, *args, **kwargs):
         # Автоматически определяем цветовую схему, если значение не задано вручную

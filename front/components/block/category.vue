@@ -25,8 +25,8 @@ onMounted(() => { loadPages() })
 <template>
     <BlockWrapper :block="block">
         <div class="container p-4 py-16 grid grid-cols-1 gap-4" :class="{
-            'xl:grid-cols-[2fr_1fr]': block.is_text_right,
-            'xl:grid-cols-[1fr_2fr]': !block.is_text_right
+            'xl:grid-cols-[1fr_2fr]': block.is_text_right,
+            'xl:grid-cols-[2fr_1fr]': !block.is_text_right,
         }">
             <div class="col-span-1 flex items-end justify-center cat-title" :class="[{
                 'order-first': block.is_text_right,
@@ -36,7 +36,7 @@ onMounted(() => { loadPages() })
                     v-html="block.title || block.category.title" />
                 <NuxtLink :to="`cat/${block.category.slug}`"
                     class="flex items-center justify-center leading-none size-24 rounded-full border border-secondary-400">
-                    <Icon name="mdi:arrow-right" class="w-3/4 h-3/4" />
+                    <Icon :name="block.is_text_right ?`mdi:arrow-right`: `mdi:arrow-left`" class="w-3/4 h-3/4" />
                 </NuxtLink>
             </div>
             <div class="col-span-1 grid grid-cols-1 xl:grid-cols-2 gap-8 ">

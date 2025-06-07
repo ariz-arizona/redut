@@ -9,7 +9,7 @@ import 'swiper/css/effect-fade';
 
 const props = defineProps({
     'slides': {
-        requireв: true,
+        required: true,
         type: Array as PropType<Image[]>,
     },
 })
@@ -42,7 +42,7 @@ const swiperRef = ref(null);
     <div>
         <swiper ref="swiperRef" v-bind="(swiperOptions as any)" class="w-full">
             <swiper-slide v-for="(slide, index) in props.slides" :key="index" class="w-auto">
-                <div class="bg-no-repeat bg-cover bg-center h-[50vh]  flex justify-start align-bottom p-4"
+                <div class="bg-no-repeat bg-cover bg-center h-[50vh]  flex justify-start align-bottom p-4 mb-12"
                     :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${slide.image}`) }">
                     <NuxtImg :src="`${imgBase}/${slide.image}`" class="invisible" />
                 </div>

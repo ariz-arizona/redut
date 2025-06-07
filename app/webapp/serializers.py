@@ -73,7 +73,7 @@ class ContentBlockSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContentBlock
         # fields = "__all__"
-        fields = ["block", "color_scheme"]
+        fields = ["block", "menu_title", "color_scheme"]
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

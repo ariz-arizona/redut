@@ -6,7 +6,9 @@ defineProps<{
 }>();
 </script>
 <template>
-    <BlockWrapper :block="block" class="pt-16 relative">
+    <BlockWrapper :block="block" class="pt-16 relative gallery" :class="[{
+        'pb-0 -mb-36': block.link || block.external_link
+    }]">
         <div class="relative overflow-hidden">
             <div class="text-[50vmin] text-center text-secondary-200 font-wonder pointer-events-none z-20 
                 absolute left-0 right-0 top-1/2 -translate-y-1/2 leading-[0.25]" v-if="block.title">
@@ -24,3 +26,9 @@ defineProps<{
         </template>
     </BlockWrapper>
 </template>
+<style lang="css" scoped>
+.gallery+* {
+    position: relative;
+    padding-top: 4rem;
+}
+</style>

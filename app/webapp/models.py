@@ -318,6 +318,13 @@ class ContentBlock(models.Model):
         verbose_name=_("Цветовая схема"),
         help_text=_("Выберите цветовую схему для этого блока."),
     )
+    menu_title = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name=_("Заголовок в меню"),
+        help_text=_("Опциональный заголовок, отображаемый в меню навигации."),
+    )
 
     class Meta:
         ordering = ["order"]
@@ -413,7 +420,7 @@ class Block(models.Model):
         ("full_image", "Большая картинка"),
         ("feedback", "Форма обратной связи"),
         ("category", "Вывод категории"),
-        ("calc", "Калькулятор")
+        ("calc", "Калькулятор"),
     ]
     type = models.CharField(
         choices=BLOCK_TYPES, max_length=20, verbose_name="Тип блока"

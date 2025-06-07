@@ -11,10 +11,10 @@ const scheme = `var(--image-overlay-${props.block.color_scheme})`
 }
 </style>
 <template>
-    <div :id="block.slug" :class="[{
+    <div class="relative" :id="block.slug" :class="[{
         'scheme-light': block.color_scheme == 'light',
         'scheme-dark': block.color_scheme == 'dark',
-    }]">
+    }]" :block_type="block.type">
         <slot />
     </div>
 </template>

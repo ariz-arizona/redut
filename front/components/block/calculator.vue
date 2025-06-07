@@ -23,7 +23,6 @@ const getStep = (range: Range) => {
     if (range.data_type === 'percent') return 1 // можно 0.1 для дробных процентов
     return 0.01
 }
-const baseRate = 15 // базовая процентная ставка в процентах
 
 // Примерные данные из calcData.ranges:
 // cost — стоимость недвижимости
@@ -169,6 +168,21 @@ const sliderDisplayValues = computed(() => {
                             <span>{{ formatRangeValue(range, range.max_value) }}</span>
                         </div>
                     </div>
+                    <label class="flex flex-col gap-2 justify-between text-sm sm:text-base"
+                        v-for="service in calcData.services">
+                        <div class="flex items-center justify-start gap-2">
+                            <input class="input" type="checkbox" v-model="service.is_active">
+                            <span class="text-xl font-bleu">
+                                {{ service.name }}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="text-xl font-bleu">
+                                {{ service.rate_increase }}%
+                            </span>
+                            {{ service.description }}
+                        </div>
+                    </label>
                 </div>
                 <div class="space-y-3">
                     <div class="flex justify-between text-sm sm:text-base">

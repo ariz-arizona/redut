@@ -14,7 +14,7 @@ defineProps<{
                 absolute left-0 right-0 top-1/2 -translate-y-1/2 leading-[0.25]" v-if="block.title">
                 {{ block.title }}
             </div>
-            <Gallery :slides="block.images" />
+            <Gallery :slides="block.images" :block_id="block.id" />
         </div>
         <template v-if="block.link || block.external_link">
             <div class="relative -translate-y-1/2 z-10 flex justify-center w-full">

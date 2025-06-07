@@ -10,6 +10,7 @@ class RangeSerializer(serializers.ModelSerializer):
             "label",
             "min_value",
             "max_value",
+            "default_value",
             "description",
             "data_type",
             "is_active",

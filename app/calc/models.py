@@ -11,6 +11,14 @@ class Range(models.Model):
     max_value = models.DecimalField(
         verbose_name="Максимальное значение", max_digits=12, decimal_places=2
     )
+    default_value = models.DecimalField(
+        verbose_name="Значение по умолчанию",
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        help_text="Значение, используемое по умолчанию, если не указано иное"
+    )
     description = models.TextField(verbose_name="Описание", blank=True, null=True)
     data_type = models.CharField(
         verbose_name="Тип данных",

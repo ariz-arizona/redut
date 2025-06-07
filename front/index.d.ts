@@ -120,6 +120,7 @@ interface Range {
     label: string
     min_value: string
     max_value: string
+    default_value: string
     description: string
     data_type: 'decimal' | 'integer' | 'percent'
     is_active: boolean

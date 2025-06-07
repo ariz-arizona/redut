@@ -14,7 +14,7 @@ const sliderValues = ref<Record<string, number>>({})
 watchEffect(() => {
     const initial: Record<string, number> = {}
     for (const range of calcData.value?.ranges || []) {
-        initial[range.label] = Number(range.min_value)
+        initial[range.label] = Number(range.default_value || range.min_value)
     }
     sliderValues.value = initial
 })
@@ -89,31 +89,6 @@ const formatNumber = (num: number): string => {
     return num.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 }
 
-const formatCurrency = (value: number): string => {
-    return value.toLocaleString('ru-RU', {
-        style: 'currency',
-        currency: 'RUB',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    })
-}
-
-const formatYears = (value: number): string => {
-    const lastTwoDigits = value % 100
-    if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
-        return `${value} лет`
-    }
-    switch (value % 10) {
-        case 1:
-            return `${value} год`
-        case 2:
-        case 3:
-        case 4:
-            return `${value} года`
-        default:
-            return `${value} лет`
-    }
-}
 const formatRangeValue = (range: Range, value: number | string): string => {
     const numValue = typeof value === 'string' ? parseFloat(value) : value
 

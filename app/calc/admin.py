@@ -13,7 +13,7 @@ class RangeAdmin(admin.ModelAdmin):
     search_fields = ("name", "description")
     fieldsets = (
         (None, {"fields": ("name", "label", "is_active")}),
-        ("Диапазон значений", {"fields": ("min_value", "max_value")}),
+        ("Диапазон значений", {"fields": ("min_value", "max_value", "default_value")}),
         (
             "Дополнительно",
             {"fields": ("description", "data_type"), "classes": ("collapse",)},

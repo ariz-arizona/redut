@@ -13,7 +13,7 @@ const onImageLoad = (event: Event) => {
 </script>
 <template>
     <BlockWrapper :block="block">
-        <div class="bg-no-repeat bg-cover bg-center min-h-[50vh] max-h-[83vh] w-full p-4 relative pointer-events-none"
+        <div class="bg-no-repeat bg-cover min-h-[50vh] max-h-[83vh] w-full p-4 relative pointer-events-none"
             :class="[{ '-mt-[33vh]': block.link || block.external_link }]" :style="{
                 backgroundImage: createBgWithGrad(
                     `${imgBase}/${block.images[0].image}`,
@@ -21,7 +21,8 @@ const onImageLoad = (event: Event) => {
                     '0',
                     '0',
                 ),
-                aspectRatio: aspectRatio
+                aspectRatio: aspectRatio,
+                backgroundPositionY: '75%'
             }" v-if="block.images.length">
             <NuxtImg @load="onImageLoad" :src="`${imgBase}/${block.images[0].image}`" class="invisible hidden" />
 

@@ -9,6 +9,7 @@ const isOpen = ref(false)
 const { items: menuItems } = useMenuPages()
 
 const toggleMenu = () => {
+    if(!menuItems.value.length) return
     isOpen.value = !isOpen.value
 }
 
@@ -40,7 +41,7 @@ const scrollToAnchor = (e: PointerEvent) => {
         </NuxtLink>
 
         <!-- Выпадающий список -->
-        <div v-show="isOpen"
+        <div v-show="isOpen && menuItems.length"
             class="origin-bottom-right absolute left-0 top-full mt-2 w-56 rounded-md z-10 menubtn bg-primary-950">
             <div class="py-1 basetext text-white" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                 <NuxtLink v-for="item in menuItems" :key="item.id" :href="`#${item.slug}`" @click.prevent="scrollToAnchor"

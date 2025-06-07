@@ -19,7 +19,7 @@ const imgBase = config.public.imgBase
 
 <template>
   <div class="h-full min-h-[50vh] bg-cover relative"
-    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${slide.image}`) }">
+    :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${slide.image}`), backgroundPositionY: '75%' }">
     <div class="absolute bottom-2 right-2 left-2 text-left">
       <div class="container m-auto">
         <div class="max-w-full md:max-w-[85%] select-none leading-none relative inline-block">
@@ -41,11 +41,10 @@ const imgBase = config.public.imgBase
             {{ settings?.name }}
           </div>
         </div>
-        <div class="prose basetext">
+        <div class="prose">
           <span v-html="slide.text_rendered" />
         </div>
         <div class="text-center">
-
           <NuxtLink :to="slide.external_link || slide.link" :target="slide.external_link ? '_blank' : '_self'"
             :external="slide.external_link" v-if="slide.external_link || slide.link"
             class="menubtn bg-secondary-500 hover:bg-secondary-700">

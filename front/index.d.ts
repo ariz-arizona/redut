@@ -50,6 +50,7 @@ interface PageData {
     created_at: string
     updated_at: string
     preview_image: string
+    preview_text: string
 }
 interface CategoryData {
     id: number; // Уникальный идентификатор категории

@@ -24,8 +24,14 @@ onMounted(() => { loadPages() })
 </script>
 <template>
     <BlockWrapper :block="block">
-        <div class="container p-4 py-16 grid grid-cols-1 xl:grid-cols-[1fr_2fr] gap-4">
-            <div class="col-span-1 flex items-end justify-center cat-title">
+        <div class="container p-4 py-16 grid grid-cols-1 gap-4" :class="{
+            'xl:grid-cols-[2fr_1fr]': block.is_text_right,
+            'xl:grid-cols-[1fr_2fr]': !block.is_text_right
+        }">
+            <div class="col-span-1 flex items-end justify-center cat-title" :class="[{
+                'order-first': block.is_text_right,
+                'order-last': !block.is_text_right
+            }]">
                 <div class="text-7xl font-bleu uppercase sideways-writing-lr text-left indent-20"
                     v-html="block.title || block.category.title" />
                 <NuxtLink :to="`cat/${block.category.slug}`"

@@ -259,6 +259,11 @@ class BaseContentModel(models.Model):
         blank=True,
         null=True,
     )
+    preview_text = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name=_("Текст превью в категории"),
+    )
 
     created_at = models.DateTimeField(
         auto_now_add=True,  # Устанавливается только при создании объекта

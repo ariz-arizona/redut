@@ -49,6 +49,7 @@ interface PageData {
     title: string;
     created_at: string
     updated_at: string
+    preview_image: string
 }
 interface CategoryData {
     id: number; // Уникальный идентификатор категории
@@ -57,6 +58,7 @@ interface CategoryData {
     meta_description: string;
     meta_title: string | null;
     blocks: Block[]; // Массив связанных страниц (может быть пустым)
+    preview_image: string
 }
 interface Document {
     id: number; // Уникальный идентификатор документа

@@ -250,6 +250,13 @@ class BaseContentModel(models.Model):
         null=True,
         verbose_name=_("Meta Description"),
     )
+    preview_image = models.ImageField(
+        upload_to="page_previews/",
+        verbose_name=_("Превью-картинка"),
+        help_text=_("Картинка для предварительного просмотра страницы (например, в категории)."),
+        blank=True,
+        null=True,
+    )
 
     created_at = models.DateTimeField(
         auto_now_add=True,  # Устанавливается только при создании объекта

@@ -90,6 +90,7 @@ class ContentBlockSerializer(serializers.ModelSerializer):
 
 class PageSerializer(serializers.ModelSerializer):
     blocks = serializers.SerializerMethodField()
+    preview_image = serializers.ImageField(use_url=False)
 
     class Meta:
         model = Page
@@ -102,6 +103,7 @@ class PageSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     blocks = serializers.SerializerMethodField()
+    preview_image = serializers.ImageField(use_url=False)
 
     class Meta:
         model = Category

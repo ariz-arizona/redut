@@ -8,7 +8,7 @@ const props = defineProps<CategoryItemProps>();
 
 // Функция для получения фонового изображения
 const getBg = () => {
-    return props.item.blocks.find(el => el.type == 'text' && el.images.length > 0)?.images[0].image;
+    return props.item.preview_image || props.item.blocks.find(el => el.type == 'text' && el.images.length > 0)?.images[0].image;
 };
 </script>
 

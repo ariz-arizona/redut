@@ -283,7 +283,7 @@ class BlockAdmin(admin.ModelAdmin):
     readonly_fields = ("content",)
 
     def get_queryset(self, request):
-        return super().get_queryset(request).distinct()  # Добавляем distinct()
+        return super().get_queryset(request).order_by("id").distinct("id")
 
     def title_and_excerpt(self, obj):
         title = obj.title or ""

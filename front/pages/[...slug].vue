@@ -7,6 +7,8 @@ const config = useRuntimeConfig()
 const imgBase = config.public.imgBase
 const { settings, loading: settingLoading } = useSiteSettings();
 
+const { setItems } = useMenuPages()
+
 // Приводим slug к массиву
 const slug = Array.isArray(route.params.slug)
     ? route.params.slug.filter(Boolean) // Убираем пустые значения
@@ -62,6 +64,7 @@ const fetchDataBySlug = async () => {
     status.value = res.status.value
 
     combineData.value = data.value?.blocks
+    setItems(combineData.value.filter((el: Block) => el.menu_title))
 };
 
 // Получаем данные
@@ -90,8 +93,6 @@ const fetchPagesInCat = async () => {
             next: pagination.next,
             previous: pagination.previous,
         };
-
-        console.log(cat.value.items)
     }
 }
 if (pageType.value == 'category' && slug.length > 1) {

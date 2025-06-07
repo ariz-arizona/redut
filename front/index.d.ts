@@ -36,6 +36,7 @@ interface Block {
     is_text_styled: boolean;
     category: SmallCategory
     color_scheme: 'dark' | 'light'
+    menu_title: string | null
 }
 
 interface PageData {

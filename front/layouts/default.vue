@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import("~/assets/tailwind.scss");
-import { useScroll } from '@vueuse/core';
 
-const { settings, loading, error, fetchSettings } = useSiteSettings();
+const { settings, loading } = useSiteSettings();
 const menuRef = ref()
 const { isVisible: isSliderVisible } = useMainSlider();
 
@@ -14,23 +13,7 @@ const makeLink = (el: TopItem) => {
     if (el.type == 'page') return '/' + el.slug + '#' + el.block
     if (el.type == 'category') return '/cat/' + el.slug + '#' + el.block
 }
-/**
- * Плавная прокрутка к якорю.
- */
-const scrollToAnchor = (e: PointerEvent) => {
-    // Находим элемент по якорю
-    const anchor = (e.currentTarget as HTMLAnchorElement).href.split('#')[1]
-    const targetElement = document.getElementById(anchor);
 
-    if (targetElement) {
-        // Используем useScroll для плавной прокрутки
-        const { y } = useScroll(window, { behavior: 'smooth' });
-        y.value = targetElement.getBoundingClientRect().top + window.scrollY;
-    } else {
-        // Если якорь не найден, перенаправляем на страницу /contacts
-        navigateTo(`/#${anchor}`);
-    }
-};
 onMounted(() => {
     const darkBgColor = (twConfig.theme?.extend?.colors as any).primary['950']
     const darkBgColorRGB = (hexToRgb(darkBgColor))
@@ -54,15 +37,7 @@ onMounted(() => {
                     :class="[isSliderVisible ? 'items-start' : 'items-center']">
                     <div class="gap-2 xl:gap-8 items-center basetext hidden md:flex flex-wrap xl:flex-nowrap">
                         <template v-if="topItems[0]">
-                            <NuxtLink :to="makeLink(topItems[0])" class="menubtn" @click.prevent="scrollToAnchor">
-                                <Icon name="mdi:chevron-down" class="text-secondary-500 text-xl" />
-                                <span>{{ topItems[0].title }}</span>
-                            </NuxtLink>
-                        </template>
-                        <template v-if="topItems[1]">
-                            <NuxtLink :to="makeLink(topItems[1])">
-                                <span>{{ topItems[1].title }}</span>
-                            </NuxtLink>
+                            <DropdownMenu :title="topItems[0].title" />
                         </template>
                     </div>
                     <HeaderLogo :logo="settings?.logo" />
@@ -71,11 +46,11 @@ onMounted(() => {
                         <template v-if="settings?.phone_number">
                             <HeaderPhone :phone="settings?.phone_number" />
                         </template>
-                        <template v-if="topItems[2]">
-                            <NuxtLink :to="makeLink(topItems[2])" class="contents">
+                        <template v-if="topItems[1]">
+                            <NuxtLink :to="makeLink(topItems[1])" class="contents">
                                 <div
                                     class="menubtn text-nowrap bg-secondary-500 hover:bg-secondary-700 transition-colors">
-                                    <span>{{ topItems[2].title }}</span>
+                                    <span>{{ topItems[1].title }}</span>
                                 </div>
                             </NuxtLink>
                         </template>

@@ -10,7 +10,7 @@ defineProps<{
         'pb-0 -mb-36': block.link || block.external_link
     }]">
         <div class="relative overflow-hidden">
-            <div class="text-[50vmin] text-center text-secondary-200 font-wonder pointer-events-none z-20 
+            <div class="text-[50vmin] text-center text-secondary-200 font-wonder pointer-events-none z-10 
                 absolute left-0 right-0 top-1/2 -translate-y-1/2 leading-[0.25]" v-if="block.title">
                 {{ block.title }}
             </div>

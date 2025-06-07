@@ -81,6 +81,7 @@ class ContentBlockInline(GenericTabularInline):
     extra = 1
     verbose_name = _("Блок")
     verbose_name_plural = _("Блоки")
+    autocomplete_fields = ['block']
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """
@@ -313,7 +314,7 @@ class PageAdmin(admin.ModelAdmin):
     search_fields = ("title", "slug", "meta_title")
     prepopulated_fields = {"slug": ("title",)}
     inlines = [ContentBlockInline]  # Добавляем инлайн для блоков
-
+    
     def blocks_count(self, obj):
         """
         Возвращает количество блоков, связанных со страницей.

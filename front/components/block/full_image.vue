@@ -39,7 +39,7 @@ const img_add = props.block.images[1]
                 <div class="grid grid-cols-6 gap-y-10">
                     <div class="col-span-full xl:col-span-3 xl:col-start-3">
                         <div class="text-7xl md:text-[6.5vh] font-bleu uppercase leading-tight">
-                            {{ block.title }}
+                            <span v-html="block.title" />
                         </div>
                     </div>
                     <div class="col-span-full xl:col-span-2 xl:col-start-5">

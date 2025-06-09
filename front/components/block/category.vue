@@ -32,11 +32,11 @@ onMounted(() => { loadPages() })
                 'order-first': block.is_text_right,
                 'order-last': !block.is_text_right
             }]">
-                <div class="text-7xl font-bleu uppercase sideways-writing-lr text-left indent-20"
+                <div class="text-5xl md:text-7xl md:sideways-writing-lr md:indent-20 font-bleu uppercase text-left"
                     v-html="block.title || block.category.title" />
                 <NuxtLink :to="`cat/${block.category.slug}`"
                     class="flex items-center justify-center leading-none size-24 rounded-full border border-secondary-400">
-                    <Icon :name="block.is_text_right ?`mdi:arrow-right`: `mdi:arrow-left`" class="w-3/4 h-3/4" />
+                    <Icon :name="block.is_text_right ? `mdi:arrow-right` : `mdi:arrow-left`" class="w-3/4 h-3/4" />
                 </NuxtLink>
             </div>
             <div class="col-span-1 grid grid-cols-1 xl:grid-cols-2 gap-8 ">

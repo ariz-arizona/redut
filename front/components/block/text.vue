@@ -4,6 +4,8 @@ defineProps<{
     imgBase: string;
 }>();
 
+const { items: images } = useImagesData()
+
 const lightboxVisible = ref(false);
 const indexRef = ref(0)
 const openLightbox = () => {
@@ -22,6 +24,9 @@ const onImageLoad = (event: Event) => {
 </script>
 <template>
     <BlockWrapper :block="block">
+        <vue-easy-lightbox :visible="lightboxVisible" :imgs="images.map(el => `${imgBase}/${el.image}`)"
+            :index="indexRef" @hide="closeLightbox" />
+            
         <div class="container pt-14 pb-20">
             <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-4">
                 <!-- Картинка -->
@@ -33,11 +38,9 @@ const onImageLoad = (event: Event) => {
                             ),
                             aspectRatio: aspectRatio
                         }" @click="openLightbox">
-                            <NuxtImg @load="onImageLoad" :src="`${imgBase}/${block.images[0].image}`" class="invisible" />
+                            <NuxtImg @load="onImageLoad" :src="`${imgBase}/${block.images[0].image}`"
+                                class="invisible" />
                         </div>
-                        <vue-easy-lightbox :visible="lightboxVisible"
-                            :imgs="block.images.map(el => `${imgBase}/${el.image}`)" :index="indexRef"
-                            @hide="closeLightbox" />
                     </div>
                 </div>
 

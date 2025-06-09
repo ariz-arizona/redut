@@ -8,6 +8,7 @@ const imgBase = config.public.imgBase
 const { settings, loading: settingLoading } = useSiteSettings();
 
 const { setItems } = useMenuPages()
+const { setItems: setImages } = useImagesData()
 
 // Приводим slug к массиву
 const slug = Array.isArray(route.params.slug)
@@ -65,6 +66,11 @@ const fetchDataBySlug = async () => {
 
     combineData.value = data.value?.blocks
     setItems(combineData.value.filter((el: Block) => el.menu_title))
+    setImages(
+        combineData.value.flatMap((el: Block) => {
+            return el.type === 'text' ? el.images : []
+        })
+    )
 };
 
 // Получаем данные

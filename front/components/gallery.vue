@@ -43,12 +43,24 @@ const swiperRef = ref(null);
 const onSwiper = () => {
     // console.log(props)
 }
+const extendedSlides = computed(() => {
+    const TARGET_SLIDES = 10
+    if (props.slides.length < TARGET_SLIDES) {
+        let result = [...props.slides]
+        for (let i = 0; i <= ~~(TARGET_SLIDES / props.slides.length); i++) {
+            result = result.concat(props.slides)
+        }
+        return result
+    } else {
+        return props.slides
+    }
+})
 </script>
 <template>
     <div>
-        <swiper :id="`swiper_${block_id}`" :key="`swiper_${block_id}_${slides[0].id}`" ref="swiperRef" v-bind="(swiperOptions as any)" 
-        class="w-full"    @swiper="onSwiper">
-            <swiper-slide v-for="(slide, index) in props.slides" :key="index" class="w-auto">
+        <swiper :id="`swiper_${block_id}`" :key="`swiper_${block_id}_${slides[0].id}`" ref="swiperRef"
+            v-bind="(swiperOptions as any)" class="w-full" @swiper="onSwiper">
+            <swiper-slide v-for="(slide, index) in extendedSlides" :key="index" class="w-auto">
                 <div class="bg-no-repeat bg-cover bg-center h-[50vh]  flex justify-start align-bottom p-4 mb-12"
                     :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${slide.image}`) }">
                     <NuxtImg :src="`${imgBase}/${slide.image}`" class="invisible" />

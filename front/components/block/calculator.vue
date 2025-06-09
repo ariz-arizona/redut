@@ -144,7 +144,7 @@ const sliderDisplayValues = computed(() => {
                 </div>
             </template>
             <template v-else>
-                <div class="col-span-full text-7xl md:text-[6.5vh] font-bleu uppercase leading-tight">
+                <div class="col-span-full text-4xl md:text-[6.5vh] font-bleu uppercase leading-tight">
                     {{ block.title }}
                 </div>
                 <div class="space-y-6">

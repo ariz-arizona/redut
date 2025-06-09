@@ -57,7 +57,7 @@ const extendedSlides = computed(() => {
 })
 </script>
 <template>
-    <div>
+    <div v-if="slides.length">
         <swiper :id="`swiper_${block_id}`" :key="`swiper_${block_id}`" ref="swiperRef"
             v-bind="(swiperOptions as any)" class="w-full" @swiper="onSwiper">
             <swiper-slide v-for="(slide, index) in extendedSlides" :key="index" class="w-auto">

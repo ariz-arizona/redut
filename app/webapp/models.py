@@ -135,6 +135,20 @@ class SiteSettings(models.Model):
         verbose_name="Разрешено в robots.txt",
         help_text="Если установлено, сайт будет доступен для индексации поисковыми роботами.",
     )
+    yandex_api_key = models.CharField(
+        max_length=255,
+        verbose_name="Yandex API Key",
+        help_text="Введите ключ API для Яндекс сервисов (например, карты).",
+        blank=True,
+        null=True,
+    )
+    yandex_api_point = models.CharField(
+        max_length=255,
+        verbose_name="Yandex API Точка на карте",
+        help_text="Координаты или точка на карте по умолчанию (например, '55.751244,37.618423').",
+        blank=True,
+        null=True,
+    )
 
     def documents_count(self):
         """
@@ -428,6 +442,7 @@ class Page(BaseContentModel):
 class Block(models.Model):
     BLOCK_TYPES = [
         ("text", "Текстовый блок"),
+        ("map", "Текстовый блок с картой"),
         ("lead", "Лид"),
         ("slider", "Главная картинка"),
         ("gallery", "Карусель"),

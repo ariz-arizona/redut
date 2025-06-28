@@ -81,7 +81,7 @@ class ContentBlockInline(GenericTabularInline):
     extra = 1
     verbose_name = _("Блок")
     verbose_name_plural = _("Блоки")
-    autocomplete_fields = ['block']
+    autocomplete_fields = ["block"]
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """
@@ -143,6 +143,13 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             "Активность и доступность",
             {
                 "fields": ("is_enabled", "allow_in_robots_txt"),
+            },
+        ),
+        (
+            "Яндекс.Карты",
+            {
+                "fields": ("yandex_api_key", "yandex_api_point"),
+                "description": "Настройки для интеграции Яндекс.Карт. Укажите API-ключ и координаты точки по умолчанию.",
             },
         ),
         (
@@ -314,7 +321,7 @@ class PageAdmin(admin.ModelAdmin):
     search_fields = ("title", "slug", "meta_title")
     prepopulated_fields = {"slug": ("title",)}
     inlines = [ContentBlockInline]  # Добавляем инлайн для блоков
-    
+
     def blocks_count(self, obj):
         """
         Возвращает количество блоков, связанных со страницей.

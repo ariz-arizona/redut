@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
     block: Block;
     imgBase: string;
 }>();
@@ -7,7 +7,9 @@ defineProps<{
 const { items: images } = useImagesData()
 
 const lightboxVisible = ref(false);
-const indexRef = ref(0)
+const indexRef = computed(()=>{
+    return images.value.findIndex(el=>el.id === props.block.images[0].id)
+})
 const openLightbox = () => {
     lightboxVisible.value = true;
 };
@@ -28,7 +30,7 @@ const onImageLoad = (event: Event) => {
             :index="indexRef" @hide="closeLightbox" />
             
         <div class="container pt-14 pb-20">
-            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-4 md:gap-x-16">
                 <!-- Картинка -->
                 <div class="col-span-1" :class="[!block.is_text_right ? 'order-last' : '']">
                     <div v-if="block.images.length">

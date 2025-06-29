@@ -288,6 +288,7 @@ class BlockAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     inlines = [ImageInline]
     readonly_fields = ("content",)
+    filter_horizontal = ("selected_pages",)
 
     def get_queryset(self, request):
         return super().get_queryset(request).order_by("id").distinct("id")

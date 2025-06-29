@@ -52,6 +52,8 @@ interface PageData {
     updated_at: string
     preview_image: string
     preview_text: string
+    cat_main?: string | null;   // Основной заголовок категории (опционально)
+    cat_sub?: string | null;    // Подзаголовок категории (опционально)
 }
 interface CategoryData {
     id: number; // Уникальный идентификатор категории

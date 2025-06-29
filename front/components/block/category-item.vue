@@ -10,6 +10,18 @@ const props = defineProps<CategoryItemProps>();
 const getBg = () => {
     return props.item.preview_image || props.item.blocks.find(el => el.type == 'text' && el.images.length > 0)?.images[0].image;
 };
+// Компьютед поля для отображения заголовка и подзаголовка
+const displayTitle = computed(() => {
+    return props.item.cat_main
+})
+
+const displaySubtitle = computed(() => {
+    return props.item.cat_sub || new Date(props.item.updated_at).toLocaleString('ru', { month: 'long' })
+})
+
+const displayDay = computed(() => {
+    return new Date(props.item.updated_at).getDate().toString()
+})
 </script>
 
 <template>
@@ -29,9 +41,11 @@ const getBg = () => {
             <span v-html="item.preview_text" />
         </div>
         <div class="flex justify-between items-end">
-            <div class="text-7xl font-bleu">{{ new Date(item.updated_at).getDate() }}</div>
-            <div class="basetext">
-                {{ new Date(item.updated_at).toLocaleString('ru', { month: 'long' }) }}
+            <div class="text-7xl font-bleu">
+                {{ displayTitle || displayDay }}
+            </div>
+            <div class="basetext text-right">
+                {{ displaySubtitle }}
             </div>
         </div>
     </NuxtLink>

@@ -421,6 +421,20 @@ class Page(BaseContentModel):
         blank=True,
         null=True,
     )
+    cat_main = models.CharField(
+        max_length=255,
+        verbose_name=_("Основной заголовок категории"),
+        help_text=_("Этот заголовок будет отображаться как основной текст категории на странице."),
+        blank=True,
+        null=True,
+    )
+    cat_sub = models.CharField(
+        max_length=255,
+        verbose_name=_("Подзаголовок категории"),
+        help_text=_("Этот текст будет отображаться как подзаголовок категории на странице."),
+        blank=True,
+        null=True,
+    )
     blocks = GenericRelation(
         "ContentBlock",
         related_query_name="page",

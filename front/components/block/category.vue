@@ -9,16 +9,50 @@ const props = defineProps<{
 // Состояние для хранения данных новостей
 const pages = ref<PageData[]>([]);
 
-// Функция для загрузки данных
-async function loadPages() {
+
+// === Загрузка по ID ===
+async function loadPagesByIds(ids: number[]) {
     try {
-        const cat = props.block.category.slug
-        // Получаем данные через API
-        const res = await fetchData<PaginatedResponse<PageData>>(`page/?limit=4&category__slug=${cat.trim()}`);
-        pages.value = res.data.value?.results as PageData[]
+        const idsQuery = ids.join(',')
+        const res = await useApiFetch().fetchData<PaginatedResponse<PageData>>(
+            `page/?id__in=${idsQuery}`
+        )
+        pages.value = res.data.value?.results || []
     } catch (error) {
-        console.error('Ошибка при загрузке страниц:', error);
+        console.error('Ошибка при загрузке страниц по ID:', error)
     }
+}
+
+// === Загрузка по категории ===
+async function loadPagesByCategory(slug: string) {
+    try {
+        const { fetchData } = useApiFetch()
+        const res = await fetchData<PaginatedResponse<PageData>>(
+            `page/?limit=4&category__slug=${slug.trim()}`
+        )
+        pages.value = res.data.value?.results || []
+    } catch (error) {
+        console.error('Ошибка при загрузке страниц по категории:', error)
+    }
+}
+
+// === Основная логика загрузки ===
+async function loadPages() {
+    // Если есть selected_pages — грузим их
+    if (props.block.selected_pages?.length > 0) {
+        await loadPagesByIds(props.block.selected_pages)
+        return
+    }
+
+    // Иначе грузим по категории, если она указана
+    const catSlug = props.block.category?.slug
+    if (catSlug) {
+        await loadPagesByCategory(catSlug)
+        return
+    }
+
+    // Иначе — ничего не загружаем
+    pages.value = []
 }
 onMounted(() => { loadPages() })
 </script>

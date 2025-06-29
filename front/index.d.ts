@@ -37,6 +37,7 @@ interface Block {
     category: SmallCategory
     color_scheme: 'dark' | 'light'
     menu_title: string | null
+    selected_pages: number[]
 }
 
 interface PageData {

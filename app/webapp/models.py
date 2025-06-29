@@ -507,6 +507,13 @@ class Block(models.Model):
         verbose_name="Категория",
         related_name="cat",
     )
+    selected_pages = models.ManyToManyField(
+        "Page",
+        blank=True,
+        verbose_name="Выбранные страницы",
+        help_text="Выберите 2–4 страницы, которые будут отображаться как приоритетные для этой категории.",
+        related_name="priority_in_category_blocks"
+    )
 
     def __str__(self):
         return f"{self.get_type_display()} {self.title}"

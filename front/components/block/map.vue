@@ -16,30 +16,30 @@ watch(settings, () => {
 //Можно использовать для различных преобразований
 const map = shallowRef<null | YMap>(null);
 const point = computed((): [number, number] => {
-  const defaultPoint: [number, number] = [37.617644, 55.755819]
+    const defaultPoint: [number, number] = [37.617644, 55.755819]
 
-  if (!settings.value?.yandex_api_point) {
+    if (!settings.value?.yandex_api_point) {
+        return defaultPoint
+    }
+
+    const [lngStr, latStr] = settings.value.yandex_api_point
+        .split(',')
+        .map(coord => coord.trim())
+
+    const lng = parseFloat(lngStr)
+    const lat = parseFloat(latStr)
+
+    if (!isNaN(lng) && !isNaN(lat)) {
+        return [lng, lat]
+    }
+
     return defaultPoint
-  }
-
-  const [lngStr, latStr] = settings.value.yandex_api_point
-    .split(',')
-    .map(coord => coord.trim())
-
-  const lng = parseFloat(lngStr)
-  const lat = parseFloat(latStr)
-
-  if (!isNaN(lng) && !isNaN(lat)) {
-    return [lng, lat]
-  }
-
-  return defaultPoint
 })
 
 const zoom = computed(() => {
-  // Если вы хотите использовать отдельное поле для zoom — добавьте его в настройки
-  // Пока используем дефолтное значение
-  return 9
+    // Если вы хотите использовать отдельное поле для zoom — добавьте его в настройки
+    // Пока используем дефолтное значение
+    return 9
 })
 </script>
 <template>

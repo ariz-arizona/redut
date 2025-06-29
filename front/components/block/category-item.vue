@@ -34,10 +34,10 @@ const displayDay = computed(() => {
                 '0.7'
             ) : 'transparent',
         }">
-        <div class="w-1/2 xl:w-3/4 basetext leading-8">
+        <div class="w-full basetext leading-8">
             {{ item.title }}
         </div>
-        <div class="w-1/2 xl:w-3/4">
+        <div class="w-full">
             <span v-html="item.preview_text" />
         </div>
         <div class="flex justify-between items-end">

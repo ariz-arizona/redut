@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { createYmapsOptions } from "vue-yandex-maps";
+
 import("~/assets/tailwind.scss");
 
 const { settings, loading } = useSiteSettings();
@@ -13,7 +15,6 @@ const makeLink = (el: TopItem) => {
     if (el.type == 'page') return '/' + el.slug + '#' + el.block
     if (el.type == 'category') return '/cat/' + el.slug + '#' + el.block
 }
-
 onMounted(() => {
     const darkBgColor = (twConfig.theme?.extend?.colors as any).primary['950']
     const darkBgColorRGB = (hexToRgb(darkBgColor))

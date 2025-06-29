@@ -16,7 +16,7 @@ class RangeAdmin(admin.ModelAdmin):
         ("Диапазон значений", {"fields": ("min_value", "max_value", "default_value")}),
         (
             "Дополнительно",
-            {"fields": ("description", "data_type"), "classes": ("collapse",)},
+            {"fields": ("description", "data_type", "order"), "classes": ("collapse",)},
         ),
     )
     ordering = ("name",)

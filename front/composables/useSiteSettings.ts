@@ -1,5 +1,5 @@
 // Реактивное состояние для хранения данных
-const settings = ref<SiteSettings | null>(null);
+const settings = useState<SiteSettings | null>('site_settigns', () => null);
 const loading = ref<boolean>(false);
 const error = ref<string | null>(null);
 

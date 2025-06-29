@@ -12,7 +12,7 @@ interface Image {
     text: string | null
     text_rendered: string | null
 }
-type BlockType = 'text' | 'lead' | 'gallery' | 'slider' | 'full_image' | 'feedback' | 'category' | 'calc';
+type BlockType = 'text' | 'map' | 'lead' | 'gallery' | 'slider' | 'full_image' | 'feedback' | 'category' | 'calc';
 
 interface SmallCategory {
     title: string; // Название категории
@@ -99,6 +99,8 @@ interface SiteSettings {
     documents: Document[]; // Массив связанных документов
     top_items: TopItem[]; // Массив топовых элементов
     overlay_opacity: number
+    yandex_api_key: string | null; // Ключ API Яндекс
+    yandex_api_point: string | null; // Точка на карте (например, "55.751244,37.618423")
 }
 
 interface Pagination {

@@ -4,7 +4,7 @@ const { fetchData } = useApiFetch()
 const route = useRoute()
 
 const config = useRuntimeConfig()
-const imgBase = config.public.imgBase
+const imgBase = config.public.imgBase as string
 const { settings, loading: settingLoading } = useSiteSettings();
 
 const { setItems } = useMenuPages()
@@ -149,10 +149,10 @@ const dummyCatBlock = { color_scheme: 'light', slug: 'cat' } as Block
             </BlockWrapper>
         </template>
         <template v-if="!mainSlider">
-            <div class="h-40" />
+            <EmptyHolder/>
         </template>
         <template
-            v-for="(block, index) in blocksByType(['text', 'gallery', 'lead', 'full_image', 'feedback', 'category', 'calc'])"
+            v-for="(block, index) in blocksByType(['text', 'map', 'gallery', 'lead', 'full_image', 'feedback', 'category', 'calc'])"
             :key="block.id">
             <template v-if="(index + 1) === Math.floor(combineData.length / 2)">
                 <template v-if="cat.items?.length">
@@ -181,6 +181,7 @@ const dummyCatBlock = { color_scheme: 'light', slug: 'cat' } as Block
                 </template>
             </template>
             <BlockText v-if="block.type === 'text'" :block="block" :img-base="imgBase" />
+            <BlockMap v-if="block.type === 'map'" :block="block" :img-base="imgBase" />
             <BlockGallery v-else-if="block.type === 'gallery'" :block="block" />
             <BlockLead v-else-if="block.type === 'lead'" :block="block" :img-base="imgBase" />
             <BlockFullImage v-else-if="block.type === 'full_image'" :block="block" :img-base="imgBase" />

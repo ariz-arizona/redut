@@ -7,7 +7,6 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/icon',
     '@nuxt/image',
-    // '@nuxtjs/robots',
   ],
   // site: { indexable: false },
   runtimeConfig: {

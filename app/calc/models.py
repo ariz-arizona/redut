@@ -17,7 +17,7 @@ class Range(models.Model):
         decimal_places=2,
         blank=True,
         null=True,
-        help_text="Значение, используемое по умолчанию, если не указано иное"
+        help_text="Значение, используемое по умолчанию, если не указано иное",
     )
     description = models.TextField(verbose_name="Описание", blank=True, null=True)
     data_type = models.CharField(
@@ -31,10 +31,18 @@ class Range(models.Model):
         default="decimal",
     )
     is_active = models.BooleanField(verbose_name="Активно", default=True)
+    order = models.PositiveIntegerField(
+        verbose_name="Порядок",
+        default=0,
+        blank=True,
+        null=True,
+        help_text="Укажите порядок отображения (если не указан — будет установлен автоматически)",
+    )
 
     class Meta:
         verbose_name = "Диапазон"
         verbose_name_plural = "Диапазоны"
+        ordering = ["order"]
 
     def __str__(self):
         return self.name
@@ -75,7 +83,6 @@ class BaseRate(models.Model):
 
     def __str__(self):
         return f"{self.rate}%"
-
 
 
 class CalculatorData(models.Model):

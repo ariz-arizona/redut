@@ -15,14 +15,18 @@ const errorRedirect = () => {
 }
 
 onMounted(errorRedirect)
-watch(props, errorRedirect, {deep: true})
+watch(props, errorRedirect, { deep: true })
 </script>
 <template>
     <NuxtLayout>
+        <EmptyHolder />
         <div class="container pt-4">
             <div class="prose">
                 <h1>Error</h1>
                 <p>Произошла ошибка</p>
+                <pre>
+                {{ error }}
+                </pre>
             </div>
         </div>
     </NuxtLayout>

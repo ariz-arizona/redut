@@ -53,7 +53,7 @@ const interestRate = computed(() => {
         }
     }
 
-    return Math.max(5, Math.min(30, rate)) // Ограничиваем ставку между 5% и 30%
+    return Math.max(1, Math.min(30, rate)) // Ограничиваем ставку между 5% и 30%
 })
 
 // Формула аннуитетного платежа

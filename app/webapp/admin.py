@@ -292,6 +292,22 @@ class BlockAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).order_by("id").distinct("id")
+    
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        """
+        Фильтруем selected_pages по category блока
+        """
+        if db_field.name == "selected_pages":
+            block_id = request.resolver_match.kwargs.get('object_id')
+
+            if block_id:
+                try:
+                    block = Block.objects.get(id=block_id)
+                    if block.category:
+                        kwargs["queryset"] = Page.objects.filter(category=block.category)
+                except Block.DoesNotExist:
+                    pass
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
 
     def title_and_excerpt(self, obj):
         title = obj.title or ""

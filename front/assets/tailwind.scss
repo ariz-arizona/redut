@@ -9,7 +9,25 @@
 }
 
 body {
-  @apply font-euclid min-w-[30rem];
+  @apply font-euclid overflow-x-hidden min-w-[480px];
+}
+
+/* Дополнительные правила для мобильных устройств */
+@media (max-width: 768px) {
+  html {
+    @apply touch-manipulation;
+  }
+  
+  body {
+    @apply overflow-x-hidden;
+  }
+  
+  /* Улучшаем отображение стрелочек каруселей на мобильных */
+  .swiper-button-next,
+  .swiper-button-prev {
+    @apply z-10;
+    /* Убеждаемся, что стрелочки поверх контента */
+  }
 }
 
 .container {

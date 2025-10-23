@@ -8,6 +8,18 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/image',
   ],
+  app: {
+    head: {
+      viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' },
+        { name: 'format-detection', content: 'telephone=no' },
+        { name: 'mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-capable', content: 'yes' },
+        { name: 'apple-mobile-web-app-status-bar-style', content: 'default' }
+      ]
+    }
+  },
   // site: { indexable: false },
   runtimeConfig: {
     public: {

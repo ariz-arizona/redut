@@ -59,4 +59,23 @@ const swiperRef = ref(null);
 .swiper-button-prev {
     @apply after:content-['prev']
 }
+
+/* Улучшаем отображение стрелочек на мобильных устройствах */
+@media (max-width: 768px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+        @apply after:text-4xl;
+        /* Уменьшаем размер стрелочек на мобильных */
+    }
+    
+    .swiper-button-next {
+        @apply right-2;
+        /* Прижимаем к краю экрана */
+    }
+    
+    .swiper-button-prev {
+        @apply left-2;
+        /* Прижимаем к краю экрана */
+    }
+}
 </style>

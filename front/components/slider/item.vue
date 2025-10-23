@@ -18,12 +18,12 @@ const imgBase = config.public.imgBase
 </script>
 
 <template>
-  <div class="h-full min-h-[50vh] bg-cover relative"
+  <div class="h-full min-h-[50vh] bg-cover relative z-10"
     :style="{ backgroundImage: createBgWithGrad(`${imgBase}/${slide.image}`), backgroundPositionY: '75%' }">
     <div class="absolute bottom-2 right-2 left-2 text-left">
       <div class="container m-auto">
         <div class="max-w-full md:max-w-[85%] select-none leading-none relative inline-block">
-          <h3 class="text-5xl sm:text-[7rem] font-bleu" v-html="slide.title"></h3>
+          <h3 class="text-5xl md:text-[7rem] font-bleu" v-html="slide.title"></h3>
           <p v-if="slide.alt_text" class="text-9xl sm:text-[20rem] font-wonder 
             text-secondary-200 absolute w-full lg:top-1/2 -translate-y-1/2 left-1/4 lg:left-3/4">
             {{ slide.alt_text }}

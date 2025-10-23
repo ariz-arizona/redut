@@ -30,18 +30,39 @@ onMounted(() => {
     <div class="overflow-hidden">
         <Preloader :loading="loading" />
         <div :class="[{ 'hidden': loading }]">
-            <div class="w-full z-20 text-secondary-50" :ref="menuRef" :class="[
+            <div class="w-full min-w-[480px] z-20 text-secondary-50" :ref="menuRef" :class="[
                 isSliderVisible ? 'h-36 absolute top-20' : 'h-28 fixed bg-primary-800/90',
                 'transition-all duration-300 ease-in-out'
             ]">
                 <div class="container grid grid-cols-1 md:grid-cols-[1fr_10rem_1fr] xl:grid-cols-[1fr_14rem_1fr] items-start gap-4 px-2 h-full"
                     :class="[isSliderVisible ? 'items-start' : 'items-center']">
+                    <!-- Мобильная версия хедера -->
+                    <div class="flex justify-between items-center w-full md:hidden">
+                        <template v-if="topItems[0]">
+                            <DropdownMenu :title="topItems[0].title" />
+                        </template>
+                        <div class="flex gap-4 items-center">
+                            <template v-if="settings?.phone_number">
+                                <HeaderPhone :phone="settings?.phone_number" />
+                            </template>
+                            <template v-if="topItems[1]">
+                                <NuxtLink :to="makeLink(topItems[1])" class="contents">
+                                    <div
+                                        class="menubtn text-nowrap bg-secondary-500 hover:bg-secondary-700 transition-colors">
+                                        <span>{{ topItems[1].title }}</span>
+                                    </div>
+                                </NuxtLink>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Десктопная версия хедера -->
                     <div class="gap-2 xl:gap-8 items-center basetext hidden md:flex flex-wrap xl:flex-nowrap">
                         <template v-if="topItems[0]">
                             <DropdownMenu :title="topItems[0].title" />
                         </template>
                     </div>
-                    <HeaderLogo :logo="settings?.logo" />
+                    <HeaderLogo :logo="settings?.logo" class="hidden md:block" />
                     <div
                         class="justify-end gap-2 xl:gap-8 items-center basetext hidden md:flex flex-wrap xl:flex-nowrap">
                         <template v-if="settings?.phone_number">

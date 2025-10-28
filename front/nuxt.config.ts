@@ -10,9 +10,9 @@ export default defineNuxtConfig({
   ],
   app: {
     head: {
-      viewport: 'width=480, initial-scale=1, minimum-scale=0.5, maximum-scale=2',
+      viewport: 'width=480',
       meta: [
-        { name: 'viewport', content: 'width=480, initial-scale=1, minimum-scale=0.5, maximum-scale=2' },
+        { name: 'viewport', content: 'width=480' },
         { name: 'format-detection', content: 'telephone=no' },
         { name: 'mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-capable', content: 'yes' },

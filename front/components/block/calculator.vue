@@ -19,9 +19,7 @@ watchEffect(() => {
     sliderValues.value = initial
 })
 const getStep = (range: Range) => {
-    if (range.data_type === 'integer') return 1
-    if (range.data_type === 'percent') return 1 // можно 0.1 для дробных процентов
-    return 0.01
+    return Number(range.step) || 1
 }
 
 // Примерные данные из calcData.ranges:

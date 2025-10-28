@@ -129,6 +129,7 @@ interface Range {
     min_value: string
     max_value: string
     default_value: string
+    step: string
     description: string
     data_type: 'decimal' | 'integer' | 'percent'
     is_active: boolean

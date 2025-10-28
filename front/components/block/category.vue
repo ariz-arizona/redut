@@ -59,21 +59,21 @@ onMounted(() => { loadPages() })
 <template>
     <BlockWrapper :block="block">
         <div class="container p-4 py-16 grid grid-cols-1 gap-4" :class="{
-            'xl:grid-cols-[1fr_2fr]': block.is_text_right,
-            'xl:grid-cols-[2fr_1fr]': !block.is_text_right,
+            'lg:grid-cols-[1fr_2fr]': block.is_text_right,
+            'lg:grid-cols-[2fr_1fr]': !block.is_text_right,
         }">
             <div class="col-span-1 flex items-end justify-center cat-title" :class="[{
                 'order-first': block.is_text_right,
                 'order-last': !block.is_text_right
             }]">
-                <div class="text-5xl md:text-7xl md:sideways-writing-lr md:indent-20 font-bleu uppercase text-left"
+                <div class="text-5xl md:text-7xl horizontal-writing-tb lg:sideways-writing-lr md:indent-20 font-bleu uppercase text-left"
                     v-html="block.title || block.category.title" />
                 <NuxtLink :to="`cat/${block.category.slug}`"
                     class="flex items-center justify-center leading-none size-24 rounded-full border border-secondary-400">
                     <Icon :name="block.is_text_right ? `mdi:arrow-right` : `mdi:arrow-left`" class="w-3/4 h-3/4" />
                 </NuxtLink>
             </div>
-            <div class="col-span-1 grid grid-cols-1 xl:grid-cols-2 gap-8 ">
+            <div class="col-span-1 grid grid-cols-1 md:grid-cols-2 gap-8 ">
                 <template v-for="item in pages">
                     <BlockCategoryItem :img-base="imgBase" :item="item" />
                 </template>

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { createYmapsOptions } from "vue-yandex-maps";
-
 import("~/assets/tailwind.scss");
 
 const { settings, loading } = useSiteSettings();
@@ -27,7 +25,7 @@ onMounted(() => {
 })
 </script>
 <template>
-    <div class="overflow-hidden">
+    <div>
         <Preloader :loading="loading" />
         <div :class="[{ 'hidden': loading }]">
             <div class="w-full min-w-[480px] z-20 text-secondary-50" :ref="menuRef" :class="[

@@ -12,7 +12,7 @@ from .serializers import (
 
 class ConfigView(APIView):
     def get(self, request):
-        ranges = Range.objects.all()
+        ranges = Range.objects.filter(is_active=True)
         services = AdditionalService.objects.filter(is_active=True)
                 # Получаем активную ставку
         base_rate = BaseRate.objects.filter().first()  # Предположим, что только одна запись или ты сам управляешь

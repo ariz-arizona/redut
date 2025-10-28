@@ -11,9 +11,11 @@ class RangeSerializer(serializers.ModelSerializer):
             "min_value",
             "max_value",
             "default_value",
+            "step",
             "description",
             "data_type",
             "is_active",
+            "order",
         ]
 
 

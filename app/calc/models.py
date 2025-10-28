@@ -19,6 +19,13 @@ class Range(models.Model):
         null=True,
         help_text="Значение, используемое по умолчанию, если не указано иное",
     )
+    step = models.DecimalField(
+        verbose_name="Шаг",
+        max_digits=12,
+        decimal_places=2,
+        default=1,
+        help_text="Шаг изменения значения в калькуляторе",
+    )
     description = models.TextField(verbose_name="Описание", blank=True, null=True)
     data_type = models.CharField(
         verbose_name="Тип данных",
